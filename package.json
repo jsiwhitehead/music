@@ -1,0 +1,14 @@
+{
+  "name": "music",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@preact/signals-core": "1.2.3",
+    "@svgdotjs/svg.js": "^3.2.0",
+    "ohm-js": "^17.0.4"
+  },
+  "devDependencies": {
+    "vite": "^4.2.1"
+  }
+}
