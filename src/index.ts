@@ -26,6 +26,9 @@ const compiled = maraca(
       values: {},
       items: Array.from({ length }).map((_, i) => i + 1),
     }),
+    isBlock: (x) => x.__type === "block",
+    len: (block) => block.items.length,
+    floor: (num) => Math.floor(num),
   },
   source
 );

@@ -173,7 +173,7 @@ const evaluate = (node, context) => {
         return block.values[arg];
       }
       if (Number.isInteger(arg)) {
-        return resolveItems(block.items)[arg - 1] || null;
+        return resolveItems(block.items)[arg - 1] ?? null;
       }
       return null;
     });

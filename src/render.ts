@@ -269,7 +269,7 @@ const getSVGElement = (svg, { shape }, items) => {
 };
 
 const updateNode = (effect, node, data, prevContext) => {
-  if (!data) return null;
+  if (!data && data !== 0) return null;
 
   if (typeof data === "number" || typeof data === "string") {
     const text = `${data}`
