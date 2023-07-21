@@ -292,8 +292,10 @@ const updateNode = (effect, node, data, prevContext) => {
         if (typeof radius === "number") e.radius(radius);
         e.radius(radius.items[0], radius.items[1]);
       }
-      if (fill) {
-        if (typeof fill !== "string" && fill.items.length > 0) {
+      if (fill || opacity) {
+        if (!fill) {
+          e.fill({ opacity });
+        } else if (typeof fill !== "string" && fill.items.length > 0) {
           const g = svg.gradient("linear", (add) => {
             for (const stop of fill.items) {
               add.stop({
@@ -312,11 +314,16 @@ const updateNode = (effect, node, data, prevContext) => {
           });
         }
       }
-      if (stroke) {
-        e.stroke({
-          opacity,
-          ...(typeof stroke === "string" ? { color: stroke } : stroke.values),
-        });
+      if (stroke || opacity) {
+        if (!stroke) {
+          e.stroke({ opacity });
+        } else {
+          e.stroke({
+            opacity,
+            color: "black",
+            ...(typeof stroke === "string" ? { color: stroke } : stroke.values),
+          });
+        }
       }
       if (rotate) {
         e.rotate(rotate);
