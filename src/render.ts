@@ -323,6 +323,9 @@ const updateNode = (effect, node, data, prevContext) => {
             color: "black",
             ...(typeof stroke === "string" ? { color: stroke } : stroke.values),
           });
+          if (stroke.values.cap) {
+            e.attr("stroke-linecap", stroke.values.cap);
+          }
         }
       }
       if (rotate) {
