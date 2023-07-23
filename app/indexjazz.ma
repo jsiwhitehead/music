@@ -135,7 +135,9 @@
           stroke: [width: 1.5, color: 'black']
           ~
           [
-            origin[1] - barWidth + barWidth / 4 * (i - 0.5) - noteSize / 2,
+            origin[1] + (floor((i - 1) / 4) - 1) * barWidth + curveOffset
+              + (barWidth - curveOffset * 2) / 3 * (i % 4 - 1)
+              - noteSize / 2,
             origin[2] + (12 - note[1]) * lineHeight - noteSize / 2 +
               row * rowHeight
           ]
@@ -146,11 +148,13 @@
           stroke: [width: 1.5, color: 'black']
           ~
           [
-            origin[1] - barWidth + barWidth / 4 * (i - 0.5) - noteSize / 2,
-            origin[2] + (12 - note[1]) * lineHeight - (lineHeight - 1.5) / 2 +
+            origin[1] + (floor((i - 1) / 4) - 1) * barWidth + curveOffset
+              + (barWidth - curveOffset * 2) / 3 * (i % 4 - 1)
+              - noteSize / 2,
+            origin[2] + (12 - note[1]) * lineHeight - (lineHeight - 3.5) / 2 +
               row * rowHeight
           ]
-          [noteSize, lineHeight - 1.5]
+          [noteSize * 1.1, lineHeight - 3.5]
         ]
   ~
   [
@@ -249,7 +253,7 @@
         origin[2] + 0 * rowHeight
       ]
       ['l'
-        1
+        0
         lineHeight * 16
       ]
     ]
@@ -260,7 +264,7 @@
       [2, 6, [], 5, no]
       [2, 5, [], 4, no]
       [1, 5, [], 3, no]
-      [1, 5, [], 3, 0]
+      [1, 5, [], 1, 0]
       [3, 6, [], 6, no]
       [3, 6, [], 6, no]
       [2, 6, [], 5, no]
@@ -270,7 +274,7 @@
       fill: 'white'
       ~
       [
-        origin[1] - barWidth - curveOffset / 2,
+        origin[1] - barWidth - curveOffset / 2 - 0.5,
         origin[2] + 0 * rowHeight
       ]
       [barWidth, lineHeight * 16]
@@ -280,7 +284,7 @@
       fill: 'white'
       ~
       [
-        origin[1] + barWidth * 8 + curveOffset / 2,
+        origin[1] + barWidth * 8 + curveOffset / 2 - 0.5,
         origin[2] + 0 * rowHeight
       ]
       [barWidth, lineHeight * 16]
@@ -314,8 +318,8 @@
       [5, 0, 8]
       [6, 0, 7]
       [4, -1, 10]
-      [11, -1, 11]
-      [3, -1, 10]
+      [11, -1, 12]
+      [3, 3, 10]
       [3, -1, 10]
       [12, -2, 10]
       [3, -1, 10]
@@ -336,8 +340,8 @@
       [2, 3]
       [4]
       [2, 3]
-      [3.5]
-      [1, 2]
+      [3.5, 4.5]
+      [2]
       [1, 2]
       [1]
       [2]
@@ -358,7 +362,7 @@
       [10, 11]
       [10, 11]
       [9, 10]
-      [10.5, 11.5]
+      [11.5, 12.5]
       [8, 9]
       [8, 9]
       [8]
@@ -380,7 +384,7 @@
       [3]
       [4]
       [3]
-      [3.5]
+      [3.5, 4.5]
       [2]
       [2]
       [1]
@@ -402,7 +406,7 @@
       [11, 12]
       [11, 12]
       [10, 11]
-      [10.5, 11.5]
+      [11.5, 12.5]
       [9, 10]
       [9, 10]
       [8, 9]
@@ -417,7 +421,7 @@
         origin[2] + 1 * rowHeight
       ]
       ['l'
-        1
+        0
         lineHeight * 16
       ]
     ]
@@ -448,7 +452,7 @@
       fill: 'white'
       ~
       [
-        origin[1] - barWidth - curveOffset / 2,
+        origin[1] - barWidth - curveOffset / 2 - 0.5,
         origin[2] + 1 * rowHeight
       ]
       [barWidth, lineHeight * 16]
@@ -458,7 +462,7 @@
       fill: 'white'
       ~
       [
-        origin[1] + barWidth * 8 + curveOffset / 2,
+        origin[1] + barWidth * 8 + curveOffset / 2 - 0.5,
         origin[2] + 1 * rowHeight
       ]
       [barWidth, lineHeight * 16]
@@ -468,7 +472,7 @@
       fill: 'white'
       ~
       [
-        origin[1] - curveOffset / 2,
+        origin[1] - curveOffset / 2 - 0.5,
         origin[2] + 1 * rowHeight
       ]
       [barWidth * 2 + curveOffset / 2 + 1, lineHeight * 4]
@@ -478,7 +482,7 @@
       fill: 'white'
       ~
       [
-        origin[1] + 2 * barWidth,
+        origin[1] + 2 * barWidth - 0.5,
         origin[2] + 1 * rowHeight + 8 * lineHeight + 3
       ]
       [barWidth * 2 + 1, lineHeight * 4]
@@ -488,7 +492,7 @@
       fill: 'white'
       ~
       [
-        origin[1] + 4 * barWidth,
+        origin[1] + 4 * barWidth - 0.5,
         origin[2] + 1 * rowHeight + 9 * lineHeight + 6
       ]
       [barWidth * 2 + 1, lineHeight * 4]
@@ -498,7 +502,7 @@
       fill: 'white'
       ~
       [
-        origin[1] + 6 * barWidth,
+        origin[1] + 6 * barWidth - 0.5,
         origin[2] + 1 * rowHeight + 10 * lineHeight + 3
       ]
       [barWidth * 1 + 1, lineHeight * 4]
@@ -508,7 +512,7 @@
       fill: 'white'
       ~
       [
-        origin[1] + 7 * barWidth,
+        origin[1] + 7 * barWidth - 0.5,
         origin[2] + 1 * rowHeight + 9 * lineHeight + 6
       ]
       [barWidth * 1 + 1, lineHeight * 4]
