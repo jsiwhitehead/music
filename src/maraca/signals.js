@@ -54,8 +54,13 @@ export const resolveToFragment = (x) => {
 export const resolveToSingle = (x) => {
   const fragment = resolveToFragment(x);
   if (fragment === null) return null;
-  if (fragment?.__type === "fragment") return fragment.value[0];
-  return fragment;
+  const result = fragment?.__type === "fragment" ? fragment.value[0] : fragment;
+  if (result?.__type !== "block") return result;
+  return {
+    __type: "block",
+    values: result.values,
+    items: resolveItems(result.items),
+  };
 };
 
 export const resolveDeep = (x) => {

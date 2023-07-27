@@ -283,8 +283,11 @@ const updateNode = (effect, node, data, prevContext) => {
   }
 
   if (resolve(data.values.svg)) {
-    const svg = node?.nodeName === "svg" ? node : SVG().size(2000, 2000);
-    const items = resolve(data.items, true);
+    const { values, items } = resolve(data, true);
+    const svg =
+      node?.nodeName === "svg"
+        ? node
+        : SVG().size(values.size.items[0], values.size.items[1]);
     for (const x of items) {
       const e = getSVGElement(svg, x.values, x.items);
       const { radius, fill, stroke, opacity, rotate } = x.values;

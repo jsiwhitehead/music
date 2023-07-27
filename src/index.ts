@@ -23,11 +23,6 @@ const source = Object.keys(app).reduce((res, k) => {
 
 const compiled = maraca(
   {
-    arr: (length) => ({
-      __type: "block",
-      values: {},
-      items: Array.from({ length }).map((_, i) => i + 1),
-    }),
     isBlock: (x) => x.__type === "block",
     len: (block) => block.items.length,
     floor: (num) => Math.floor(num),
@@ -73,6 +68,7 @@ const compiled = maraca(
       }
       return k2 + [-2, 0, 2, -3, -1, 1, 3][mod(note - start - 0.5, 7)] + 7;
     },
+    sort: (x) => ({ ...x, items: [...x.items].sort((a, b) => a - b) }),
     check: (x) => x,
   },
   source

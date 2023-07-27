@@ -1,670 +1,331 @@
 {
-  origin: [40, 40]
   barWidth: 100
   lineHeight: 8
+  barHeight: lineHeight * 20 - 1
   curveOffset: lineHeight * 1.5
   noteSize: 7.5
-  rowHeight: 140
-  bars: (row, info) =>
-    for bar, i in info [
-      shape: 'rect'
-      fill: colors[bar[1]]
-      opacity: 0.5
-      ~
-      [
-        origin[1] + barWidth * (i - 2),
-        origin[2] + (12 - bar[3]) * lineHeight + row * rowHeight
-      ]
-      [barWidth, lineHeight * (bar[3] - bar[2])]
+  theme: 0
+  getX: (x) => barWidth * (x - 2) + curveOffset,
+  getY: (y) => lineHeight * (15.5 - y) - 1,
+  renderCurvePiece: (x, y1, y2, width, color) => [
+    shape: 'path'
+    stroke: [width: width, color: color]
+    fill: 'none'
+    ~
+    ['M', getX(x + 1) - curveOffset, getY(y1)]
+    ['c'
+      curveOffset, 0, ','
+      curveOffset, lineHeight * (y1 - y2), ','
+      curveOffset * 2, lineHeight * (y1 - y2)
     ]
-  curve: (row, color, pointsList) =>
-    for points, i in pointsList
-      for p in points {
-        [
-          shape: 'path'
-          stroke: [width: lineHeight, color: color]
-          fill: 'none'
-          ~
-          ['M'
-            origin[1] + (i - 2) * barWidth +
-              curveOffset * (if i = 1 then 0 else 1)
-            origin[2] + (12 - p - 0.5) * lineHeight + row * rowHeight
-          ]
-          ['l'
-            barWidth -
-              curveOffset * (if i = 1 | i = len(pointsList) then 1 else 2),
-            0
-          ]
-        ]
-        for p2 in pointsList[i + 1] [
-          shape: 'path'
-          stroke: [width: lineHeight, color: color]
-          fill: 'none'
-          ~
-          ['M'
-            origin[1] + (i - 1) * barWidth - curveOffset
-            origin[2] + (12 - p - 0.5) * lineHeight + row * rowHeight
-          ]
-          ['c'
-            curveOffset, 0, ','
-            curveOffset, lineHeight * (p - p2), ','
-            curveOffset * 2, lineHeight * (p - p2)
-          ]
-        ]
+  ]
+  renderLinePiece: (x, y, width, color, round) => [
+    shape: 'path'
+    stroke: [width: width, color: color, cap: if round then 'round']
+    fill: 'none'
+    ~
+    ['M', getX(x) + curveOffset, getY(y)]
+    ['l', barWidth - curveOffset * 2, 0]
+  ]
+  renderCurve: (color, pointsList) => {
+    for i in [1, 2]
+      for p1 in pointsList[i] {
+        if i = 2 then
+          renderLinePiece(2, p1, lineHeight, color, no)
+        for p2 in pointsList[i + 1] 
+          renderCurvePiece(i, p1, p2, lineHeight, color)   
       }
-  roots: (row, points) => {
-    for i in [1, 2] [
-      shape: 'path'
-      stroke: [width: 1, color: 'rgb(165, 165, 165)']
-      fill: 'none'
-      ~
-      ['M'
-        origin[1] - barWidth
-        origin[2] + (12 - points[1][i]) * lineHeight + row * rowHeight
-      ]
-      ['l'
-        curveOffset, 0
-      ]
-      for p, j in points {
-        ['l'
-          barWidth - curveOffset * 2
-          0
-        ]
-        if j < len(points) then ['c'
-          curveOffset, 0, ','
-          curveOffset, lineHeight * (p[i] - points[j + 1][i]), ','
-          curveOffset * 2, lineHeight * (p[i] - points[j + 1][i])
-        ]
-      }
-      ['l'
-        curveOffset, 0
-      ]
-    ]
-    for p, i in points {
-      pos:
-        if p[5] then p[5]
-        else if p[2] - p[1] = 3 then p[2]
-        else p[1]
-      ~
-      [
-        shape: 'path'
-        stroke: [width: 3.5, color: colorsdark[p[4] % 12], cap: 'round']
-        fill: 'none'
-        ~
-        ['M'
-          origin[1] + (i - 2) * barWidth + curveOffset
-          origin[2] + (12 - pos) * lineHeight + row * rowHeight
-        ]
-        ['l'
-          barWidth - curveOffset * 2, 0
-        ]
-      ]
-      [
-        shape: 'path'
-        stroke: [width: 1.5, color: colors[p[4] % 12], cap: 'round']
-        fill: 'none'
-        ~
-        ['M'
-          origin[1] + (i - 2) * barWidth + curveOffset
-          origin[2] + (12 - pos) * lineHeight + row * rowHeight
-        ]
-        ['l'
-          barWidth - curveOffset * 2, 0
-        ]
-      ]
-      for x in p[3] [
-        shape: 'path'
-        stroke: [width: 1, color: 'white', cap: 'round']
-        ~
-        ['M'
-          origin[1] + (i - 2) * barWidth + curveOffset
-          origin[2] + (12 - x) * lineHeight + row * rowHeight
-        ]
-        ['l'
-          barWidth - curveOffset * 2, 0
-        ]
-      ]
-    }
   }
-  notes: (row, info) =>
-    for note, i in info
-      if note then
-        if !note[3] then [
-          shape: 'ellipse'
-          fill: colors[note[2] % 12]
-          stroke: [width: 1.5, color: 'black']
-          ~
-          [
-            origin[1] + (floor((i - 1) / 6) - 1) * barWidth + curveOffset
-              + (barWidth - curveOffset * 2) / 5 * (i % 6 - 1)
-              - noteSize / 2,
-            origin[2] + (12 - note[1]) * lineHeight - noteSize / 2 +
-              row * rowHeight
-          ]
-          [noteSize, noteSize]
-        ] else [
-          shape: 'rect'
-          fill: colors[note[2] % 12]
-          stroke: [width: 1.5, color: 'black']
-          ~
-          [
-            origin[1] + (floor((i - 1) / 6) - 1) * barWidth + curveOffset
-              + (barWidth - curveOffset * 2) / 5 * (i % 6 - 1)
-              - noteSize / 2,
-            origin[2] + (12 - note[1]) * lineHeight - (lineHeight - 3.5) / 2 +
-              row * rowHeight
-          ]
-          [noteSize * 1.1, lineHeight - 3.5]
+  renderCover: (bar, points, top) => [
+    shape: 'path'
+    fill: 'white'
+    ~
+    ['M'
+      getX(bar)
+      if top then 0 else barHeight
+    ]
+    ['l'
+      barWidth
+      0
+    ]
+    ['L'
+      getX(bar + 1)
+      getY((points[2] + points[3]) / 2)
+    ]
+    ['L'
+      getX(bar + 1) - curveOffset
+      getY(points[2])
+    ]
+    ['L'
+      getX(bar) + curveOffset
+      getY(points[2])
+    ]
+    ['L'
+      getX(bar)
+      getY((points[1] + points[2]) / 2)
+    ]
+  ]
+  renderBar: (infos) => [
+    fill: 'white'
+    style: [margin: '0px -{curveOffset}px']
+    ~
+    [
+      svg: yes
+      size: [barWidth + curveOffset * 2, barHeight]
+      gaps: [
+        for info in infos [
+          -0.5 + floor(info.key / 2)
+          2.5 + floor((info.key + 1) / 2)
         ]
+      ]
+      roots: [
+        for info, i in infos sort([
+          gaps[i][1] + (
+            if info.key % 2 = 2 then
+              [3, 0, 4, 1, 5, 2, 6, 3.5, 0.5, 4.5, 1.5, 5.5]
+            else
+              [0, 4, 1, 5, 2, 6, 3, 0.5, 4.5, 1.5, 5.5, 2.5]
+          )[info.root + 1] + 0.5
+          gaps[i][1] + (
+            if info.key % 2 = 2 then
+              [3, 0, 4, 1, 5, 2, 6, 3, 0, 4, 1, 5, 2, 6]
+            else
+              [0, 4, 1, 5, 2, 6, 3, 0, 4, 1, 5, 2, 6, 3]
+          )[info.root + 2] + 0.5
+        ])
+      ]
+      bases: [
+        for info, i in infos
+          gaps[i][1] + (
+            if infos[i].key % 2 = 2 then
+              [3, 0, 4, 1, 5, 2, 6, 3.5, 0.5, 4.5, 1.5, 5.5]
+            else
+              [0, 4, 1, 5, 2, 6, 3, 0.5, 4.5, 1.5, 5.5, 2.5]
+          )[(infos[i].base | infos[i].root) + 1] + 0.5
+      ]
+      ~
+      for info, i in infos [
+        shape: 'rect'
+        fill: colors[(info.key + 3 + theme) % 12]
+        opacity: 0.5
+        ~
+        [getX(i), 0]
+        [barWidth, barHeight]
+      ]
+      for j in [1, 2]
+        for x in [0, 7]
+          renderCurve(
+            'rgb(235, 235, 235)'
+            [
+              for points, i in gaps [
+                if (
+                  (infos[i].key + j) % 2 = 1 & infos[i].chord[2] < 4
+                ) then
+                  points[j] - 2 + x
+                if (
+                  (infos[i].key + j) % 2 = 1 & infos[i].chord[2] < 6 |
+                  (infos[i].key + j) % 2 = 2 & infos[i].chord[2] < 5
+                ) then
+                  points[j] - 1 + x
+                points[j] + x
+                if (
+                  (infos[i].key + j) % 2 = 1 & infos[i].chord[1] > 1 |
+                  (infos[i].key + j) % 2 = 2 & infos[i].chord[1] > 0
+                ) then
+                  points[j] + 1 + x
+                if (
+                  (infos[i].key + j) % 2 = 2 & infos[i].chord[1] > 2
+                ) then
+                  points[j] + 2 + x
+              ]
+            ]
+          )
+      for j in [1, 2]
+        for x in [0, 7]
+          renderCurve(
+            'white'
+            [for points in gaps [points[j] + x]]
+          )
+      for i in [1, 2, 3] [
+        shape: 'path'
+        stroke: [width: 1, color: 'white']
+        ~
+        ['M', getX(i), 0]
+        ['l', 0, barHeight]
+      ]
+      for j in [1, 2] {
+        renderCurvePiece(1, roots[1][j], roots[2][j], 1, 'rgb(165, 165, 165)')
+        renderLinePiece(2, roots[2][j], 1, 'rgb(165, 165, 165)', no)
+        renderCurvePiece(2, roots[2][j], roots[3][j], 1, 'rgb(165, 165, 165)')
+      }
+      for base, i in bases {
+        renderLinePiece(
+          i,
+          base,
+          3.5,
+          colorsdark[(infos[i].key + (infos[i].base | infos[i].root) + theme) % 12],
+          yes
+        )
+        renderLinePiece(
+          i,
+          base,
+          1.5,
+          colors[(infos[i].key + (infos[i].base | infos[i].root) + theme) % 12],
+          yes
+        )
+      }
+      renderCover(1, check([gaps[1][1], gaps[1][1], gaps[2][1]]), no)
+      renderCover(1, check([gaps[1][2] + 7, gaps[1][2] + 7, gaps[2][2] + 7]), yes)
+      renderCover(2, check([for points in gaps (points[1])]), no)
+      renderCover(2, check([for points in gaps (points[2] + 7)]), yes)
+      renderCover(3, check([gaps[2][1], gaps[3][1], gaps[3][1]]), no)
+      renderCover(3, check([gaps[2][2] + 7, gaps[3][2] + 7, gaps[3][2] + 7]), yes)
+    ]
+  ]
+
+  piece: [
+    [
+      key: 0
+      chord: [1, 5]
+      root: 1
+      base: 2
+    ]
+    [
+      key: 0
+      chord: [1, 5]
+      root: 1
+      base: 2
+    ]
+    [
+      key: 1
+      chord: [0, 6]
+      root: 3
+    ]
+    [
+      key: 1
+      chord: [0, 6]
+      root: 3
+    ]
+    [
+      key: 1
+      chord: [1, 5]
+      root: 4
+    ]
+    [
+      key: 1
+      chord: [1, 5]
+      root: 4
+    ]
+    [
+      key: 2
+      chord: [0, 6]
+      root: 2
+      base: 0
+    ]
+    [
+      key: 2
+      chord: [0, 6]
+      root: 2
+      base: 0
+    ]
+    [
+      key: 2
+      chord: [1, 5]
+      root: 1
+      base: 2
+    ]
+    [
+      key: 2
+      chord: [1, 5]
+      root: 1
+      base: 2
+    ]
+    [
+      key: 2
+      chord: [0, 6]
+      root: 9
+    ]
+    [
+      key: 2
+      chord: [0, 6]
+      root: 9
+    ]
+    [
+      key: 2
+      chord: [1, 5]
+      root: 1
+      base: 2
+    ]
+    [
+      key: 2
+      chord: [1, 5]
+      root: 1
+      base: 2
+    ]
+    [
+      key: 3
+      chord: [0, 6]
+      root: 6
+    ]
+    [
+      key: 3
+      chord: [0, 6]
+      root: 6
+    ]
+    [
+      key: 2
+      chord: [0, 4]
+      root: 0
+    ]
+    [
+      key: 2
+      chord: [0, 4]
+      root: 0
+    ]
+    [
+      key: 2
+      chord: [1, 5]
+      root: 1
+      base: 5
+    ]
+    [
+      key: 2
+      chord: [1, 5]
+      root: 1
+      base: 5
+    ]
+    [
+      key: 2
+      chord: [0, 4]
+      root: 3
+    ]
+    [
+      key: 2
+      chord: [0, 4]
+      root: 3
+    ]
+    [
+      key: 0
+      chord: [0, 5]
+      root: 3
+    ]
+    [
+      key: 0
+      chord: [0, 5]
+      root: 3
+    ]
+  ]
   ~
   [
-    svg: yes
+    pad: 50
+    flow: 'row'
+    style: ['flex-wrap': 'wrap']
     ~
-    bars(0, [
-      [6, -6, 9]
-      [6, -6, 9]
-      [3, -3, 8]
-      [3, -4, 8]
-      [1, -5, 8]
-      [1, -5, 7]
-      [6, -6, 7]
-      [6, -6, 7]
-      [3, -6, 8]
-      [8, -7, 8]
-    ])
-    curve(0, 'rgb(235, 235, 235)', [
-      [-6]
-      [-6, -5]
-      [-7]
-    ])
-    curve(0, 'rgb(235, 235, 235)', [
-      [-2]
-      [-2]
-      [-4]
-      [-4, -3]
-      [-6, -5]
-      [-5, -4]
-      [-6.5, -5.5]
-      [-5.5, -4.5]
-      [-7.5, -6.5]
-      [-8, -7]
-    ])
-    curve(0, 'rgb(235, 235, 235)', [
-      [1]
-      [1, 2]
-      [0]
-      [0]
-      [-1]
-      [-1]
-      [-1.5]
-      [-1.5]
-      [-3.5]
-      [-4, -3]
-    ])
-    curve(0, 'rgb(235, 235, 235)', [
-      [5]
-      [5]
-      [3]
-      [3, 4]
-      [2]
-      [2, 3]
-      [1.5]
-      [1.5, 2.5]
-      [0.5]
-      [0]
-    ])
-    curve(0, 'rgb(235, 235, 235)', [
-      [8, 9]
-      [8, 9]
-      [7, 8]
-      [7, 8]
-      [6, 7]
-      [6, 7]
-      [5.5, 6.5]
-      [5.5]
-      [3.5]
-      [3, 4]
-    ])
-    curve(0, 'rgb(235, 235, 235)', [
-      [9.5]
-      [9.5]
-      [9.5]
-      [9.5]
-      [9.5]
-      [9.5]
-      [9.5]
-      [8.5]
-      [7.5]
-      [7]
-    ])
-    curve(0, 'white', [
-      [-6]
-      [-6]
-      [-7]
-    ])
-    curve(0, 'white', [
-      [-2]
-      [-2]
-      [-4]
-      [-5, -4]
-      [-6, -5]
-      [-6, -5]
-      [-6.5, -5.5]
-      [-6.5, -5.5]
-      [-7.5, -6.5]
-      [-8, -7]
-    ])
-    curve(0, 'white', [
-      [1]
-      [1]
-      [0]
-      [0]
-      [-1]
-      [-1]
-      [-1.5]
-      [-1.5]
-      [-3.5]
-      [-4]
-    ])
-    curve(0, 'white', [
-      [5]
-      [5]
-      [3]
-      [3]
-      [2]
-      [2]
-      [1.5]
-      [1.5]
-      [0.5]
-      [0]
-    ])
-    curve(0, 'white', [
-      [8, 9]
-      [8, 9]
-      [7, 8]
-      [7, 8]
-      [6, 7]
-      [6, 7]
-      [5.5, 6.5]
-      [5.5]
-      [3.5]
-      [3]
-    ])
-    curve(0, 'white', [
-      [9.5]
-      [9.5]
-      [9.5]
-      [9.5]
-      [9.5]
-      [9.5]
-      [9.5]
-      [8.5]
-      [7.5]
-      [7]
-    ])
-    for x in [0, 1, 2, 3, 4, 5, 6, 7, 8] [
-      shape: 'path'
-      stroke: [width: 1, color: 'white']
-      ~
-      ['M'
-        origin[1] + x * barWidth,
-        origin[2] + 0 * rowHeight
-      ]
-      ['l'
-        0
-        lineHeight * 20
-      ]
-    ]
-    roots(0, [
-      [-4, 0, [], 4, no]
-      [-4, -1, [], 4, no]
-      [-5, -2, [], 2, no]
-    ])
-    roots(0, [
-      [0, 3, [], 4, no]
-      [-1, 3, [], 4, no]
-      [-2, 2, [], 2, no]
-      [-2, 1, [], 1, no]
-      [-3, 1, [], 0, no]
-      [-3, 0, [], -1, no]
-      [-3.5, 0.5, [], 5, no]
-      [-3.5, -0.5, [], 4, no]
-      [-4.5, -1.5, [-5], 2, no]
-      [-6, -2, [], 6, no]
-    ])
-    roots(0, [
-      [6, 10, [], 4, no]
-      [6, 10, [], 4, no]
-      [5, 9, [], 2, no]
-      [5, 8, [], 1, no]
-      [4, 8, [], 0, no]
-      [4, 7, [], -1, no]
-      [3.5, 7.5, [], 5, no]
-      [3.5, 6.5, [], 4, no]
-      [2.5, 5.5, [2], 2, no]
-      [1, 5, [], 6, no]
-    ])
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] - barWidth - curveOffset / 2 - 0.5,
-        origin[2] + 0 * rowHeight
-      ]
-      [barWidth, lineHeight * 20]
-    ]
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] + barWidth * 8 + curveOffset / 2 - 0.5,
-        origin[2] + 0 * rowHeight
-      ]
-      [barWidth, lineHeight * 20]
-    ]
-    notes(0, [
-      no, no, no, no, no, no
-      [3, 5]
-      no, no, no
-      [1, 8]
-      no
-      [-1, 4]
-      no
-      [5, 2]
-      no, no, no
-      [3, 5]
-      no, no, no
-      [-2, 2]
-      no
-      [-1.5, 9, yes]
-      no
-      [4.5, 7, yes]
-      no, no, no
-      [4, 0]
-      no, no, no
-      [-3, 0]
-      no
-      [-2.5, 7]
-      no
-      [3.5, 5]
-      no, no, no
-      [1.5, 8]
-      no, no, no, no, no
-      [2, 8, yes]
-      no, no, no, no, no
-    ])
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] - curveOffset + 0 * barWidth - 0.5,
-        origin[2] + 0 * rowHeight + 1 * lineHeight - 1
-      ]
-      [barWidth * 1 + curveOffset + 1, lineHeight * 6]
-    ]
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] + 1 * barWidth - 0.5,
-        origin[2] + 0 * rowHeight + 15 * lineHeight + 3
-      ]
-      [barWidth * 1 + 1, lineHeight * 3]
-    ]
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] + 1 * barWidth - 0.5,
-        origin[2] + 0 * rowHeight + 1 * lineHeight + 3
-      ]
-      [barWidth * 2 + 1, lineHeight * 3]
-    ]
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] + 3 * barWidth - 0.5,
-        origin[2] + 0 * rowHeight + 1 * lineHeight + 3
-      ]
-      [barWidth * 2 + 1, lineHeight * 4]
-    ]
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] + 5 * barWidth - 0.5,
-        origin[2] + 0 * rowHeight + 1 * lineHeight + 1.5
-      ]
-      [barWidth * 2 + 1, lineHeight * 5]
-    ]
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] + 7 * barWidth - 0.5,
-        origin[2] + 0 * rowHeight + 15 * lineHeight - 3
-      ]
-      [barWidth * 0.5 + curveOffset + 1, lineHeight * 4]
-    ]
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] + 7.5 * barWidth - 0.5,
-        origin[2] + 0 * rowHeight + 15 * lineHeight + 1
-      ]
-      [barWidth * 0.5 + curveOffset + 1, lineHeight * 4]
-    ]
-
-    bars(1, [
-      [3, -3, 8]
-      [8, -3, 8]
-      [7, -4, 8]
-      [8, -4, 8]
-      [10, -4, 8]
-      [8, -4, 8]
-      [1, -4, 8]
-      [1, -4, 8]
-      [6, -4, 8]
-      [6, -4, 8]
-    ])
-    curve(1, 'rgb(235, 235, 235)', [
-      [-3.5]
-      [-4, -3]
-      [-5, -4]
-      [-4, -3]
-      [-4, -3]
-      [-5, -4]
-      [-5.5, -4.5]
-      [-4.5, -3.5]
-      [-6, -5]
-      [-5, -4]
-    ])
-    curve(1, 'rgb(235, 235, 235)', [
-      [0.5]
-      [0]
-      [-2, -1]
-      [0, 1]
-      [1]
-      [-1, 0]
-      [-0.5]
-      [-0.5]
-      [-1]
-      [-1]
-    ])
-    curve(1, 'rgb(235, 235, 235)', [
-      [3.5]
-      [3, 4]
-      [2, 3]
-      [3, 4]
-      [4]
-      [3]
-      [2.5]
-      [2.5, 3.5]
-      [2]
-      [2, 3]
-    ])
-    curve(1, 'rgb(235, 235, 235)', [
-      [7.5, 8.5]
-      [7, 8]
-      [5, 6]
-      [7, 8]
-      [8, 9]
-      [6, 7]
-      [6.5, 7.5]
-      [6.5, 7.5]
-      [6, 7]
-      [6, 7]
-    ])
-    curve(1, 'white', [
-      [-3.5]
-      [-4]
-      [-5, -4]
-      [-5, -4]
-      [-4, -3]
-      [-5, -4]
-      [-5.5, -4.5]
-      [-5.5, -4.5]
-      [-6, -5]
-      [-6, -5]
-    ])
-    curve(1, 'white', [
-      [0.5]
-      [0]
-      [-1]
-      [0]
-      [1]
-      [0]
-      [-0.5]
-      [-0.5]
-      [-1]
-      [-1]
-    ])
-    curve(1, 'white', [
-      [3.5]
-      [3]
-      [3]
-      [3]
-      [4]
-      [3]
-      [2.5]
-      [2.5]
-      [2]
-      [2]
-    ])
-    curve(1, 'white', [
-      [7.5, 8.5]
-      [7, 8]
-      [6, 7]
-      [7, 8]
-      [8, 9]
-      [7, 8]
-      [6.5, 7.5]
-      [6.5, 7.5]
-      [6, 7]
-      [6, 7]
-    ])
-    for x in [0, 1, 2, 3, 4, 5, 6, 7, 8] [
-      shape: 'path'
-      stroke: [width: 1, color: 'white']
-      ~
-      ['M'
-        origin[1] + x * barWidth,
-        origin[2] + 1 * rowHeight
-      ]
-      ['l'
-        0
-        lineHeight * 20
-      ]
-    ]
-    roots(1, [
-      [-1.5, 2.5, [2], 2, no]
-      [-2, 1, [], 6, no]
-      [-2, 2, [], 7, no]
-      [0, 3, [], 10, no]
-      [-1, 3, [-0.5], 9, no]
-      [-1, 2, [], 8, no]
-      [-2.5, 1.5, [], 0, no]
-      [-2.5, 0.5, [], -1, no]
-      [-3, 1, [], 5, no]
-      [-3, 0, [], 4, no]
-    ])
-    roots(1, [
-      [2.5, 5.5, [2], 2, no]
-      [1, 5, [], 6, no]
-      [2, 5, [], 7, no]
-      [3, 7, [], 10, no]
-      [3, 6, [6.5], 9, no]
-      [2, 6, [], 8, no]
-      [1.5, 4.5, [], 0, no]
-      [0.5, 4.5, [], -1, no]
-      [1, 4, [], 5, no]
-      [0, 4, [], 4, no]
-    ])
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] - barWidth - curveOffset / 2 - 0.5,
-        origin[2] + 1 * rowHeight
-      ]
-      [barWidth, lineHeight * 20]
-    ]
-    [
-      shape: 'rect'
-      fill: 'white'
-      ~
-      [
-        origin[1] + barWidth * 8 + curveOffset / 2 - 0.5,
-        origin[2] + 1 * rowHeight
-      ]
-      [barWidth, lineHeight * 20]
-    ]
-    notes(1, [
-      no, no, no, no, no, no
-      [5, 7]
-      no, no, no
-      [1, 6]
-      no
-      [0, 4]
-      no
-      [7, 4]
-      no, no, no
-      [6, 9]
-      no, no, no
-      [-1, 9]
-      no
-      [-0.5, 4, yes]
-      no
-      [4, 12]
-      no, no, no
-      [5, 7]
-      no, no, no
-      [-2, 7]
-      no
-      [-1.5, 2]
-      no
-      [5.5, 2]
-      no, no
-      [4.5, 0]
-      [2.5, 5]
-      no, no, no, no, no
-      no, no
-      [0, 4]
-      [1, 6]
-      [2, 8]
-      [3, 3]
-    ])
+    for p, i in piece
+      renderBar([
+        if i = 1 then p else piece[i - 1]
+        p
+        if i = len(piece) then p else piece[i + 1]
+      ])
   ]
 }

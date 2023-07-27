@@ -193,7 +193,7 @@ const evaluate = (node, context) => {
         if (typeof f === "function") {
           return f.reactiveFunc
             ? f(...$args)
-            : f(...$args.map((x) => resolveToFragment(x)));
+            : f(...$args.map((x) => resolveDeep(x)));
         }
         const matches = f.patterns.map((p, i) => getParameters(p, $args[i]));
         return evaluate(
