@@ -4,9 +4,10 @@
   barHeight: lineHeight * 20 - 1
   curveOffset: lineHeight * 1.5
   noteSize: 7.5
-  theme: 0
+  theme: 6
   getX: (x) => barWidth * (x - 2) + curveOffset,
-  getY: (y) => lineHeight * (15.5 - y) - 1,
+  getY: (y) => lineHeight * (15 - y) - 1,
+  oneOf: (x, y) => if x then !y else y,
   renderCurvePiece: (x, y1, y2, width, color) => [
     shape: 'path'
     stroke: [width: width, color: color]
@@ -41,15 +42,15 @@
     fill: 'white'
     ~
     ['M'
-      getX(bar)
+      getX(bar) - 0.5
       if top then 0 else barHeight
     ]
     ['l'
-      barWidth
+      barWidth + 1
       0
     ]
     ['L'
-      getX(bar + 1)
+      getX(bar + 1) + 0.5
       getY((points[2] + points[3]) / 2)
     ]
     ['L'
@@ -61,10 +62,16 @@
       getY(points[2])
     ]
     ['L'
-      getX(bar)
+      getX(bar) - 0.5
       getY((points[1] + points[2]) / 2)
     ]
   ]
+  getPosInKey: (fifth, alt) => (
+    if alt then
+      [0, 4, 1, 5, 2, 6, 3, 0.5, 4.5, 1.5, 5.5, 2.5]
+    else
+      [3, 0, 4, 1, 5, 2, 6, 3.5, 0.5, 4.5, 1.5, 5.5]
+  )[fifth + 1] + 0.5
   renderBar: (infos) => [
     fill: 'white'
     style: [margin: '0px -{curveOffset}px']
@@ -74,34 +81,28 @@
       size: [barWidth + curveOffset * 2, barHeight]
       gaps: [
         for info in infos [
-          -0.5 + floor(info.key / 2)
-          2.5 + floor((info.key + 1) / 2)
+          info.baseline + 0.5
+          info.baseline + (if info.alt then 4.5 else 3.5)
         ]
       ]
       roots: [
         for info, i in infos sort([
-          gaps[i][1] + (
-            if info.key % 2 = 2 then
-              [3, 0, 4, 1, 5, 2, 6, 3.5, 0.5, 4.5, 1.5, 5.5]
-            else
-              [0, 4, 1, 5, 2, 6, 3, 0.5, 4.5, 1.5, 5.5, 2.5]
-          )[info.root + 1] + 0.5
-          gaps[i][1] + (
-            if info.key % 2 = 2 then
-              [3, 0, 4, 1, 5, 2, 6, 3, 0, 4, 1, 5, 2, 6]
-            else
-              [0, 4, 1, 5, 2, 6, 3, 0, 4, 1, 5, 2, 6, 3]
-          )[info.root + 2] + 0.5
+          gaps[i][1] + getPosInKey(info.root, info.alt)
+          if includes(info.ext, 10) then
+            gaps[i][1] + getPosInKey(10, info.alt)
+          else
+            gaps[i][1] + getPosInKey((info.root + 2) % 7 - 1, info.alt)
         ])
       ]
       bases: [
         for info, i in infos
-          gaps[i][1] + (
-            if infos[i].key % 2 = 2 then
-              [3, 0, 4, 1, 5, 2, 6, 3.5, 0.5, 4.5, 1.5, 5.5]
-            else
-              [0, 4, 1, 5, 2, 6, 3, 0.5, 4.5, 1.5, 5.5, 2.5]
-          )[(infos[i].base | infos[i].root) + 1] + 0.5
+          gaps[i][1] + getPosInKey(infos[i].base, info.alt)
+      ]
+      exts: [
+        for info, i in infos [
+          for ext in info.ext
+            gaps[i][1] + getPosInKey(ext, info.alt)
+        ]
       ]
       ~
       for info, i in infos [
@@ -119,22 +120,22 @@
             [
               for points, i in gaps [
                 if (
-                  (infos[i].key + j) % 2 = 1 & infos[i].chord[2] < 4
+                  oneOf(infos[i].alt, j = 1) & infos[i].chord[2] < 4
                 ) then
                   points[j] - 2 + x
                 if (
-                  (infos[i].key + j) % 2 = 1 & infos[i].chord[2] < 6 |
-                  (infos[i].key + j) % 2 = 2 & infos[i].chord[2] < 5
+                  oneOf(infos[i].alt, j = 1) & infos[i].chord[2] < 6 |
+                  !oneOf(infos[i].alt, j = 1) & infos[i].chord[2] < 5
                 ) then
                   points[j] - 1 + x
                 points[j] + x
                 if (
-                  (infos[i].key + j) % 2 = 1 & infos[i].chord[1] > 1 |
-                  (infos[i].key + j) % 2 = 2 & infos[i].chord[1] > 0
+                  oneOf(infos[i].alt, j = 1) & infos[i].chord[1] > 1 |
+                  !oneOf(infos[i].alt, j = 1) & infos[i].chord[1] > 0
                 ) then
                   points[j] + 1 + x
                 if (
-                  (infos[i].key + j) % 2 = 2 & infos[i].chord[1] > 2
+                  !oneOf(infos[i].alt, j = 1) & infos[i].chord[1] > 2
                 ) then
                   points[j] + 2 + x
               ]
@@ -163,169 +164,62 @@
           i,
           base,
           3.5,
-          colorsdark[(infos[i].key + (infos[i].base | infos[i].root) + theme) % 12],
+          colorsdark[(infos[i].key + infos[i].base + theme) % 12],
           yes
         )
         renderLinePiece(
           i,
           base,
           1.5,
-          colors[(infos[i].key + (infos[i].base | infos[i].root) + theme) % 12],
+          colors[(infos[i].key + infos[i].base + theme) % 12],
           yes
         )
       }
-      renderCover(1, check([gaps[1][1], gaps[1][1], gaps[2][1]]), no)
-      renderCover(1, check([gaps[1][2] + 7, gaps[1][2] + 7, gaps[2][2] + 7]), yes)
-      renderCover(2, check([for points in gaps (points[1])]), no)
-      renderCover(2, check([for points in gaps (points[2] + 7)]), yes)
-      renderCover(3, check([gaps[2][1], gaps[3][1], gaps[3][1]]), no)
-      renderCover(3, check([gaps[2][2] + 7, gaps[3][2] + 7, gaps[3][2] + 7]), yes)
+      for extList, i in exts
+        for ext in extList
+          renderLinePiece(i, ext, 2, 'white', yes)
+      for i in [1, 2, 3] {
+        renderCover(
+          i,
+          [
+            for j in [-1, 0, 1]
+              (
+                if infos[i].range[1] % 2 = 2 then
+                  gaps[i + j][1] | 0
+                else
+                  gaps[i + j][2] | 0
+              ) + floor(infos[i].range[1] / 2) * 7
+          ],
+          no
+        )
+        renderCover(
+          i,
+          [
+            for j in [-1, 0, 1]
+              (
+                if infos[i].range[2] % 2 = 2 then
+                  gaps[i + j][1] | 0
+                else
+                  gaps[i + j][2] | 0
+              ) + floor(infos[i].range[2] / 2) * 7
+          ],
+          yes
+        )
+      }
     ]
   ]
 
-  piece: [
-    [
-      key: 0
-      chord: [1, 5]
-      root: 1
-      base: 2
-    ]
-    [
-      key: 0
-      chord: [1, 5]
-      root: 1
-      base: 2
-    ]
-    [
-      key: 1
-      chord: [0, 6]
-      root: 3
-    ]
-    [
-      key: 1
-      chord: [0, 6]
-      root: 3
-    ]
-    [
-      key: 1
-      chord: [1, 5]
-      root: 4
-    ]
-    [
-      key: 1
-      chord: [1, 5]
-      root: 4
-    ]
-    [
-      key: 2
-      chord: [0, 6]
-      root: 2
-      base: 0
-    ]
-    [
-      key: 2
-      chord: [0, 6]
-      root: 2
-      base: 0
-    ]
-    [
-      key: 2
-      chord: [1, 5]
-      root: 1
-      base: 2
-    ]
-    [
-      key: 2
-      chord: [1, 5]
-      root: 1
-      base: 2
-    ]
-    [
-      key: 2
-      chord: [0, 6]
-      root: 9
-    ]
-    [
-      key: 2
-      chord: [0, 6]
-      root: 9
-    ]
-    [
-      key: 2
-      chord: [1, 5]
-      root: 1
-      base: 2
-    ]
-    [
-      key: 2
-      chord: [1, 5]
-      root: 1
-      base: 2
-    ]
-    [
-      key: 3
-      chord: [0, 6]
-      root: 6
-    ]
-    [
-      key: 3
-      chord: [0, 6]
-      root: 6
-    ]
-    [
-      key: 2
-      chord: [0, 4]
-      root: 0
-    ]
-    [
-      key: 2
-      chord: [0, 4]
-      root: 0
-    ]
-    [
-      key: 2
-      chord: [1, 5]
-      root: 1
-      base: 5
-    ]
-    [
-      key: 2
-      chord: [1, 5]
-      root: 1
-      base: 5
-    ]
-    [
-      key: 2
-      chord: [0, 4]
-      root: 3
-    ]
-    [
-      key: 2
-      chord: [0, 4]
-      root: 3
-    ]
-    [
-      key: 0
-      chord: [0, 5]
-      root: 3
-    ]
-    [
-      key: 0
-      chord: [0, 5]
-      root: 3
-    ]
-  ]
   ~
   [
     pad: 50
     flow: 'row'
     style: ['flex-wrap': 'wrap']
     ~
-    for p, i in piece
+    for p, i in data
       renderBar([
-        if i = 1 then p else piece[i - 1]
+        if i = 1 then p else data[i - 1]
         p
-        if i = len(piece) then p else piece[i + 1]
+        if i = len(data) then p else data[i + 1]
       ])
   ]
 }

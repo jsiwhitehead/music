@@ -1,5 +1,6 @@
 import maraca, { effect } from "./maraca";
 import render from "./render";
+import getPiece from "./getPiece";
 
 import "./style.css";
 
@@ -21,11 +22,32 @@ const source = Object.keys(app).reduce((res, k) => {
   return res;
 }, {});
 
+// GOD ONLY KNOWS
+// D/A D/A Bm6 Bm6
+// F#m F#m7 B/A B/A
+// E/B E/B Cdim7 Cdim7
+// E/B E/B Bbm7b5 Bbm7b5
+// A A E/G# E/G#
+// F#m7 F#m7 Em9 Em9
+
+// MY FOOLISH HEART
+// Bbmaj7 Ebmaj7 D-7 G7 C-7 C-7/Bb A7sus4 A7
+// D-7 D7#9 G-7 Db7 C-7 C-7 C-7b5 F7b9
+// Bbmaj7 Bbmaj7 F-9 Bb+7 Ebmaj7 Ebmaj7 A-7b5 D7
+// G-7 D7#9 G-7 C7 C-7 G+7 C-7 F7
+
 const compiled = maraca(
   {
+    data: getPiece(`
+      E/B Bbm7b5
+    `),
     isBlock: (x) => x.__type === "block",
-    len: (block) => block.items.length,
+    len: (block) => (Array.isArray(block) ? block.length : block.items.length),
     floor: (num) => Math.floor(num),
+    includes: (block, value) =>
+      Array.isArray(block)
+        ? block.includes(value)
+        : block.items.includes(value),
     getKey: (key, offset) => {
       const k = mod(key, 1) === 0.5 ? key - 0.5 : key;
       let gaps = [mod((k + 1) * 4, 7), mod((k + 2) * 4, 7)].sort(
