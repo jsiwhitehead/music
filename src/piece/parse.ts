@@ -7,11 +7,15 @@ const sum = (x) => x.reduce((a, b) => a + b, 0);
 
 const grammar = String.raw`Chord {
 
+  piece
+    = space* listOf<chord, space+> space*
+
   chord
   	= note ext* ("/" note)?
 
   ext
-  	= "7" -- seven
+  	= "6" -- six
+    | "7" -- seven
     | "maj" ("7")? -- major
     | ("m" | "-") ("6" | "7" | "9")? -- minor
     | "b" ("5" | "9") -- flat
@@ -48,6 +52,8 @@ const getChord = (notes) => {
 };
 
 s.addAttribute("ast", {
+  piece: (_1, a, _2) => a.ast,
+
   chord: (a, b, _1, c) => {
     const notes = b.ast.reduce((res, x) => [...res, ...x], [0]);
     const base = c.ast[0] !== undefined ? modDist(a.ast, c.ast[0]) : 0;
@@ -55,6 +61,7 @@ s.addAttribute("ast", {
     if (!notes.includes(6) && !notes.includes(-4)) notes.push(1);
     if (!notes.includes(-3) && !notes.includes(-1)) notes.push(4);
     return {
+      name: a.sourceString + b.sourceString + c.sourceString,
       key: a.ast,
       ...getChord(notes),
       root: 0,
@@ -62,6 +69,7 @@ s.addAttribute("ast", {
     };
   },
 
+  ext_six: (_1) => [3],
   ext_seven: (_1) => [-2],
   ext_minor: (_1, a) =>
     ({
@@ -104,15 +112,6 @@ s.addAttribute("ast", {
   _terminal: () => null,
 });
 
-const parseChord = (chord) => {
-  const m = g.match(chord);
-  if (m.failed()) {
-    console.error(m.message);
-    throw new Error("Parser error");
-  }
-  return s(m).ast;
-};
-
 const getStartKey = (chords) => {
   const initial = [] as any[];
   let i = 0;
@@ -133,11 +132,14 @@ const getStartKey = (chords) => {
   return mod(chords[0].key + chords[0].chord[0], 12);
 };
 
-export default (info) => {
-  const chords = info
-    .trim()
-    .split(/\s+/g)
-    .map((s) => parseChord(s));
+export default (piece) => {
+  const m = g.match(piece);
+  if (m.failed()) {
+    console.error(m.message);
+    throw new Error("Parser error");
+  }
+
+  const chords = s(m).ast;
   let currentKey = getStartKey(chords);
   const adjustKeys = chords.map((chord) => {
     if (!chord.chord) {
@@ -147,11 +149,12 @@ export default (info) => {
       currentKey = options[index];
       const diff = chord.key - currentKey;
       return {
+        name: chord.name,
         key: currentKey,
         chord: [0, 6],
-        ext: chord.ext.map((x) => mod(x + diff, 12)),
         root: mod(chord.root + diff, 12),
         base: mod(chord.base + diff, 12),
+        ext: chord.ext.map((x) => mod(x + diff, 12)),
       };
     }
     const min = mod(chord.key + chord.chord[0], 12);
@@ -160,17 +163,14 @@ export default (info) => {
     if (modDist(currentKey + 6, max) > 0) currentKey = mod(max - 6, 12);
     const diff = chord.key - currentKey;
     return {
+      name: chord.name,
       key: currentKey,
       chord: [mod(chord.chord[0] + diff, 12), mod(chord.chord[1] + diff, 12)],
-      ext: chord.ext.map((x) => mod(x + diff, 12)),
       root: mod(chord.root + diff, 12),
       base: mod(chord.base + diff, 12),
+      ext: chord.ext.map((x) => mod(x + diff, 12)),
     };
   });
-
-  Math.round(
-    sum(adjustKeys.map((c) => Math.sin(c.key * (Math.PI / 6)))) * 100
-  ) / 100;
 
   const averageKey =
     Math.round(
@@ -184,43 +184,8 @@ export default (info) => {
       ) /
         (Math.PI / 6)
     ) + 6;
-  const normedKeys = adjustKeys.map((chord) => ({
+  return adjustKeys.map((chord) => ({
     ...chord,
     key: mod(chord.key - averageKey, 12),
   }));
-
-  let baseline = 0;
-  let offset = false;
-  return normedKeys.map((chord, i) => {
-    if (i === 0) {
-      return { ...chord, baseline, alt: false, range: [0, 3] };
-    }
-    const diff = modDist(normedKeys[i - 1].key, chord.key);
-    if (diff === 6) {
-      offset = !offset;
-    } else if (diff === -5) {
-      baseline += 0.5;
-      offset = !offset;
-    } else if (diff === 5) {
-      baseline -= 0.5;
-      offset = !offset;
-    } else {
-      baseline += diff * 0.5;
-    }
-    return {
-      ...chord,
-      baseline: offset
-        ? Math.floor(baseline - 0.5) + 0.5
-        : Math.floor(baseline),
-      alt: mod(baseline + (offset ? 0.5 : 0), 1) === 0.5,
-      range: [0, 3],
-    };
-  });
 };
-
-// gaps: [
-//   for info in infos [
-//     info.baseline + 0.5
-//     info.baseline + (if info.alt then 4.5 else 3.5)
-//   ]
-// ]

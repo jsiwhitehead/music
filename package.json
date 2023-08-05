@@ -6,7 +6,8 @@
   "dependencies": {
     "@preact/signals-core": "1.2.3",
     "@svgdotjs/svg.js": "^3.2.0",
-    "ohm-js": "^17.1.0"
+    "ohm-js": "^17.1.0",
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "vite": "^4.4.8"

@@ -1,8 +1,21 @@
+import webfont from "webfontloader";
+
 import maraca, { effect } from "./maraca";
 import render from "./render";
-import getPiece from "./getPiece";
+import getPiece from "./piece";
 
 import "./style.css";
+
+webfont.load({
+  google: {
+    families: [
+      "Atkinson Hyperlegible",
+      "Atkinson Hyperlegible:italic",
+      "Atkinson Hyperlegible:bold",
+      "Atkinson Hyperlegible:bolditalic",
+    ],
+  },
+});
 
 const mod = (x, n) => ((x % n) + n) % n;
 
@@ -36,10 +49,21 @@ const source = Object.keys(app).reduce((res, k) => {
 // Bbmaj7 Bbmaj7 F-9 Bb+7 Ebmaj7 Ebmaj7 A-7b5 D7
 // G-7 D7#9 G-7 C7 C-7 G+7 C-7 F7
 
+// VERY EARLY
+// Amaj7 G7 Cmaj7 F7 Bbmaj7 E7 Amaj7 G7#11
+// Bbmaj7 F#-7 D#-7 G#7b9 C#-9 F7 Bbmaj7 E7
+
+// BLUES FOR ALICE
+// F6 F6 E-7 A7b9 D-7 G7 C-7 F7
+// Bb7 Bb7 Bb-7 Eb7 A-7 D7 Ab-7 Db7
+// G-7 G-7 C7 C7 A-7 D-7 G-7 C7
+
 const compiled = maraca(
   {
     data: getPiece(`
-      E/B Bbm7b5
+    F6 F6 E-7 A7b9 D-7 G7 C-7 F7
+    Bb7 Bb7 Bb-7 Eb7 A-7 D7 Ab-7 Db7
+    G-7 G-7 C7 C7 A-7 D-7 G-7 C7
     `),
     isBlock: (x) => x.__type === "block",
     len: (block) => (Array.isArray(block) ? block.length : block.items.length),
