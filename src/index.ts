@@ -35,36 +35,41 @@ const source = Object.keys(app).reduce((res, k) => {
   return res;
 }, {});
 
-// GOD ONLY KNOWS
-// D/A D/A Bm6 Bm6
-// F#m F#m7 B/A B/A
-// E/B E/B Cdim7 Cdim7
-// E/B E/B Bbm7b5 Bbm7b5
-// A A E/G# E/G#
-// F#m7 F#m7 Em9 Em9
-
-// MY FOOLISH HEART
-// Bbmaj7 Ebmaj7 D-7 G7 C-7 C-7/Bb A7sus4 A7
-// D-7 D7#9 G-7 Db7 C-7 C-7 C-7b5 F7b9
-// Bbmaj7 Bbmaj7 F-9 Bb+7 Ebmaj7 Ebmaj7 A-7b5 D7
-// G-7 D7#9 G-7 C7 C-7 G+7 C-7 F7
-
-// VERY EARLY
-// Amaj7 G7 Cmaj7 F7 Bbmaj7 E7 Amaj7 G7#11
-// Bbmaj7 F#-7 D#-7 G#7b9 C#-9 F7 Bbmaj7 E7
-
-// BLUES FOR ALICE
-// F6 F6 E-7 A7b9 D-7 G7 C-7 F7
-// Bb7 Bb7 Bb-7 Eb7 A-7 D7 Ab-7 Db7
-// G-7 G-7 C7 C7 A-7 D-7 G-7 C7
-
-const compiled = maraca(
-  {
-    data: getPiece(`
+const songs = {
+  GodOnlyKnows: `
+    D/A D/A Bm6 Bm6
+    F#m F#m7 B/A B/A
+    E/B E/B Cdim7 Cdim7
+    E/B E/B Bbm7b5 Bbm7b5
+    A A E/G# E/G#
+    F#m7 F#m7 Em9 Em9
+  `,
+  CircleOfLife: `
+    Bb Cm7/Bb F/A Bb
+    Gm Cm Ab F
+    Bb Bb Ab/Bb Ab/Bb Eb Eb F F
+    Bb/D G7 Cm Ebm6/Gb Bb Bb F F7 Eb/Bb Bb Bb
+  `,
+  MyFoolishHeart: `
+    Bbmaj7 Ebmaj7 D-7 G7 C-7 C-7/Bb A7sus4 A7
+    D-7 D7#9 G-7 Db7 C-7 C-7 C-7b5 F7b9
+    Bbmaj7 Bbmaj7 F-9 Bb+7 Ebmaj7 Ebmaj7 A-7b5 D7
+    G-7 D7#9 G-7 C7 C-7 G+7 C-7 F7
+  `,
+  VeryEarly: `
+    Amaj7 G7 Cmaj7 F7 Bbmaj7 E7 Amaj7 G7#11
+    Bbmaj7 F#-7 D#-7 G#7b9 C#-9 F7 Bbmaj7 E7
+  `,
+  BluesForAlice: `
     F6 F6 E-7 A7b9 D-7 G7 C-7 F7
     Bb7 Bb7 Bb-7 Eb7 A-7 D7 Ab-7 Db7
     G-7 G-7 C7 C7 A-7 D-7 G-7 C7
-    `),
+  `,
+};
+
+const compiled = maraca(
+  {
+    data: getPiece(songs.MyFoolishHeart),
     isBlock: (x) => x.__type === "block",
     len: (block) => (Array.isArray(block) ? block.length : block.items.length),
     floor: (num) => Math.floor(num),
@@ -115,7 +120,7 @@ const compiled = maraca(
       return k2 + [-2, 0, 2, -3, -1, 1, 3][mod(note - start - 0.5, 7)] + 7;
     },
     sort: (x) => ({ ...x, items: [...x.items].sort((a, b) => a - b) }),
-    check: (x) => x,
+    check: (x) => console.log(x),
   },
   source
 );

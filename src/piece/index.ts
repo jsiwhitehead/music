@@ -6,7 +6,8 @@ const getRange = (a, b) =>
   Array.from({ length: b - a + 1 }).map((_, i) => i + a);
 const halfFloor = (x, alt) => (alt ? Math.floor(x - 0.5) + 0.5 : Math.floor(x));
 
-const getClosest = (note, roots) => {
+const getClosest = (note, rootsIn) => {
+  const roots = [...rootsIn];
   const dists = roots.map((r) =>
     Math.abs(r - note - Math.round((r - note) / 7) * 7)
   );
@@ -92,10 +93,18 @@ export default (info) => {
     }
     range = [offset, offset + 3];
 
+    const base = getClosest(getPos(chord.base), roots);
+    const lowest =
+      (offset % 2 === 0 ? chord.white[0] : chord.white[1]) +
+      Math.floor(offset / 2) * 7 +
+      0.5;
+    // console.log(chord.name, lowest, base);
+    if (base < lowest) range = [range[0] - 1, range[0] + 2];
+
     return {
       ...chord,
       roots,
-      base: getClosest(getPos(chord.base), roots),
+      base,
       ext: chord.ext.map((x) => getClosest(getPos(x), roots)),
       range,
     };

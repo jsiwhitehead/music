@@ -56,10 +56,10 @@ s.addAttribute("ast", {
 
   chord: (a, b, _1, c) => {
     const notes = b.ast.reduce((res, x) => [...res, ...x], [0]);
-    const base = c.ast[0] !== undefined ? modDist(a.ast, c.ast[0]) : 0;
-    notes.push(base);
     if (!notes.includes(6) && !notes.includes(-4)) notes.push(1);
     if (!notes.includes(-3) && !notes.includes(-1)) notes.push(4);
+    const base = c.ast[0] !== undefined ? modDist(a.ast, c.ast[0]) : 0;
+    notes.push(base);
     return {
       name: a.sourceString + b.sourceString + c.sourceString,
       key: a.ast,
