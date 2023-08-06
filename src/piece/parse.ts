@@ -16,8 +16,9 @@ const grammar = String.raw`Chord {
   ext
   	= "6" -- six
     | "7" -- seven
+    | "13" -- thirteen
     | "maj" ("7")? -- major
-    | ("m" | "-") ("6" | "7" | "9")? -- minor
+    | ("m" | "-") ("6" | "7" | "9" | "11")? -- minor
     | "b" ("5" | "9") -- flat
     | "#" ("9" | "11") -- sharp
     | "+" -- augmented
@@ -64,19 +65,20 @@ s.addAttribute("ast", {
       name: a.sourceString + b.sourceString + c.sourceString,
       key: a.ast,
       ...getChord(notes),
-      root: 0,
       base: base,
     };
   },
 
   ext_six: (_1) => [3],
   ext_seven: (_1) => [-2],
+  ext_thirteen: (_1) => [-2, 3],
   ext_minor: (_1, a) =>
     ({
       "": [-3],
       "6": [-3, 3],
       "7": [-3, -2],
       "9": [-3, -2, 2],
+      "11": [-3, -2, -1],
     }[a.sourceString]),
   ext_major: (_1, a) =>
     ({
@@ -112,26 +114,6 @@ s.addAttribute("ast", {
   _terminal: () => null,
 });
 
-const getStartKey = (chords) => {
-  const initial = [] as any[];
-  let i = 0;
-  while (i < chords.length) {
-    if (chords[i].chord) {
-      for (let j = chords[i].chord[0]; j < chords[i].chord[1]; j++) {
-        initial[mod(chords[i].key + j, 12)] = true;
-      }
-      const full = Array.from({ length: 12 })
-        .map((_, x) => x)
-        .filter((x) =>
-          Array.from({ length: 6 }).every((_, y) => initial[mod(x + y, 12)])
-        );
-      if (full.length > 0) return full[0];
-    }
-    i++;
-  }
-  return mod(chords[0].key + chords[0].chord[0], 12);
-};
-
 export default (piece) => {
   const m = g.match(piece);
   if (m.failed()) {
@@ -140,51 +122,42 @@ export default (piece) => {
   }
 
   const chords = s(m).ast;
-  let currentKey = getStartKey(chords);
-  const adjustKeys = chords.map((chord) => {
-    if (!chord.chord) {
-      const options = [-3, 0, 3, 6].map((x) => mod(chord.key + x, 12));
-      const diffs = options.map((x) => Math.abs(modDist(x, currentKey)));
-      const index = diffs.indexOf(Math.min(...diffs));
-      currentKey = options[index];
-      const diff = chord.key - currentKey;
-      return {
-        name: chord.name,
-        key: currentKey,
-        chord: [0, 6],
-        root: mod(chord.root + diff, 12),
-        base: mod(chord.base + diff, 12),
-        ext: chord.ext.map((x) => mod(x + diff, 12)),
-      };
+
+  let mid;
+  const withDiminished = chords.map((chord) => {
+    if (chord.chord) {
+      mid = chord.key + (chord.chord[0] + chord.chord[1]) / 2;
+      return chord;
     }
-    const min = mod(chord.key + chord.chord[0], 12);
-    const max = mod(chord.key + chord.chord[1], 12);
-    if (modDist(currentKey, min) < 0) currentKey = mod(min, 12);
-    if (modDist(currentKey + 6, max) > 0) currentKey = mod(max - 6, 12);
-    const diff = chord.key - currentKey;
+    const options = [0, 3, 6, 9].map((x) => mod(chord.key + x + 3, 12));
+    const diffs = options.map((x) => Math.abs(modDist(x, mid ?? x)));
+    const index = diffs.indexOf(Math.min(...diffs));
     return {
       name: chord.name,
-      key: currentKey,
-      chord: [mod(chord.chord[0] + diff, 12), mod(chord.chord[1] + diff, 12)],
-      root: mod(chord.root + diff, 12),
-      base: mod(chord.base + diff, 12),
-      ext: chord.ext.map((x) => mod(x + diff, 12)),
+      key: chord.key,
+      chord: [
+        [0, 6],
+        [3, 9],
+        [-6, 0],
+        [-3, 3],
+      ][index],
+      base: 0,
+      ext: [],
     };
   });
 
+  const keyAngles = withDiminished.map(
+    (c) => (c.key + (c.chord[0] + c.chord[1]) / 2) * (Math.PI / 6)
+  );
   const averageKey =
     Math.round(
       Math.atan2(
-        Math.round(
-          sum(adjustKeys.map((c) => Math.sin(c.key * (Math.PI / 6)))) * 100
-        ),
-        Math.round(
-          sum(adjustKeys.map((c) => Math.cos(c.key * (Math.PI / 6)))) * 100
-        )
+        Math.round(sum(keyAngles.map((a) => Math.sin(a))) * 100),
+        Math.round(sum(keyAngles.map((a) => Math.cos(a))) * 100)
       ) /
         (Math.PI / 6)
-    ) + 6;
-  return adjustKeys.map((chord) => ({
+    ) + 3;
+  return withDiminished.map((chord) => ({
     ...chord,
     key: mod(chord.key - averageKey, 12),
   }));

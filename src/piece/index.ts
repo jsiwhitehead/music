@@ -1,112 +1,206 @@
 import parse from "./parse";
 
 const mod = (x, n) => ((x % n) + n) % n;
-const modDist = (a, b) => mod(b - a + 5, 12) - 5;
-const getRange = (a, b) =>
-  Array.from({ length: b - a + 1 }).map((_, i) => i + a);
-const halfFloor = (x, alt) => (alt ? Math.floor(x - 0.5) + 0.5 : Math.floor(x));
+const getRange = (start, end) =>
+  Array.from({ length: end - start + 1 }).map((_, i) => i + start);
 
-const getClosest = (note, rootsIn) => {
-  const roots = [...rootsIn];
+const convert = (note) => mod(note * 7, 12);
+
+const getEnds = (start, length) => [start, start + length];
+const mid = ([start, end]: any) => (start + end) / 2;
+
+const getClosest = (note, roots) => {
   const dists = roots.map((r) =>
-    Math.abs(r - note - Math.round((r - note) / 7) * 7)
+    Math.abs(r - note - Math.round((r - note) / 12) * 12)
   );
   const close = roots[dists.indexOf(Math.min(...dists))];
-  return note + Math.round((close - note) / 7) * 7;
+  return note + Math.round((close - note) / 12) * 12;
 };
 
 export default (info) => {
   const chords = parse(info);
 
-  let baseline = 0;
-  let offset = false;
-  const withGaps = chords.map((chord, i) => {
-    if (i > 0) {
-      const diff = modDist(chords[i - 1].key, chord.key);
-      if (diff === 6) {
-        offset = !offset;
-      } else if (diff === -5) {
-        baseline += 0.5;
-        offset = !offset;
-      } else if (diff === 5) {
-        baseline -= 0.5;
-        offset = !offset;
-      } else {
-        baseline += diff * 0.5;
+  let gaps;
+  const withGaps = chords.map((chord) => {
+    let current = [
+      getEnds(
+        convert(chord.key + chord.chord[1] - 1) + 0.5,
+        Math.floor((7 - (chord.chord[1] - chord.chord[0])) / 2) * 2
+      ),
+      getEnds(
+        convert(chord.key + chord.chord[1]) + 0.5,
+        Math.floor((6 - (chord.chord[1] - chord.chord[0])) / 2) * 2
+      ),
+    ].sort((a, b) => a[0] - b[0]);
+    if (!gaps) {
+      gaps = current;
+    } else {
+      const dir =
+        mid(gaps[0]) - mid(current[0]) + (mid(gaps[1]) - mid(current[1])) > 0
+          ? 1
+          : -1;
+      while (true) {
+        const next =
+          dir === 1
+            ? [current[1], current[0].map((x) => x + 12)]
+            : [current[1].map((x) => x - 12), current[0]];
+
+        const dists1 = [
+          Math.abs(mid(gaps[0]) - mid(next[0])),
+          Math.abs(mid(gaps[1]) - mid(next[1])),
+        ];
+        const dists2 = [
+          Math.abs(mid(gaps[0]) - mid(current[0])),
+          Math.abs(mid(gaps[1]) - mid(current[1])),
+        ];
+        if (
+          (dists1[0] + dists1[1] - (dists2[0] + dists2[1]) ||
+            mod(gaps[0][0] - next[0][0], 2) -
+              mod(gaps[0][0] - current[0][0], 2) ||
+            Math.abs(dists1[0] - dists1[1]) - Math.abs(dists2[0] - dists2[1])) <
+          0
+        ) {
+          current = next;
+        } else {
+          break;
+        }
       }
+      gaps = current;
     }
     return {
       ...chord,
-      alt: mod(baseline + (offset ? 0.5 : 0), 1) === 0.5,
-      white: [
-        halfFloor(baseline, offset) - 0.5,
-        halfFloor(baseline + 3.5, offset) - 0.5,
-      ],
-      grey: [
-        getRange(
-          halfFloor(baseline + (chord.chord[1] - 6) / 2, offset),
-          halfFloor(baseline + chord.chord[0] / 2, offset)
-        ).map((x) => x - 0.5),
-        getRange(
-          halfFloor(baseline + 3.5 + (chord.chord[1] - 6) / 2, offset),
-          halfFloor(baseline + 3.5 + chord.chord[0] / 2, offset)
-        ).map((x) => x - 0.5),
-      ],
+      gaps,
+      lines: getRange(chord.chord[0] + 2, chord.chord[1] - 2).map((x) =>
+        convert(chord.key + x)
+      ),
     };
   });
 
   let roots;
-  let range = [0, 3];
-  return withGaps.map((chord, i) => {
-    const getPos = (fifth) =>
-      chord.white[0] +
-      0.5 +
-      (chord.alt
-        ? [0, 4, 1, 5, 2, 6, 3, 0.5, 4.5, 1.5, 5.5, 2.5]
-        : [3, 0, 4, 1, 5, 2, 6, 3.5, 0.5, 4.5, 1.5, 5.5])[fifth];
+  const withNotes = withGaps.map((chord) => {
     let current = [
-      getPos(chord.root),
-      getPos(chord.ext.includes(10) ? 10 : mod(chord.root + 1, 7)),
+      convert(chord.key),
+      convert(
+        chord.key +
+          (chord.ext.includes(-4)
+            ? -4
+            : chord.chord[0] >= 1 || chord.chord[1] <= 0
+            ? 6
+            : 1)
+      ),
     ].sort((a, b) => a - b);
-    let offset = 0;
-    if (i === 0) {
+    if (!roots) {
       roots = current;
     } else {
-      let dist = roots[0] - current[0] + (roots[1] - current[1]);
-      let dir = dist > 0 ? 1 : -1;
+      const dir = roots[0] - current[0] + (roots[1] - current[1]) > 0 ? 1 : -1;
       while (true) {
         const next =
           dir === 1
-            ? [current[1], current[0] + 7]
-            : [current[1] - 7, current[0]];
+            ? [current[1], current[0] + 12]
+            : [current[1] - 12, current[0]];
         if (
-          Math.abs(roots[0] - next[0]) + Math.abs(roots[1] - next[1]) <
-          Math.abs(roots[0] - current[0]) + Math.abs(roots[1] - current[1])
+          (Math.abs(roots[0] - next[0]) +
+            Math.abs(roots[1] - next[1]) -
+            (Math.abs(roots[0] - current[0]) +
+              Math.abs(roots[1] - current[1])) ||
+            mod(roots[0] - next[0], 2) - mod(roots[0] - current[0], 2)) < 0
         ) {
           current = next;
-          offset += dir;
         } else {
           break;
         }
       }
       roots = current;
     }
-    range = [offset, offset + 3];
-
-    const base = getClosest(getPos(chord.base), roots);
-    const lowest =
-      (offset % 2 === 0 ? chord.white[0] : chord.white[1]) +
-      Math.floor(offset / 2) * 7 +
-      0.5;
-    // console.log(chord.name, lowest, base);
-    if (base < lowest) range = [range[0] - 1, range[0] + 2];
-
     return {
       ...chord,
       roots,
-      base,
-      ext: chord.ext.map((x) => getClosest(getPos(x), roots)),
-      range,
+      base: getClosest(convert(chord.key + chord.base), roots),
+      ext: chord.ext
+        .map((x) => getClosest(convert(chord.key + x), roots))
+        .sort((a, b) => a - b),
+    };
+  });
+
+  const withRange = withNotes.map((chord, i) => {
+    const notes = [
+      ...chord.roots,
+      chord.base,
+      ...chord.ext,
+      ...(withNotes[i - 1]?.ext || []),
+      ...(withNotes[i + 1]?.ext || []),
+    ].sort((a, b) => a - b);
+    const min = notes[0];
+    const max = notes[notes.length - 1];
+
+    const divides = [mid(chord.gaps[0]), mid(chord.gaps[1])];
+    let first = 0;
+    while (divides[0] > min) {
+      divides.unshift(divides[0] - 12, divides[1] - 12);
+      first -= 2;
+    }
+    while (divides[divides.length - 1] < max) {
+      divides.push(
+        divides[divides.length - 2] + 12,
+        divides[divides.length - 1] + 12
+      );
+    }
+
+    return {
+      ...chord,
+      range: [
+        first + divides.findIndex((d) => d > min) - 1,
+        first + divides.findIndex((d) => d > max),
+      ],
+    };
+  });
+  const withExtraRange = withRange.map((chord, i) => ({
+    ...chord,
+    range: [
+      Math.min(
+        withRange[i - 1]?.range[0] || chord.range[0],
+        chord.range[0],
+        withRange[i + 1]?.range[0] || chord.range[0]
+      ),
+      Math.max(
+        withRange[i - 1]?.range[1] || chord.range[1],
+        chord.range[1],
+        withRange[i + 1]?.range[1] || chord.range[1]
+      ),
+    ],
+  }));
+
+  return withExtraRange.map((chord) => {
+    const bottom =
+      (mod(chord.range[0], 2) === 0 ? mid(chord.gaps[0]) : mid(chord.gaps[1])) +
+      Math.floor(chord.range[0] / 2) * 12;
+    const top =
+      (mod(chord.range[1], 2) === 0 ? mid(chord.gaps[0]) : mid(chord.gaps[1])) +
+      Math.floor(chord.range[1] / 2) * 12;
+
+    const len = chord.ext.length;
+    while (chord.ext[0] > bottom) {
+      chord.ext.unshift(...chord.ext.slice(0, len).map((x) => x - 12));
+    }
+    while (chord.ext[chord.ext.length - 1] < top) {
+      chord.ext.push(...chord.ext.slice(-len).map((x) => x + 12));
+    }
+    const ext = chord.ext.filter((x) => x > bottom && x < top);
+
+    const len2 = chord.lines.length;
+    while (chord.lines[0] > bottom) {
+      chord.lines.unshift(...chord.lines.slice(0, len2).map((x) => x - 12));
+    }
+    while (chord.lines[chord.lines.length - 1] < top) {
+      chord.lines.push(...chord.lines.slice(-len2).map((x) => x + 12));
+    }
+
+    return {
+      ...chord,
+      ext,
+      lines: chord.lines
+        .filter((x) => x > bottom && x < top)
+        .filter((l) => !ext.some((e) => Math.abs(l - e) === 1)),
     };
   });
 };

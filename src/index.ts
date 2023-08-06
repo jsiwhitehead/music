@@ -48,7 +48,7 @@ const songs = {
     Bb Cm7/Bb F/A Bb
     Gm Cm Ab F
     Bb Bb Ab/Bb Ab/Bb Eb Eb F F
-    Bb/D G7 Cm Ebm6/Gb Bb Bb F F7 Eb/Bb Bb Bb
+    Bb/D G7 Cm Ebm6/Gb Bb F7 Eb/Bb Bb
   `,
   MyFoolishHeart: `
     Bbmaj7 Ebmaj7 D-7 G7 C-7 C-7/Bb A7sus4 A7
@@ -65,18 +65,38 @@ const songs = {
     Bb7 Bb7 Bb-7 Eb7 A-7 D7 Ab-7 Db7
     G-7 G-7 C7 C7 A-7 D-7 G-7 C7
   `,
+  WillsPiece: `
+    Gbmaj7 Gbmaj7 Bbmaj7/Eb Bbmaj7/Eb
+    Ebm Ebm Ab13#11 Ab13#11
+    Cm11 Dm D7 Gm7 Gbmaj7b5
+    Bb/F Emaj7b5 Ebm9 Ab13
+    Dbmaj7 Dbmaj7 Fmaj7/Bb Fmaj7/Bb
+    Bbm Bbm Eb13 Eb13
+    Gm11 Am A7 Dm7 Ab7sus4
+    Bb7sus4 Bm7 Amaj7/Db Abm7 Db13
+  `,
 };
 
 const compiled = maraca(
   {
-    data: getPiece(songs.MyFoolishHeart),
+    data: getPiece(songs.VeryEarly),
     isBlock: (x) => x.__type === "block",
-    len: (block) => (Array.isArray(block) ? block.length : block.items.length),
+    len: (block) =>
+      block === null
+        ? null
+        : Array.isArray(block)
+        ? block.length
+        : block.items.length,
     floor: (num) => Math.floor(num),
     includes: (block, value) =>
       Array.isArray(block)
         ? block.includes(value)
         : block.items.includes(value),
+    getRange: (start, end) => ({
+      __type: "block",
+      values: {},
+      items: Array.from({ length: end - start + 1 }).map((_, i) => start + i),
+    }),
     getKey: (key, offset) => {
       const k = mod(key, 1) === 0.5 ? key - 0.5 : key;
       let gaps = [mod((k + 1) * 4, 7), mod((k + 2) * 4, 7)].sort(
@@ -120,7 +140,10 @@ const compiled = maraca(
       return k2 + [-2, 0, 2, -3, -1, 1, 3][mod(note - start - 0.5, 7)] + 7;
     },
     sort: (x) => ({ ...x, items: [...x.items].sort((a, b) => a - b) }),
-    check: (x) => console.log(x),
+    check: (x) => {
+      console.log(x);
+      return x;
+    },
   },
   source
 );
