@@ -37,12 +37,30 @@ const source = Object.keys(app).reduce((res, k) => {
 
 const songs = {
   GodOnlyKnows: `
-    D/A D/A Bm6 Bm6
-    F#m F#m7 B/A B/A
-    E/B E/B Cdim7 Cdim7
-    E/B E/B Bbm7b5 Bbm7b5
-    A A E/G# E/G#
-    F#m7 F#m7 Em9 Em9
+    D/A:
+    D/A: - D C# D
+    Bm6: C# B - F#
+    Bm6: - B
+    F#m: - - - G#
+    F#m7: A G# A C#
+    B/A: - F#+ - A
+    B/A: B C#
+    E/B:
+    E/B: - E D# E
+    Cdim7: F#+ - A B
+    Cdim7: - C
+    E/B: - - - E
+    E/B: - E D# E
+    Bbm7b5: - G#+ - C#
+    Bbm7b5: D# E
+    A:
+    A: C# B C# B
+    E/G#: - - E B
+    E/G#: A - G# E-
+    F#m7: - - F#
+    F#m7:
+    Esus4: E- - - E-
+    Em: F# G
   `,
   CircleOfLife: `
     Bb Cm7/Bb F/A Bb
@@ -51,14 +69,56 @@ const songs = {
     Bb/D G7 Cm Ebm6/Gb Bb F7 Eb/Bb Bb
   `,
   MyFoolishHeart: `
-    Bbmaj7 Ebmaj7 D-7 G7 C-7 C-7/Bb A7sus4 A7
-    D-7 D7#9 G-7 Db7 C-7 C-7 C-7b5 F7b9
-    Bbmaj7 Bbmaj7 F-9 Bb+7 Ebmaj7 Ebmaj7 A-7b5 D7
-    G-7 D7#9 G-7 C7 C-7 G+7 C-7 F7
+    Bbmaj7: F
+    Ebmaj7: - Bb- D- F
+    D-7: G A G
+    G7: - - G
+    C-7: G
+    C-7/Bb: - C- Eb- G
+    A7sus4: A
+    A7: - - A
+    D-7: A
+    D7#9: - D- F A
+    G-7: Bb C Bb
+    Db7: - - Bb
+    C-7: Bb
+    C-7: - Eb- G Bb
+    C-7b5: C
+    F7b9: - - Bb C
+    Bbmaj7: D - - D
+    Bbmaj7: D - C Bb
+    F-9: D - D
+    Bb+7: - - C Bb
+    Ebmaj7: C - C C
+    Ebmaj7: D C A Bb
+    A-7b5: C
+    D7: - - Bb A
+    G-7: Bb - - Bb
+    D7#9: Bb A G A
+    G-7: Bb - Bb
+    C7: - - A G
+    C-7: A - - A
+    G+7: A F G F
+    C-7: A
+    F7: - - G
   `,
   VeryEarly: `
-    Amaj7 G7 Cmaj7 F7 Bbmaj7 E7 Amaj7 G7#11
-    Bbmaj7 F#-7 D#-7 G#7b9 C#-9 F7 Bbmaj7 E7
+    Amaj7: E - - - C#
+    G7: A - G+
+    Cmaj7: E - - - G
+    F7: G# - F#+
+    Bbmaj7: F+ - - - F
+    E7: F# - E
+    Amaj7: C#
+    G7#11: C#
+    Bbmaj7: F+ - - - Bb
+    F#-7: A - A+
+    D#-7: G#+ - - - G#
+    G#7b9: A - F+
+    C#-9: F#+ - - - F#
+    F7: G - G+ - - F+
+    Bbmaj7: D
+    E7: - - A B C# D
   `,
   BluesForAlice: `
     F6 F6 E-7 A7b9 D-7 G7 C-7 F7
@@ -79,7 +139,7 @@ const songs = {
 
 const compiled = maraca(
   {
-    data: getPiece(songs.GodOnlyKnows),
+    data: getPiece(songs.VeryEarly, 6),
     isBlock: (x) => x.__type === "block",
     len: (block) =>
       block === null
@@ -95,9 +155,9 @@ const compiled = maraca(
     getRange: (start, end) => ({
       __type: "block",
       values: {},
-      items: Array.from({ length: (end - start) * 2 + 1 }).map(
-        (_, i) => start + i * 0.5
-      ),
+      items: Array.from({
+        length: (end - start) * 4 - 1,
+      }).map((_, i) => start + 0.25 + i * 0.25),
     }),
     getKey: (key, offset) => {
       const k = mod(key, 1) === 0.5 ? key - 0.5 : key;

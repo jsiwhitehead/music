@@ -17,7 +17,7 @@ const getClosest = (note, roots) => {
   return note + Math.round((close - note) / 12) * 12;
 };
 
-export default (info) => {
+export default (info, time) => {
   const chords = parse(info);
 
   let gaps;
@@ -43,8 +43,8 @@ export default (info) => {
     ];
     const sortedBlocks = [...blocks].sort((a, b) => a[0] - b[0]);
     let current = [
-      [sortedBlocks[0][1] + 0.5, sortedBlocks[1][0] - 0.5],
-      [sortedBlocks[1][1] + 0.5, sortedBlocks[0][0] - 0.5 + 12],
+      [sortedBlocks[0][1], sortedBlocks[1][0]],
+      [sortedBlocks[1][1], sortedBlocks[0][0] + 12],
     ];
     if (!gaps) {
       gaps = current;
@@ -101,13 +101,7 @@ export default (info) => {
       convert(chord.key),
       convert(
         chord.key +
-          (chord.chord === "alt"
-            ? -4
-            : chord.chord === "dim"
-            ? 6
-            : chord.chord[0][0] === 6
-            ? 6
-            : 1)
+          (chord.chord === "alt" ? -4 : chord.chord === "dim" ? 6 : chord.root2)
       ),
     ].sort((a, b) => a - b);
     if (!roots) {
@@ -149,14 +143,13 @@ export default (info) => {
       ...chord.roots,
       chord.base,
       ...chord.ext,
-      ...(withNotes[i - 1]?.ext || []),
-      ...(withNotes[i + 1]?.ext || []),
+      ...chord.melody.filter((x) => x !== null),
     ].sort((a, b) => a - b);
     const min = notes[0];
     const max = notes[notes.length - 1];
 
     if (!Array.isArray(chord.chord)) {
-      return { ...chord, bounds: [min - 2, max + 2] };
+      return { ...chord, bounds: [min - 4, max + 4] };
     }
 
     const divides = [mid(chord.gaps[0]), mid(chord.gaps[1])];
@@ -176,6 +169,7 @@ export default (info) => {
       first + divides.findIndex((d) => d > min) - 1,
       first + divides.findIndex((d) => d > max),
     ];
+    if (range[1] - range[0] === 1) range[1] = range[0] + 2;
     return {
       ...chord,
       range,
@@ -185,18 +179,18 @@ export default (info) => {
     if (!Array.isArray(chord.chord)) return chord;
     return {
       ...chord,
-      range: [
-        Math.min(
-          withRange[i - 1]?.range?.[0] || chord.range[0],
-          chord.range[0],
-          withRange[i + 1]?.range?.[0] || chord.range[0]
-        ),
-        Math.max(
-          withRange[i - 1]?.range?.[1] || chord.range[1],
-          chord.range[1],
-          withRange[i + 1]?.range?.[1] || chord.range[1]
-        ),
-      ],
+      // range: [
+      //   Math.min(
+      //     withRange[i - 1]?.range?.[0] || chord.range[0],
+      //     chord.range[0],
+      //     withRange[i + 1]?.range?.[0] || chord.range[0]
+      //   ),
+      //   Math.max(
+      //     withRange[i - 1]?.range?.[1] || chord.range[1],
+      //     chord.range[1],
+      //     withRange[i + 1]?.range?.[1] || chord.range[1]
+      //   ),
+      // ],
     };
   });
 
@@ -236,25 +230,27 @@ export default (info) => {
 
   const result = withLines.map((chord, i) => {
     const thin1 =
-      chord.gaps && mod(chord.gaps[0][0] - chord.gaps[1][1], 12) === 1;
+      chord.gaps && mod(chord.gaps[0][0] - chord.gaps[1][1], 12) === 0;
     const thin2 =
-      chord.gaps && mod(chord.gaps[1][0] - chord.gaps[0][1], 12) === 1;
+      chord.gaps && mod(chord.gaps[1][0] - chord.gaps[0][1], 12) === 0;
     return {
       ...chord,
       curves: [
-        mod(chord?.gaps?.[0][0] - withLines[i - 1]?.gaps?.[0][0], 2) === 0,
-        mod(chord?.gaps?.[0][0] - withLines[i + 1]?.gaps?.[0][0], 2) === 0,
+        i === 0 ||
+          mod(chord?.gaps?.[0][0] - withLines[i - 1]?.gaps?.[0][0], 2) === 0,
+        i === withLines.length - 1 ||
+          mod(chord?.gaps?.[0][0] - withLines[i + 1]?.gaps?.[0][0], 2) === 0,
       ],
       ...(chord.gaps
         ? {
             gaps: [
               [
-                chord.gaps[0][0] + (thin1 ? 0.5 : 0),
-                chord.gaps[0][1] - (thin2 ? 0.5 : 0),
+                chord.gaps[0][0] + (thin1 ? 0.25 : 0),
+                chord.gaps[0][1] - (thin2 ? 0.25 : 0),
               ],
               [
-                chord.gaps[1][0] + (thin2 ? 0.5 : 0),
-                chord.gaps[1][1] - (thin1 ? 0.5 : 0),
+                chord.gaps[1][0] + (thin2 ? 0.25 : 0),
+                chord.gaps[1][1] - (thin1 ? 0.25 : 0),
               ],
             ],
           }
@@ -262,5 +258,5 @@ export default (info) => {
     };
   });
 
-  return result;
+  return result.map((chord) => ({ ...chord, time }));
 };

@@ -2,10 +2,10 @@
   barWidth: 120
   lineHeight: 6
   barHeight: lineHeight * 40 - 1
-  curveOffset: lineHeight * 1.5
-  noteSize: 7.5
+  curveOffset: lineHeight * 2
+  noteSize: lineHeight * 2 - 1.5
   getX: (x) => barWidth * (x - 2) + curveOffset,
-  getY: (y) => lineHeight * (20 - y) - 1,
+  getY: (y) => lineHeight * (24 - y) - 1,
   oneOf: (x, y) => if x then !y else y,
   renderCurvePiece: (x, y1, y2, width, color) => [
     shape: 'path'
@@ -90,18 +90,27 @@
       fill: '#fafaed'
       size: [barWidth + curveOffset * 2, barHeight]
       ~
-      for info, i in infos [
-        shape: 'rect'
-        fill:
-          if info.chord = 'alt' | info.chord = 'dim' then
-            'grey'
-          else
-            colorsfull[((info.key + info.chordMid) * 2 - 1) % 24]
-        opacity: 0.5
-        ~
-        [getX(i), 0]
-        [barWidth, barHeight]
-      ]
+      for info, i in infos {
+        [
+          shape: 'rect'
+          fill: 'white'
+          ~
+          [getX(i), 0]
+          [barWidth, barHeight]
+        ]
+        [
+          shape: 'rect'
+          fill:
+            if info.chord = 'alt' | info.chord = 'dim' then
+              'rgb(180, 180, 180)'
+            else
+              colorsfull[((info.key + info.chordMid) * 2 - 1) % 24]
+          opacity: 0.5
+          ~
+          [getX(i), 0]
+          [barWidth, barHeight]
+        ]
+      }
       for info, i in infos
         for y in info.lines
           [
@@ -116,11 +125,11 @@
         for level in [-24, -12, 0, 12, 24]
           for info, i in infos
             if info.gaps then {
-              for y in getRange(info.gaps[j][1], info.gaps[j][2])
+              for y in getRange(info.gaps[j][1], info.gaps[j][2]) 
                 renderLinePiece(
                   i,
                   y + level,
-                  lineHeight,
+                  lineHeight / 2,
                   '#fafaed',
                   no,
                   [!info.curves[1], !info.curves[2]]
@@ -128,24 +137,38 @@
               if info.curves[1] then
                 for p1 in getRange(infos[i - 1].gaps[j][1], infos[i - 1].gaps[j][2]) {
                   for p2 in getRange(infos[i].gaps[j][1], infos[i].gaps[j][2])
-                    renderCurvePiece(i - 1, p1 + level, p2 + level, lineHeight, '#fafaed')
+                    renderCurvePiece(i - 1, p1 + level, p2 + level, lineHeight / 2, '#fafaed')
                 }
               if info.curves[2] then
                 for p1 in getRange(infos[i].gaps[j][1], infos[i].gaps[j][2]) {
                   for p2 in getRange(infos[i + 1].gaps[j][1], infos[i + 1].gaps[j][2])
-                    renderCurvePiece(i, p1 + level, p2 + level, lineHeight, '#fafaed')
+                    renderCurvePiece(i, p1 + level, p2 + level, lineHeight / 2, '#fafaed')
                 }
             } else if info.chord = 'dim' then {
-              for y in [0.5, 3.5, 6.5, 9.5]
+              for y in [1.5, 4.5, 7.5, 10.5]
                 renderLinePiece(
                   i,
                   (info.key * 7) % 12 + y + level,
-                  lineHeight,
+                  lineHeight * 2,
                   '#fafaed',
                   no,
                   [yes, yes]
                 )
             }
+      for info, i in infos
+        for ext in info.ext [
+          shape: 'path'
+          stroke: [
+            width: lineHeight / 2
+            color: colorsfull[((info.key + info.chordMid) * 2 - 1) % 24]
+            cap: 'round'
+          ]
+          opacity: 0.5
+          fill: 'none'
+          ~
+          ['M', getX(i) + curveOffset - 1, getY(ext)]
+          ['L', getX(i + 1) - curveOffset + 1, getY(ext)]
+        ]
       for i in [1, 2] [
         shape: 'path'
         stroke: [
@@ -164,9 +187,9 @@
               for j in [-1, 0, 1]
                 (
                   if infos[i].range[1] % 2 = 2 then
-                    infos[i + j].gaps[1][2] | 0
+                    infos[i + j].gaps[1][1] + 0.5 | 0
                   else
-                    infos[i + j].gaps[2][2] | 0
+                    infos[i + j].gaps[2][1] + 0.5 | 0
                 ) + floor(infos[i].range[1] / 2) * 12
             ]
           else
@@ -181,9 +204,9 @@
               for j in [-1, 0, 1]
                 (
                   if infos[i].range[2] % 2 = 2 then
-                    infos[i + j].gaps[1][1] | 0
+                    infos[i + j].gaps[1][2] - 0.5 | 0
                   else
-                    infos[i + j].gaps[2][1] | 0
+                    infos[i + j].gaps[2][2] - 0.5 | 0
                 ) + floor(infos[i].range[2] / 2) * 12
             ]
           else
@@ -219,9 +242,6 @@
           ['l', curveOffset, 0]
         ]
       }
-      for info, i in infos
-        for ext in info.ext
-          renderLinePiece(i, ext, 2, 'white', yes, [no, no])
       for info, i in infos {
         renderLinePiece(
           i,
@@ -240,6 +260,36 @@
           [no, no]
         )
       }
+      for info, i in infos
+        for note, j in info.melody
+          if note then {
+            [
+              shape: 'ellipse'
+              fill: 'black'
+              ~
+              [
+                getX(i) - noteSize / 2 + (j - 0.5) * barWidth / info.time
+                getY(note) - noteSize / 2
+              ]
+              [
+                noteSize
+                noteSize
+              ]
+            ]
+            [
+              shape: 'ellipse'
+              fill: colors[(note * 7) % 12]
+              ~
+              [
+                getX(i) - (noteSize - 4) / 2 + (j - 0.5) * barWidth / info.time
+                getY(note) - (noteSize - 4) / 2
+              ]
+              [
+                noteSize - 4
+                noteSize - 4
+              ]
+            ]
+          }
     ]
   ]
 
