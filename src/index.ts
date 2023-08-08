@@ -79,7 +79,7 @@ const songs = {
 
 const compiled = maraca(
   {
-    data: getPiece(songs.VeryEarly),
+    data: getPiece(songs.GodOnlyKnows),
     isBlock: (x) => x.__type === "block",
     len: (block) =>
       block === null
@@ -95,7 +95,9 @@ const compiled = maraca(
     getRange: (start, end) => ({
       __type: "block",
       values: {},
-      items: Array.from({ length: end - start + 1 }).map((_, i) => start + i),
+      items: Array.from({ length: (end - start) * 2 + 1 }).map(
+        (_, i) => start + i * 0.5
+      ),
     }),
     getKey: (key, offset) => {
       const k = mod(key, 1) === 0.5 ? key - 0.5 : key;
@@ -103,7 +105,6 @@ const compiled = maraca(
         (a, b) => a - b
       );
       gaps = [gaps[1] - 7, gaps[0]];
-      // gaps = [gaps[1] - 7, gaps[0]];
       if (offset > 0) {
         for (let i = 0; i < offset; i++) {
           gaps = [gaps[1] - 7, gaps[0]];
