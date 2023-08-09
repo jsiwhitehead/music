@@ -1,12 +1,9 @@
 import parse from "./parse";
 
 const mod = (x, n) => ((x % n) + n) % n;
-const getRange = (start, end) =>
-  Array.from({ length: end - start + 1 }).map((_, i) => i + start);
 
 const convert = (note) => mod(note * 7, 12);
 
-const getEnds = (start, length) => [start, start + length];
 const mid = ([start, end]: any) => (start + end) / 2;
 
 const getClosest = (note, roots) => {
@@ -139,12 +136,7 @@ export default (info, time) => {
 
   let range;
   const withRange = withNotes.map((chord, i) => {
-    const notes = [
-      ...chord.roots,
-      chord.base,
-      ...chord.ext,
-      ...chord.melody.filter((x) => x !== null),
-    ].sort((a, b) => a - b);
+    const notes = chord.melody.filter((x) => x !== null).sort((a, b) => a - b);
     const min = notes[0];
     const max = notes[notes.length - 1];
 
