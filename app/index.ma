@@ -4,296 +4,301 @@
   barHeight: lineHeight * 40 - 1
   curveOffset: lineHeight * 2
   noteSize: lineHeight * 1.6
-  getX: (x) => barWidth * (x - 2) + curveOffset,
-  getY: (y) => lineHeight * (24 - y) - 1,
-  oneOf: (x, y) => if x then !y else y,
-  renderCurvePiece: (x, y1, y2, width, color) => [
-    shape: 'path'
-    stroke: [width: width, color: color]
-    fill: 'none'
-    ~
-    ['M', getX(x + 1) - curveOffset, getY(y1)]
-    ['c'
-      curveOffset, 0, ','
-      curveOffset, lineHeight * (y1 - y2), ','
-      curveOffset * 2, lineHeight * (y1 - y2)
-    ]
-  ]
-  renderLinePiece: (x, y, width, color, round, full) => [
-    shape: 'path'
-    stroke: [width: width, color: color, cap: if round then 'round']
-    fill: 'none'
-    ~
-    ['M', getX(x) + (if full[1] then 0 else curveOffset), getY(y)]
-    ['L', getX(x + 1) - (if full[2] then 0 else curveOffset), getY(y)]
-  ]
-  renderCover: (bar, points, isCurve, top) => [
-    shape: 'path'
-    fill: '#fafaed'
-    ~
-    ['M'
-      getX(bar) - 1
-      if top then 0 else barHeight
-    ]
-    ['l'
-      barWidth + 2
-      0
-    ]
-    if isCurve[2] then {
-      ['L'
-        getX(bar + 1) + 1
-        getY((points[2] + points[3]) / 2)
-      ]
-      ['L'
-        getX(bar + 1) - curveOffset
-        getY(points[2])
-      ]
-    } else {
-      ['L'
-        getX(bar + 1) + 1
-        getY(points[2])
-      ]
-    }
-    if (isCurve[1]) then {
-      ['L'
-        getX(bar) + curveOffset
-        getY(points[2])
-      ]
-      ['L'
-        getX(bar) - 1
-        getY((points[1] + points[2]) / 2)
-      ]
-    } else {
-      ['L'
-        getX(bar) - 1
-        getY(points[2])
-      ]
-    }
-  ]
-  renderBar: (infos) => [
-    fill: '#fafaed'
-    style: [margin: '0px -{curveOffset}px']
-    font: 'Atkinson Hyperlegible'
-    size: 14
+  overlap: lineHeight * 3
+
+  getY: (y) => lineHeight * (24 - y) - 1
+
+  renderCurve: (colour, opacity, stroke, x, dir, ys1, ys2) => {
+    mids: [(ys1[1] + ys2[1]) / 2, (ys1[2] + ys2[2]) / 2]
     ~
     [
-      style: [
-        position: 'relative'
-        top: '{infos[2].range[2] * -2 * lineHeight - 4}px'
-        left: '{curveOffset * 2}px'
+      shape: 'path'
+      fill: colour
+      opacity: opacity
+      stroke: stroke
+      ~
+      ['M'
+        x
+        mids[2]
       ]
-      ~
-      infos[2].name
+      ['c'
+        dir * curveOffset * 0.25, (ys2[2] - mids[2]) / 2, ','
+        dir * curveOffset * 0.5, ys2[2] - mids[2], ','
+        dir * curveOffset, ys2[2] - mids[2]
+      ]
+      ['L'
+        x + dir * curveOffset
+        ys2[1]
+      ]
+      ['c'
+        dir * (-curveOffset * 0.5), 0, ','
+        dir * (-curveOffset * 0.75), (mids[1] - ys2[1]) / 2, ','
+        dir * (-curveOffset), mids[1] - ys2[1]
+      ]
     ]
-    [
-      svg: yes
-      fill: '#fafaed'
-      size: [barWidth + curveOffset * 2, barHeight]
-      ~
-      for info, i in infos {
-        [
-          shape: 'rect'
-          fill: 'white'
+  }
+
+  renderBase: (x, info, blocks1, blocks2) => {
+
+    if info.blocks then
+      for colour in [
+        'white'
+        colorsfull[((info.key + info.chordMid) * 2 - 1) % 24]
+      ]
+        for i in getRange(info.range[1], info.range[2]) {
+          index: (i + 1) % 2
+          offset: 12 * floor(i / 2)
           ~
-          [getX(i), 0]
-          [barWidth, barHeight]
-        ]
-        [
-          shape: 'rect'
-          fill:
-            if info.chord = 'alt' | info.chord = 'dim' then
-              'rgb(180, 180, 180)'
-            else
-              colorsfull[((info.key + info.chordMid) * 2 - 1) % 24]
-          opacity: 0.5
-          ~
-          [getX(i), 0]
-          [barWidth, barHeight]
-        ]
-      }
-      for info, i in infos
-        for y in info.lines
           [
-            shape: 'path'
-            stroke: [width: 1, color: 'white', cap: 'round']
-            opacity: 0.5
+            shape: 'rect'
+            fill: colour
+            opacity: if colour != 'white' then 0.5
             ~
-            ['M', getX(i), getY(y)]
-            ['l', barWidth, 0]
+            [
+              x + (if info.curves[1] then curveOffset else 0)
+              getY(info.blocks[index][2] + offset)
+            ]
+            [
+              barWidth
+                - (if info.curves[1] then curveOffset else 0)
+                - (if info.curves[2] then curveOffset else 0)
+              lineHeight * (info.blocks[index][2] - info.blocks[index][1])
+            ]
           ]
-      for j in [1, 2]
-        for level in [-24, -12, 0, 12, 24]
-          for info, i in infos
-            if info.gaps then {
-              for y in getRange(info.gaps[j][1], info.gaps[j][2]) 
-                renderLinePiece(
-                  i,
-                  y + level,
-                  lineHeight / 2,
-                  '#fafaed',
-                  no,
-                  [!info.curves[1], !info.curves[2]]
-                )
-              if info.curves[1] then
-                for p1 in getRange(infos[i - 1].gaps[j][1], infos[i - 1].gaps[j][2]) {
-                  for p2 in getRange(infos[i].gaps[j][1], infos[i].gaps[j][2])
-                    renderCurvePiece(i - 1, p1 + level, p2 + level, lineHeight / 2, '#fafaed')
-                }
-              if info.curves[2] then
-                for p1 in getRange(infos[i].gaps[j][1], infos[i].gaps[j][2]) {
-                  for p2 in getRange(infos[i + 1].gaps[j][1], infos[i + 1].gaps[j][2])
-                    renderCurvePiece(i, p1 + level, p2 + level, lineHeight / 2, '#fafaed')
-                }
-            } else if info.chord = 'dim' then {
-              for y in [1.5, 4.5, 7.5, 10.5]
-                renderLinePiece(
-                  i,
-                  (info.key * 7) % 12 + y + level,
-                  lineHeight * 2,
-                  '#fafaed',
-                  no,
-                  [yes, yes]
-                )
-            }
-      for info, i in infos
-        for ext in info.ext [
-          shape: 'path'
-          stroke: [
-            width: lineHeight / 2
-            color: colorsfull[((info.key + info.chordMid) * 2 - 1) % 24]
-            cap: 'round'
-          ]
+          if info.curves[1] & blocks1 then
+            renderCurve(
+              colour
+              if colour != 'white' then 0.5
+              no
+              x
+              1
+              [for y in blocks1[index] getY(y + offset)]
+              [for y in info.blocks[index] getY(y + offset)]
+            )
+          if info.curves[2] & blocks2 then
+            renderCurve(
+              colour
+              if colour != 'white' then 0.5
+              no
+              x + barWidth
+              (-1)
+              [for y in blocks2[index] getY(y + offset)]
+              [for y in info.blocks[index] getY(y + offset)]
+            )
+        }
+    else if info.chord = 'aug' then {
+      [
+        shape: 'rect'
+        fill: 'white'
+        ~
+        [
+          x
+          getY(info.bounds[2])
+        ]
+        [
+          barWidth
+          lineHeight * (info.bounds[2] - info.bounds[1])
+        ]
+      ]
+      for y in getRange(1, (info.bounds[2] - info.bounds[1]) / 2)
+        [
+          shape: 'rect'
+          fill: colorsfull[(((info.bounds[1] + y * 2) * 7) * 2 - 3) % 24]
           opacity: 0.5
+          ~
+          [
+            x
+            getY(info.bounds[1] + y * 2)
+          ]
+          [
+            barWidth
+            lineHeight * 2
+          ]
+        ]
+    }
+
+    for y in info.lines [
+      shape: 'path'
+      stroke: [width: 1, color: 'white', cap: 'round']
+      opacity: 0.5
+      ~
+      ['M', x, getY(y)]
+      ['l', barWidth, 0]
+    ]
+
+    for y in info.ext
+      for colour in [
+        'white'
+        colorsfull[((y * 7) * 2 - 1) % 24]
+      ]
+        if info.chord = 'dim' then [
+          shape: 'rect'
+          fill: colour
+          opacity: if colour != 'white' then 0.5
+          ~
+          [
+            x
+            getY(y + 0.25)
+          ]
+          [
+            barWidth
+            lineHeight / 2
+          ]
+        ] else [
+          shape: 'path'
+          stroke: [width: lineHeight / 2, color: colour, cap: 'round']
+          opacity: if colour != 'white' then 0.5
           fill: 'none'
           ~
-          ['M', getX(i) + curveOffset - 1, getY(ext)]
-          ['L', getX(i + 1) - curveOffset + 1, getY(ext)]
+          ['M', x + curveOffset - 1, getY(y)]
+          ['L', x + barWidth - curveOffset + 1, getY(y)]
         ]
-      for i in [1, 2] [
+
+    for i in [1, 2] [
+      shape: 'path'
+      stroke: [width: 2, color: '#fafaed']
+      ~
+      ['M', x + (i - 1) * barWidth, 0]
+      ['l', 0, barHeight]
+    ]
+
+  }
+
+  renderNotes: (x, info, roots1, roots2) => {
+
+    for i in getRange(info.rootsRange[1], info.rootsRange[2]) {
+      index: (i + 1) % 2
+      offset: 12 * floor(i / 2)
+      ~
+      [
+        shape: 'rect'
+        fill: 'rgb(150, 150, 150)'
+        ~
+        [
+          x + curveOffset
+          getY(info.roots[index] + offset) - 0.75
+        ]
+        [
+          barWidth - curveOffset * 2
+          1.5
+        ]
+      ]
+      if roots1 then
+        if ((roots1[1] - info.roots[1]) % 2 = 2) then
+          renderCurve(
+            no
+            1
+            [width: 1.5, color: 'rgb(150, 150, 150)', cap: 'round']
+            x
+            1
+            [for y in [1, 2] getY(roots1[index] + offset)]
+            [for y in [1, 2] getY(info.roots[index] + offset)]
+          )
+        else [
+          shape: 'path'
+          stroke: [width: 1.5, color: 'rgb(150, 150, 150)', cap: 'round']
+          fill: 'none'
+          ~
+          ['M'
+            x
+            getY((roots1[index] + info.roots[index]) / 2 + offset)
+          ]
+          ['L'
+            x
+            getY(info.roots[index] + offset)
+          ]
+          ['l'
+            curveOffset
+            0
+          ]
+        ]
+      if roots2 then
+        if ((roots2[1] - info.roots[1]) % 2 = 2) then
+          renderCurve(
+            no
+            1
+            [width: 1.5, color: 'rgb(150, 150, 150)', cap: 'round']
+            x + barWidth
+            (-1)
+            [for y in [1, 2] getY(roots2[index] + offset)]
+            [for y in [1, 2] getY(info.roots[index] + offset)]
+          )
+        else [
+          shape: 'path'
+          stroke: [width: 1.5, color: 'rgb(150, 150, 150)', cap: 'round']
+          fill: 'none'
+          ~
+          ['M'
+            x + barWidth
+            getY((roots2[index] + info.roots[index]) / 2 + offset)
+          ]
+          ['L'
+            x + barWidth
+            getY(info.roots[index] + offset)
+          ]
+          ['l'
+            (-curveOffset)
+            0
+          ]
+        ]
+    }
+
+    for base in info.base {
+      [
         shape: 'path'
         stroke: [
-          width: if infos[2].curves[i] then 2 else lineHeight,
-          color: '#fafaed'
+          width: 5
+          color: colorsdark[(base * 7) % 12]
+          cap: 'round'
         ]
         ~
-        ['M', getX(i + 1), 0]
-        ['l', 0, barHeight]
+        ['M', x + curveOffset, getY(base + level)]
+        ['l', barWidth - curveOffset * 2, 0]
       ]
-      for j in [1, 2]
-        for level in [-24, -12, 0, 12, 24] {
-          if (infos[1].roots[j] - infos[2].roots[j]) % 2 = 2 then
-            renderCurvePiece(1, infos[1].roots[j] + level, infos[2].roots[j] + level, 1.5, 'rgb(150, 150, 150)')
-          else [
-            shape: 'path'
-            stroke: [width: 1.5, color: 'rgb(150, 150, 150)']
-            fill: 'none'
-            ~
-            ['M', getX(2) - curveOffset, getY(infos[1].roots[j] + level)]
-            ['l', curveOffset, 0]
-            ['L', getX(2), getY(infos[2].roots[j] + level)]
-            ['l', curveOffset, 0]
+      [
+        shape: 'path'
+        stroke: [
+          width: 2
+          color: colors[(base * 7) % 12]
+          cap: 'round'
+        ]
+        ~
+        ['M', x + curveOffset, getY(base + level)]
+        ['l', barWidth - curveOffset * 2, 0]
+      ]
+    }
+
+    for note, j in info.melody
+      if note then {
+        [
+          shape: 'ellipse'
+          fill: 'black'
+          ~
+          [
+            x - noteSize / 2 + (j - 0.5) * barWidth / info.time
+            getY(note) - noteSize / 2
           ]
-          renderLinePiece(2, infos[2].roots[j] + level, 1.5, 'rgb(150, 150, 150)', no, [no, no])
-          if (infos[2].roots[j] - infos[3].roots[j]) % 2 = 2 then
-            renderCurvePiece(2, infos[2].roots[j] + level, infos[3].roots[j] + level, 1.5, 'rgb(150, 150, 150)')
-          else [
-            shape: 'path'
-            stroke: [width: 1.5, color: 'rgb(150, 150, 150)']
-            fill: 'none'
-            ~
-            ['M', getX(3) - curveOffset, getY(infos[2].roots[j] + level)]
-            ['l', curveOffset, 0]
-            ['L', getX(3), getY(infos[3].roots[j] + level)]
-            ['l', curveOffset, 0]
+          [
+            noteSize
+            noteSize
           ]
-        }
-      for info, i in infos
-        for level in [-24, -12, 0, 12, 24]  {
-          renderLinePiece(
-            i,
-            info.base + level,
-            5,
-            colorsdark[(info.base * 7) % 12],
-            yes
-            [no, no]
-          )
-          renderLinePiece(
-            i,
-            info.base + level,
-            2,
-            colors[(info.base * 7) % 12],
-            yes
-            [no, no]
-          )
-        }
-      for i in [1, 2, 3] {
-        renderCover(
-          i,
-          if infos[i].gaps then
-            [
-              for j in [-1, 0, 1]
-                (
-                  if infos[i].range[1] % 2 = 2 then
-                    infos[i + j].gaps[1][2] - 0.5 | 0
-                  else
-                    infos[i + j].gaps[2][2] - 0.5 | 0
-                ) + floor(infos[i].range[1] / 2) * 12
-            ]
-          else
-            [infos[i].bounds[1], infos[i].bounds[1], infos[i].bounds[1]],
-          infos[i].curves
-          no
-        )
-        renderCover(
-          i,
-          if infos[i].gaps then
-            [
-              for j in [-1, 0, 1]
-                (
-                  if infos[i].range[2] % 2 = 2 then
-                    infos[i + j].gaps[1][1] + 0.5 | 0
-                  else
-                    infos[i + j].gaps[2][1] + 0.5 | 0
-                ) + floor(infos[i].range[2] / 2) * 12
-            ]
-          else
-            [infos[i].bounds[2], infos[i].bounds[2], infos[i].bounds[2]],
-          infos[i].curves
-          yes
-        )
+        ]
+        [
+          shape: 'ellipse'
+          fill: colors[(note * 7) % 12]
+          ~
+          [
+            x - (noteSize - 4) / 2 + (j - 0.5) * barWidth / info.time
+            getY(note) - (noteSize - 4) / 2
+          ]
+          [
+            noteSize - 4
+            noteSize - 4
+          ]
+        ]
       }
-      for info, i in infos
-        for note, j in info.melody
-          if note then {
-            [
-              shape: 'ellipse'
-              fill: 'black'
-              ~
-              [
-                getX(i) - noteSize / 2 + (j - 0.5) * barWidth / info.time
-                getY(note) - noteSize / 2
-              ]
-              [
-                noteSize
-                noteSize
-              ]
-            ]
-            [
-              shape: 'ellipse'
-              fill: colors[(note * 7) % 12]
-              ~
-              [
-                getX(i) - (noteSize - 4) / 2 + (j - 0.5) * barWidth / info.time
-                getY(note) - (noteSize - 4) / 2
-              ]
-              [
-                noteSize - 4
-                noteSize - 4
-              ]
-            ]
-          }
-    ]
-  ]
+
+  }
 
   ~
   [
@@ -302,11 +307,48 @@
     fill: '#fafaed'
     style: ['flex-wrap': 'wrap']
     ~
-    for p, i in data
-      renderBar([
-        if i = 1 then p else data[i - 1]
-        p
-        if i = len(data) then p else data[i + 1]
-      ])
+    for info, i in data [
+      fill: '#fafaed'
+      style: [margin: '0px -{overlap}px']
+      font: 'Atkinson Hyperlegible'
+      size: 14
+      ~
+      [
+        style: [
+          position: 'relative'
+          left: '{curveOffset * 2}px'
+        ]
+        ~
+        info.name
+      ]
+      [
+        svg: yes
+        fill: '#fafaed'
+        size: [barWidth + overlap * 2, barHeight]
+        ~
+        {
+          bars: [
+            if i = 1 then data[i] else data[i - 1]
+            data[i]
+            if i = len(data) then data[i] else data[i + 1]
+          ]
+          ~
+          for bar, i in bars
+            renderBase(
+              overlap + (i - 2) * barWidth
+              bar,
+              bars[i - 1].blocks
+              bars[i + 1].blocks
+            )
+          for bar, i in bars
+            renderNotes(
+              overlap + (i - 2) * barWidth
+              bar,
+              bars[i - 1].roots
+              bars[i + 1].roots
+            )
+        }
+      ]
+    ]
   ]
 }

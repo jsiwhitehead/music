@@ -174,7 +174,7 @@ const getChord = (notes) => {
   const max2 = Math.max(...ranges2);
 
   if (max1 === -1 && max2 === 0) {
-    return { chord: "alt", ext: [] };
+    return { chord: "aug", ext: [] };
   }
 
   const defined1 = max1 > 1 && ranges1.filter((x) => x === max1).length === 1;

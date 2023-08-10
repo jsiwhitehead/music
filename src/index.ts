@@ -63,10 +63,70 @@ const songs = {
     Em: F# G
   `,
   CircleOfLife: `
-    Bb Cm7/Bb F/A Bb
-    Gm Cm Ab F
-    Bb Bb Ab/Bb Ab/Bb Eb Eb F F
-    Bb/D G7 Cm Ebm6/Gb Bb F7 Eb/Bb Bb
+    Bb: F F F F
+    Bb: - F G F
+    Cm7/Bb: - Eb- - -
+    Cm7/Bb: - - - C-
+    F/A: Eb- Eb- - Eb-
+    F/A: Eb- G F D-
+    Bb: - - - -
+    Bb: - - - F
+    Gm: Bb - Bb Bb
+    Gm: - - G A
+    Cm7: Bb C C C
+    Cm7: - - G Bb
+    Ab: C - C D
+    Ab: Eb D - Bb
+    Fsus4: C - - -
+    F: - - - D-
+    Bb: F - F F
+    Bb: - F G F
+    Cm7/Bb: - Eb- - -
+    Cm7/Bb: - - C- D-
+    F/A: Eb- - Eb- Eb-
+    F/A: Eb- G - F
+    Bb: D- - - -
+    Bb: - - F F
+    Gm: Bb Bb Bb Bb
+    Gm: - - G A
+    Cm7: Bb C C C
+    Cm7: - C C C
+    Ab: C - C D
+    Ab: Eb D Bb D
+    Fsus4: C - F F
+    F: F+ - D C
+    Bb: D - - -
+    Eb/Bb: - - - -
+    Bb: - - D D
+    Bb: Eb - F+ F+
+    Ab/Bb: Eb - - -
+    Ab/Bb: - - - -
+    Ab/Bb: - - Eb Eb
+    Ab/Bb: F+ - - D
+    Eb: C Bb - -
+    Ab/Eb: - - - -
+    Eb: - - - F
+    Eb: Eb - D C
+    Fsus4: C - - -
+    Fsus4: - - - -
+    F: - - F+ F+
+    F: F+ - F+ -
+    Bb/D: D - - -
+    Bb/D: - C Bb -
+    G7: - - D D
+    G7: Eb F+ - G+
+    Cm: - F+ Eb -
+    Cm: - - - -
+    Ebm6/Gb: - - - -
+    Ebm6/Gb: - G+ - G+
+    Bb: F+ - - D
+    Bb: - C Bb -
+    F7: - - - F
+    F7: Eb - D C
+    Eb/Bb: Bb
+    Eb/Bb:
+    Bb: Bb
+    Bb:
   `,
   MyFoolishHeart: `
     Bbmaj7: F
@@ -139,7 +199,7 @@ const songs = {
 
 const compiled = maraca(
   {
-    data: getPiece(songs.VeryEarly, 6),
+    data: getPiece(songs.CircleOfLife, 4),
     isBlock: (x) => x.__type === "block",
     len: (block) =>
       block === null
@@ -155,9 +215,7 @@ const compiled = maraca(
     getRange: (start, end) => ({
       __type: "block",
       values: {},
-      items: Array.from({
-        length: (end - start) * 4 - 1,
-      }).map((_, i) => start + 0.25 + i * 0.25),
+      items: Array.from({ length: end - start + 1 }).map((_, i) => start + i),
     }),
     getKey: (key, offset) => {
       const k = mod(key, 1) === 0.5 ? key - 0.5 : key;
