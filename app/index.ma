@@ -268,6 +268,9 @@
       ]
     }
 
+  }
+
+  renderMelody: (x, info) => {
     for note, j in info.melody
       if note then {
         [
@@ -297,7 +300,7 @@
           ]
         ]
       }
-
+      
   }
 
   ~
@@ -322,32 +325,51 @@
         info.name
       ]
       [
-        svg: yes
-        fill: '#fafaed'
-        size: [barWidth + overlap * 2, barHeight]
+        style: [position: 'relative']
         ~
-        {
-          bars: [
-            if i = 1 then data[i] else data[i - 1]
-            data[i]
-            if i = len(data) then data[i] else data[i + 1]
+        [
+          svg: yes
+          fill: '#fafaed'
+          size: [barWidth + overlap * 2, barHeight]
+          ~
+          {
+            bars: [
+              if i = 1 then data[i] else data[i - 1]
+              data[i]
+              if i = len(data) then data[i] else data[i + 1]
+            ]
+            ~
+            for bar, i in bars
+              renderBase(
+                overlap + (i - 2) * barWidth
+                bar,
+                bars[i - 1].blocks
+                bars[i + 1].blocks
+              )
+            for bar, i in bars
+              renderNotes(
+                overlap + (i - 2) * barWidth
+                bar,
+                bars[i - 1].roots
+                bars[i + 1].roots
+              )
+          }
+        ]
+        [
+          style: [
+            position: 'absolute',
+            top: 0,
+            left: '{overlap}px'
+            zIndex: 10
           ]
           ~
-          for bar, i in bars
-            renderBase(
-              overlap + (i - 2) * barWidth
-              bar,
-              bars[i - 1].blocks
-              bars[i + 1].blocks
-            )
-          for bar, i in bars
-            renderNotes(
-              overlap + (i - 2) * barWidth
-              bar,
-              bars[i - 1].roots
-              bars[i + 1].roots
-            )
-        }
+          [
+            svg: yes
+            size: [barWidth, barHeight]
+            ~
+            renderMelody(0, data[i])
+          ]
+        ]
       ]
     ]
   ]

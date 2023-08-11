@@ -26,8 +26,8 @@ const grammar = String.raw`Chord {
     | "sus4" -- suspended
 
   fullnote
-    = note (("+" | "-")+)? -- note
-    | "-" -- gap
+    = note (("'" | ",")+)? -- note
+    | "." -- gap
 
   note
   	= "A".."G" ("b"+ | "#"+)?
@@ -51,7 +51,7 @@ s.addAttribute("ast", {
     notes.add(base);
     const melody = d.ast;
     for (const n of melody.filter((x) => x !== null)) {
-      notes.add(mod12Dist(n * 7 - a.ast));
+      notes.add(mod12Dist(n[0] * 7 - a.ast));
     }
     Array.from({ length: 12 }).forEach((_, i) => {
       if (
@@ -110,15 +110,17 @@ s.addAttribute("ast", {
   ext_diminished: (_1) => [-3, 3, 6],
   ext_suspended: (_1) => [-1],
 
-  fullnote_note: (a, b) =>
-    mod12(a.ast * 7) +
-    (b.sourceString[0] === "+" ? 12 : -12) * b.sourceString.length,
+  fullnote_note: (a, b) => [
+    mod12(a.ast * 7),
+    (b.sourceString[0] === "'" ? 12 : -12) * b.sourceString.length,
+  ],
   fullnote_gap: (_1) => null,
 
   note: (a, b) =>
     mod12(
       ["F", "C", "G", "D", "A", "E", "B"].indexOf(a.sourceString) +
-        (b.sourceString[0] === "b" ? 5 : -5) * b.sourceString.length
+        (b.sourceString[0] === "b" ? 5 : -5) * b.sourceString.length -
+        4
     ),
 
   listOf: (a) => a.ast,
@@ -262,9 +264,19 @@ export default (piece) => {
     }
   });
 
+  let prevMelody;
   const chords = withNotes.map(({ notes, ...chord }) => ({
     ...chord,
     ...getChord([...notes]),
+    melody: chord.melody.map((n) => {
+      if (n === null) return null;
+      let res = n[0];
+      while (prevMelody - res < 6) res -= 12;
+      while (prevMelody - res > 6) res += 12;
+      res += n[1];
+      prevMelody = res;
+      return res;
+    }),
   }));
 
   const keyAngles = chords

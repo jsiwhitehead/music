@@ -38,91 +38,91 @@ const source = Object.keys(app).reduce((res, k) => {
 const songs = {
   GodOnlyKnows: `
     D/A:
-    D/A: - D C# D
-    Bm6: C# B - F#
-    Bm6: - B
-    F#m: - - - G#
+    D/A: . D C# D
+    Bm6: C# B . F#
+    Bm6: . B
+    F#m: . . . G#
     F#m7: A G# A C#
-    B/A: - F#+ - A
+    B/A: . F# . A,
     B/A: B C#
     E/B:
-    E/B: - E D# E
-    Cdim7: F#+ - A B
-    Cdim7: - C
-    E/B: - - - E
-    E/B: - E D# E
-    Bbm7b5: - G#+ - C#
+    E/B: . E D# E
+    Cdim7: F# . A, B
+    Cdim7: . C
+    E/B: . . . E
+    E/B: . E D# E
+    Bbm7b5: . G# . C#,
     Bbm7b5: D# E
     A:
     A: C# B C# B
-    E/G#: - - E B
-    E/G#: A - G# E-
-    F#m7: - - F#
+    E/G#: . . E B
+    E/G#: A . G# E
+    F#m7: . . F#
     F#m7:
-    Esus4: E- - - E-
+    Esus4: E . . E
     Em: F# G
   `,
   CircleOfLife: `
     Bb: F F F F
-    Bb: - F G F
-    Cm7/Bb: - Eb- - -
-    Cm7/Bb: - - - C-
-    F/A: Eb- Eb- - Eb-
-    F/A: Eb- G F D-
-    Bb: - - - -
-    Bb: - - - F
-    Gm: Bb - Bb Bb
-    Gm: - - G A
+    Bb: . F G F
+    Cm7/Bb: . Eb . .
+    Cm7/Bb: . . . C
+    F/A: Eb Eb . Eb
+    F/A: Eb G F D
+    Bb: . . . .
+    Bb: . . . F
+    Gm: Bb . Bb Bb
+    Gm: . . G A
     Cm7: Bb C C C
-    Cm7: - - G Bb
-    Ab: C - C D
-    Ab: Eb D - Bb
-    Fsus4: C - - -
-    F: - - - D-
-    Bb: F - F F
-    Bb: - F G F
-    Cm7/Bb: - Eb- - -
-    Cm7/Bb: - - C- D-
-    F/A: Eb- - Eb- Eb-
-    F/A: Eb- G - F
-    Bb: D- - - -
-    Bb: - - F F
+    Cm7: . . G Bb
+    Ab: C . C D
+    Ab: Eb D . Bb
+    Fsus4: C . . .
+    F: . . . D,
+    Bb: F . F F
+    Bb: . F G F
+    Cm7/Bb: . Eb . .
+    Cm7/Bb: . . C D
+    F/A: Eb . Eb Eb
+    F/A: Eb G . F
+    Bb: D . . .
+    Bb: . . F F
     Gm: Bb Bb Bb Bb
-    Gm: - - G A
+    Gm: . . G A
     Cm7: Bb C C C
-    Cm7: - C C C
-    Ab: C - C D
+    Cm7: . C C C
+    Ab: C . C D
     Ab: Eb D Bb D
-    Fsus4: C - F F
-    F: F+ - D C
-    Bb: D - - -
-    Eb/Bb: - - - -
-    Bb: - - D D
-    Bb: Eb - F+ F+
-    Ab/Bb: Eb - - -
-    Ab/Bb: - - - -
-    Ab/Bb: - - Eb Eb
-    Ab/Bb: F+ - - D
-    Eb: C Bb - -
-    Ab/Eb: - - - -
-    Eb: - - - F
-    Eb: Eb - D C
-    Fsus4: C - - -
-    Fsus4: - - - -
-    F: - - F+ F+
-    F: F+ - F+ -
-    Bb/D: D - - -
-    Bb/D: - C Bb -
-    G7: - - D D
-    G7: Eb F+ - G+
-    Cm: - F+ Eb -
-    Cm: - - - -
-    Ebm6/Gb: - - - -
-    Ebm6/Gb: - G+ - G+
-    Bb: F+ - - D
-    Bb: - C Bb -
-    F7: - - - F
-    F7: Eb - D C
+    Fsus4: C . F, F
+    F: F' . D C
+    Bb: D . . .
+    Eb/Bb: . . . .
+    Bb: . . D D
+    Bb: Eb . F F
+    Ab/Bb: Eb . . .
+    Ab/Bb: . . . .
+    Ab/Bb: . . Eb Eb
+    Ab/Bb: F . . D
+    Eb: C Bb . .
+    Ab/Eb: . . . .
+    Eb: . . . F
+    Eb: Eb' . D C
+    Fsus4: C . . .
+    Fsus4: . . . .
+    F: . . F F
+    F: F . F .
+    Bb/D: D . . .
+    Bb/D: . C Bb .
+    G7: . . D D
+    G7: Eb F . G
+    Cm: . F Eb .
+    Cm: . . . .
+    Ebm6/Gb: . . . .
+    Ebm6/Gb: . G . G
+    Bb: F . . D
+    Bb: . C Bb .
+    F7: . . . F
+    F7: Eb' . D C
     Eb/Bb: Bb
     Eb/Bb:
     Bb: Bb
@@ -130,55 +130,55 @@ const songs = {
   `,
   MyFoolishHeart: `
     Bbmaj7: F
-    Ebmaj7: - Bb- D- F
+    Ebmaj7: . Bb, D F
     D-7: G A G
-    G7: - - G
+    G7: . . G
     C-7: G
-    C-7/Bb: - C- Eb- G
+    C-7/Bb: . C, Eb G
     A7sus4: A
-    A7: - - A
+    A7: . . A
     D-7: A
-    D7#9: - D- F A
+    D7#9: . D, F A
     G-7: Bb C Bb
-    Db7: - - Bb
+    Db7: . . Bb
     C-7: Bb
-    C-7: - Eb- G Bb
+    C-7: . Eb, G Bb
     C-7b5: C
-    F7b9: - - Bb C
-    Bbmaj7: D - - D
-    Bbmaj7: D - C Bb
-    F-9: D - D
-    Bb+7: - - C Bb
-    Ebmaj7: C - C C
+    F7b9: . . Bb C
+    Bbmaj7: D . . D
+    Bbmaj7: D . C Bb
+    F-9: D . D
+    Bb+7: . . C Bb
+    Ebmaj7: C . C C
     Ebmaj7: D C A Bb
     A-7b5: C
-    D7: - - Bb A
-    G-7: Bb - - Bb
+    D7: . . Bb A
+    G-7: Bb . . Bb
     D7#9: Bb A G A
-    G-7: Bb - Bb
-    C7: - - A G
-    C-7: A - - A
+    G-7: Bb . Bb
+    C7: . . A G
+    C-7: A . . A
     G+7: A F G F
     C-7: A
-    F7: - - G
+    F7: . . G
   `,
   VeryEarly: `
-    Amaj7: E - - - C#
-    G7: A - G+
-    Cmaj7: E - - - G
-    F7: G# - F#+
-    Bbmaj7: F+ - - - F
-    E7: F# - E
+    Amaj7: E . . . C#
+    G7: A . G'
+    Cmaj7: E . . . G,
+    F7: G# . F#'
+    Bbmaj7: F . . . F,
+    E7: F# . E'
     Amaj7: C#
-    G7#11: C#
-    Bbmaj7: F+ - - - Bb
-    F#-7: A - A+
-    D#-7: G#+ - - - G#
-    G#7b9: A - F+
-    C#-9: F#+ - - - F#
-    F7: G - G+ - - F+
+    G7#11:
+    Bbmaj7: F . . . Bb,
+    F#-7: A . A'
+    D#-7: G# . . . G#,
+    G#7b9: A . F'
+    C#-9: F# . . . F#,
+    F7: G . G' . . F
     Bbmaj7: D
-    E7: - - A B C# D
+    E7: . . A B C# D
   `,
   BluesForAlice: `
     F6 F6 E-7 A7b9 D-7 G7 C-7 F7
@@ -199,7 +199,7 @@ const songs = {
 
 const compiled = maraca(
   {
-    data: getPiece(songs.CircleOfLife, 4),
+    data: getPiece(songs.VeryEarly, 6),
     isBlock: (x) => x.__type === "block",
     len: (block) =>
       block === null
