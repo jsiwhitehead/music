@@ -258,16 +258,22 @@ export default (info) => {
 
   const withRepeats = withRange.map((chord) => {
     const len = chord.ext.length;
-    const extMapped = chord.ext.map((x) => convert(x)).sort((a, b) => a - b);
-    while (extMapped[0] >= chord.bounds[0]) {
-      extMapped.unshift(...extMapped.slice(0, len).map((x) => x - 12));
+    const ext = chord.ext.map((x) => convert(x)).sort((a, b) => a - b);
+    while (ext[0] >= chord.bounds[0]) {
+      ext.unshift(...ext.slice(0, len).map((x) => x - 12));
     }
-    while (extMapped[extMapped.length - 1] <= chord.bounds[1]) {
-      extMapped.push(...extMapped.slice(-len).map((x) => x + 12));
+    while (ext[ext.length - 1] <= chord.bounds[1]) {
+      ext.push(...ext.slice(-len).map((x) => x + 12));
     }
-    const ext = extMapped.filter(
-      (x) => x >= chord.bounds[0] && x <= chord.bounds[1]
-    );
+
+    const len4 = chord.ext2.length;
+    const ext2 = chord.ext2.map((x) => convert(x) + 3).sort((a, b) => a - b);
+    while (ext2[0] >= chord.bounds[0]) {
+      ext2.unshift(...ext2.slice(0, len4).map((x) => x - 12));
+    }
+    while (ext2[ext2.length - 1] <= chord.bounds[1]) {
+      ext2.push(...ext2.slice(-len4).map((x) => x + 12));
+    }
 
     const len2 = chord.lines.length;
     while (chord.lines[0] >= chord.bounds[0]) {
@@ -275,6 +281,15 @@ export default (info) => {
     }
     while (chord.lines[chord.lines.length - 1] <= chord.bounds[1]) {
       chord.lines.push(...chord.lines.slice(-len2).map((x) => x + 12));
+    }
+
+    const len3 = chord.extra.length;
+    const extra = chord.extra.map((x) => convert(x)).sort((a, b) => a - b);
+    while (extra[0] >= chord.bounds[0]) {
+      extra.unshift(...extra.slice(0, len3).map((x) => x - 12));
+    }
+    while (extra[extra.length - 1] <= chord.bounds[1]) {
+      extra.push(...extra.slice(-len3).map((x) => x + 12));
     }
 
     const base = chord.base === undefined ? undefined : [convert(chord.base)];
@@ -301,10 +316,14 @@ export default (info) => {
 
     return {
       ...chord,
-      ext,
-      lines: chord.lines
-        .filter((x) => x >= chord.bounds[0] && x <= chord.bounds[1])
-        .filter((l) => !ext.some((e) => Math.abs(l - e) === 1)),
+      ext: ext.filter((x) => x >= chord.bounds[0] && x <= chord.bounds[1]),
+      ext2: ext2.filter((x) => x >= chord.bounds[0] && x <= chord.bounds[1]),
+      extra: extra.filter(
+        (x) => x >= chord.bounds[0] && x + 2 <= chord.bounds[1]
+      ),
+      lines: chord.lines.filter(
+        (x) => x >= chord.bounds[0] && x <= chord.bounds[1]
+      ),
       base:
         base &&
         base.filter((x) => x >= chord.bounds[0] && x <= chord.bounds[1]),
@@ -362,14 +381,6 @@ export default (info) => {
         : {}),
     };
   });
-
-  console.log(
-    JSON.stringify(
-      result.map((r) => r.bounds),
-      null,
-      2
-    )
-  );
 
   return {
     time,

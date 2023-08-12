@@ -146,59 +146,60 @@ s.addAttribute("ast", {
 });
 
 const getChord = (notes) => {
-  const ranges1 = Array.from({ length: 6 }).map((_, i) =>
+  const ranges = Array.from({ length: 12 }).map((_, i) =>
     Array.from({ length: 6 })
       .map(
         (_, j) =>
-          (j === 0 || !notes.includes(mod12((i + j) * 2 - 7))) &&
-          notes.includes(mod12((i + j) * 2))
+          (j === 0 || !notes.includes(mod12(i + j * 2 - 7))) &&
+          notes.includes(mod12(i + j * 2))
       )
       .findIndex((x) => !x)
   );
-  const max1 = Math.max(...ranges1);
+  const max1 = Math.max(...ranges.filter((_, i) => i % 2 === 0));
+  const max2 = Math.max(...ranges.filter((_, i) => i % 2 === 1));
 
-  const ranges2 = Array.from({ length: 6 }).map((_, i) =>
-    Array.from({ length: 6 })
-      .map(
-        (_, j) =>
-          (j === 0 || !notes.includes(mod12((i + j) * 2 - 6))) &&
-          notes.includes(mod12((i + j) * 2 + 1))
-      )
-      .findIndex((x) => !x)
+  if (max1 < 1 && max2 < 1) {
+    if (max1 === -1 && max2 === 0) {
+      return { chord: "aug", rot: 0, ext: [] };
+    }
+    if (max2 === -1 && max1 === 0) {
+      return { chord: "aug", rot: 1, ext: [] };
+    }
+    throw new Error();
+  }
+
+  for (let i = Math.max(max1, max2); i > 0; i--) {
+    for (let j = 0; j < 12; j++) {
+      if (ranges[j] === i) {
+        for (let k = 1; k < i; k++) {
+          ranges[mod12(j + k * 2)] = 0;
+        }
+      }
+    }
+  }
+
+  const totals = Array.from({ length: Math.max(max1, max2) + 1 }).map(
+    (_, i) => ranges.filter((x) => x === i).length
   );
-  const max2 = Math.max(...ranges2);
+  totals[max1]--;
+  totals[max2]--;
 
-  if (max1 === -1 && max2 === 0) {
-    return { chord: "aug", rot: 0, ext: [] };
-  }
-  if (max2 === -1 && max1 === 0) {
-    return { chord: "aug", rot: 1, ext: [] };
-  }
-
-  const defined1 = ranges1.filter((x) => x === max1).length === 1;
-  const defined2 = ranges2.filter((x) => x === max2).length === 1;
+  const defined1 = totals[max1] === 0;
+  const defined2 = totals[max2] === 0;
   if (!defined1 && !defined2) {
     return { chord: "dim", ext: [...notes] };
   }
 
-  const index1 = defined1 ? ranges1.indexOf(max1) : false;
-  const index2 = defined2 ? ranges2.indexOf(max2) : false;
-
-  const covered: any = [];
-  if (index1 !== false) {
-    Array.from({ length: ranges1[index1] }).forEach((_, i) => {
-      covered[mod12((index1 + i) * 2)] = true;
-    });
-  }
-  if (index2 !== false) {
-    Array.from({ length: ranges2[index2] }).forEach((_, i) => {
-      covered[mod12((index2 + i) * 2 + 1)] = true;
-    });
-  }
+  const index1 = defined1
+    ? ranges.findIndex((r, i) => i % 2 === 0 && r === max1)
+    : false;
+  const index2 = defined2
+    ? ranges.findIndex((r, i) => i % 2 === 1 && r === max2)
+    : false;
 
   const chord = [
-    index1 === false ? false : [index1 * 2, (ranges1[index1] - 1) * 2],
-    index2 === false ? false : [index2 * 2 + 1, (ranges2[index2] - 1) * 2],
+    index1 === false ? false : [index1, (ranges[index1] - 1) * 2],
+    index2 === false ? false : [index2, (ranges[index2] - 1) * 2],
   ];
   const mids = [
     chord[0] && chord[0][0] + chord[0][1] / 2,
@@ -211,7 +212,8 @@ const getChord = (notes) => {
       mids[0] && mids[1]
         ? mod12(mids[0] + mod12Dist(mids[1] - mids[0]) / 2)
         : mids[0] || mids[1],
-    ext: notes.filter((x) => !covered[x]),
+    ext: notes.filter((x) => x !== index1 && x !== index2 && ranges[x] === 1),
+    ext2: notes.filter((x) => x !== index1 && x !== index2 && ranges[x] === 2),
   };
 };
 
@@ -241,6 +243,19 @@ const checkMulti = (notesList, n) => {
   return 0;
 };
 
+const simpleCheck = (notes, n) => {
+  if (notes.has(mod12(n + 7))) return -1;
+  if (notes.has(mod12(n)) && notes.has(mod12(n + 2))) return 1;
+  return 0;
+};
+const simpleCheckMulti = (notesList, n) => {
+  for (const notes of notesList) {
+    const c = simpleCheck(notes, n);
+    if (c !== 0) return c;
+  }
+  return 0;
+};
+
 export default (piece) => {
   const m = g.match(piece.trim());
   if (m.failed()) {
@@ -250,61 +265,76 @@ export default (piece) => {
 
   const { time, bars } = s(m).ast;
 
-  bars.forEach((chord, i) => {
-    const prev = bars
-      .map((c) => new Set(c.notes))
-      .slice(0, i)
-      .reverse();
-    let done = false;
-    while (!done) {
-      const size = [chord.notes, ...prev].reduce((res, x) => res + x.size, 0);
-      Array.from({ length: 12 }).forEach((_, j) => {
-        if (
-          chord.notes.has(mod12(j)) ||
-          (chord.notes.has(mod12(j - 2)) &&
-            chord.notes.has(mod12(j + 2)) &&
-            !chord.notes.has(mod12(j - 7)) &&
-            !chord.notes.has(mod12(j + 7)))
-        ) {
-          if (checkOne(chord.notes, j) >= 0) {
-            if (checkMulti(prev, j) >= 0) {
-              chord.notes.add(mod12(j));
+  for (const _ in [1, 2, 3]) {
+    bars.forEach((chord, i) => {
+      const prev = bars
+        .map((c) => new Set(c.notes))
+        .slice(0, i)
+        .reverse();
+      let done = false;
+      while (!done) {
+        const size = [chord.notes, ...prev].reduce((res, x) => res + x.size, 0);
+        Array.from({ length: 12 }).forEach((_, j) => {
+          if (
+            chord.notes.has(mod12(j)) ||
+            (chord.notes.has(mod12(j - 1)) && chord.notes.has(mod12(j + 1)))
+          ) {
+            if (checkOne(chord.notes, j) >= 0) {
+              if (checkMulti(prev, j) >= 0) {
+                chord.notes.add(mod12(j));
+              }
             }
           }
-        }
-      });
-      done =
-        size === [chord.notes, ...prev].reduce((res, x) => res + x.size, 0);
-    }
-  });
+        });
+        done =
+          size === [chord.notes, ...prev].reduce((res, x) => res + x.size, 0);
+      }
+    });
 
-  bars.forEach((chord, i) => {
-    const prev = bars
-      .map((c) => new Set(c.notes))
-      .slice(0, i)
-      .reverse();
-    let done = false;
-    while (!done) {
-      const size = [chord.notes, ...prev].reduce((res, x) => res + x.size, 0);
-      Array.from({ length: 12 }).forEach((_, j) => {
-        if (
-          chord.notes.has(mod12(j)) ||
-          (chord.notes.has(mod12(j - 1)) && chord.notes.has(mod12(j + 1)))
-        ) {
-          if (checkOne(chord.notes, j) >= 0) {
-            if (checkMulti(prev, j) >= 0) {
-              chord.notes.add(mod12(j));
+    bars.forEach((chord, i) => {
+      const prev = bars
+        .map((c) => new Set(c.notes))
+        .slice(0, i)
+        .reverse();
+      let done = false;
+      while (!done) {
+        const size = [chord.notes, ...prev].reduce((res, x) => res + x.size, 0);
+        Array.from({ length: 12 }).forEach((_, j) => {
+          if (
+            chord.notes.has(mod12(j)) ||
+            (chord.notes.has(mod12(j - 2)) &&
+              chord.notes.has(mod12(j + 2)) &&
+              !chord.notes.has(mod12(j - 7)) &&
+              !chord.notes.has(mod12(j + 7)))
+          ) {
+            if (checkOne(chord.notes, j) >= 0) {
+              if (checkMulti(prev, j) >= 0) {
+                chord.notes.add(mod12(j));
+              }
             }
           }
-        }
-      });
-      done =
-        size === [chord.notes, ...prev].reduce((res, x) => res + x.size, 0);
-    }
-  });
+        });
+        done =
+          size === [chord.notes, ...prev].reduce((res, x) => res + x.size, 0);
+      }
+    });
+  }
+
+  const barNotes = bars.map((c) => c.notes);
+  const extra = bars.map((chord, i) => ({
+    ...chord,
+    extra: Array.from({ length: 12 })
+      .map((_, j) => j)
+      .filter((j) => {
+        if (simpleCheck(chord.notes, j) !== 0) return false;
+        const before = simpleCheckMulti(barNotes.slice(0, i).reverse(), j);
+        const after = simpleCheckMulti(barNotes.slice(i + 1), j);
+        return before !== -1 && after !== -1 && (before === 1 || after === 1);
+      }),
+  }));
 
   let prevMelody;
-  const chords = bars.map(({ notes, ...chord }) => ({
+  const chords = extra.map(({ notes, ...chord }) => ({
     ...chord,
     ...getChord([...notes]),
     melody: chord.melody.map((n) => {
@@ -350,6 +380,7 @@ export default (piece) => {
           ]
         : chord.chord,
       chordMid: isDef(chord.chordMid) && mod12(chord.chordMid - averageKey),
+      extra: chord.extra.map((n) => mod12(n - averageKey)),
       ext: chord.ext.map((n) => mod12(n - averageKey)),
     })),
   };

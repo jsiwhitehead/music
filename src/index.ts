@@ -116,8 +116,8 @@ const songs = {
     Bb/D: D . . .
     Bb/D: . C Bb .
     G7: . . D D
-    G7: Eb F . G
-    Cm: . F Eb .
+    G7: Eb F . F
+    Cm: . Eb Eb .
     Cm: . . . .
     Ebm6/Gb: . . . .
     Ebm6/Gb: . G . G

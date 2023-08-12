@@ -38,7 +38,49 @@
     ]
   }
 
-  renderBase: (x, info, blocks1, blocks2) => {
+  renderBase: (x, info, blocks1, blocks2, extra1, extra2) => {
+
+    for y in info.extra [
+      shape: 'rect'
+      fill: 'rgba(230, 230, 230)'
+      ~
+      [
+        x
+        getY(y + 2)
+      ]
+      [
+        barWidth
+        lineHeight * 2
+      ]
+    ]
+    for y in extra1
+      if y >= info.bounds[1] & y + 2 <= info.bounds[2] then [
+        shape: 'rect'
+        fill: 'rgba(230, 230, 230)'
+        ~
+        [
+          x
+          getY(y + 2)
+        ]
+        [
+          barWidth / 2
+          lineHeight * 2
+        ]
+      ]
+    for y in extra2
+      if y >= info.bounds[1] & y + 2 <= info.bounds[2] then [
+        shape: 'rect'
+        fill: 'rgba(230, 230, 230)'
+        ~
+        [
+          x + barWidth / 2
+          getY(y + 2)
+        ]
+        [
+          barWidth / 2
+          lineHeight * 2
+        ]
+      ]
 
     if info.blocks then
       for colour in [
@@ -152,9 +194,67 @@
           opacity: if colour != 'white' then 0.5
           fill: 'none'
           ~
-          ['M', x + curveOffset - 1, getY(y)]
-          ['L', x + barWidth - curveOffset + 1, getY(y)]
+          ['M', x + lineHeight * 1.5, getY(y)]
+          ['L', x + barWidth - lineHeight * 1.5, getY(y)]
         ]
+    
+    for y in info.ext2
+      if info.chord = 'dim' then
+        for colour in [
+          'white'
+          colorsfull[((y * 7) * 2 - 13) % 24]
+        ] [
+          shape: 'rect'
+          fill: colour
+          opacity: if colour != 'white' then 0.5
+          ~
+          [
+            x
+            getY(y + 1)
+          ]
+          [
+            barWidth
+            lineHeight * 2
+          ]
+        ]
+      else {
+        for colour in [
+          'white'
+          colorsfull[((y * 7) * 2 - 13) % 24]
+        ] [
+          shape: 'path'
+          stroke: [width: lineHeight * 2, color: colour]
+          opacity: if colour != 'white' then 0.5
+          fill: 'none'
+          ~
+          ['M', x + lineHeight * 1.5, getY(y)]
+          ['L', x + barWidth - lineHeight * 1.5, getY(y)]
+        ]
+        for colour in [
+          'white'
+          colorsfull[((y * 7) * 2 - 13) % 24]
+        ] [
+          shape: 'path'
+          stroke: [width: lineHeight / 2, color: colour, cap: 'round']
+          opacity: if colour != 'white' then 0.5
+          fill: 'none'
+          ~
+          ['M', x + lineHeight * 1.5, getY(y - 0.75)]
+          ['L', x + lineHeight * 1.5, getY(y + 0.75)]
+        ]
+        for colour in [
+          'white'
+          colorsfull[((y * 7) * 2 - 13) % 24]
+        ] [
+          shape: 'path'
+          stroke: [width: lineHeight / 2, color: colour, cap: 'round']
+          opacity: if colour != 'white' then 0.5
+          fill: 'none'
+          ~
+          ['M', x + barWidth - lineHeight * 1.5, getY(y - 0.75)]
+          ['L', x + barWidth - lineHeight * 1.5, getY(y + 0.75)]
+        ]
+      }
 
     for i in [1, 2] [
       shape: 'path'
@@ -254,8 +354,8 @@
           cap: 'round'
         ]
         ~
-        ['M', x + curveOffset, getY(base + level)]
-        ['l', barWidth - curveOffset * 2, 0]
+        ['M', x + lineHeight * 1.5 + 1, getY(base + level)]
+        ['l', barWidth - (lineHeight * 1.5 + 1) * 2, 0]
       ]
       [
         shape: 'path'
@@ -265,8 +365,8 @@
           cap: 'round'
         ]
         ~
-        ['M', x + curveOffset, getY(base + level)]
-        ['l', barWidth - curveOffset * 2, 0]
+        ['M', x + lineHeight * 1.5 + 1, getY(base + level)]
+        ['l', barWidth - (lineHeight * 1.5 + 1) * 2, 0]
       ]
     }
 
@@ -347,6 +447,8 @@
                 bar,
                 bars[i - 1].blocks
                 bars[i + 1].blocks
+                bars[i - 1].extra
+                bars[i + 1].extra
               )
             for bar, i in bars
               if bar.root then renderNotes(
