@@ -37,6 +37,7 @@ const source = Object.keys(app).reduce((res, k) => {
 
 const songs = {
   GodOnlyKnows: `
+    4
     D/A:
     D/A: . D C# D
     Bm6: C# B . F#
@@ -63,6 +64,7 @@ const songs = {
     Em: F# G
   `,
   CircleOfLife: `
+    4
     Bb: F F F F
     Bb: . F G F
     Cm7/Bb: . Eb . .
@@ -129,6 +131,7 @@ const songs = {
     Bb:
   `,
   MyFoolishHeart: `
+    4
     Bbmaj7: F
     Ebmaj7: . Bb, D F
     D-7: G A G
@@ -163,6 +166,7 @@ const songs = {
     F7: . . G
   `,
   VeryEarly: `
+    6
     Amaj7: E . . . C#
     G7: A . G'
     Cmaj7: E . . . G,
@@ -195,11 +199,75 @@ const songs = {
     Gm11 Am A7 Dm7 Ab7sus4
     Bb7sus4 Bm7 Amaj7/Db Abm7 Db13
   `,
+  Cello: `
+    8
+    G D' B' A B D, B' D,
+    G, D' B' A B D, B' D,
+    G, E' C' B C E, C' E,
+    G, E' C' B C E, C' E,
+    G, F' C' B C F, C' F,
+    G, F' C' B C F, C' F,
+    G, G' B A B G B G
+    G, G' B A B G B F#
+    G, E' B' A B G F# G
+    E G F# G B, D C# B
+    C# G' A G A G A G
+    C# G' A G A G A G
+    F# A D C# D A G A
+    F# A G A D, F# E D
+    E, B' G' F# G B, G' B,
+    E, B' G' F# G B, G' B,
+    E, C#' D E D C# B A
+    G' F# E D' C# B A G
+    F# E D D' A D F#, A
+    D, E F# A G F# E D
+    G#' D F E F D G#' D
+    B' D, F E F D G#' D
+    C E A B C A E D
+    C E A B C A F# E
+    D# F# D# F# A F# A F#
+    D# F# D# F# A F# A F#
+    G F# E G F# G A F#
+    G F# E D C B A G
+    F# C' D C D C D C
+    F# C' D C D C D C
+    G B F' E F B F' B
+    G B F' E F B F' B
+    G C E D E C E C
+    G C E D E C E C
+    G F#' C' B C F# C' F#
+    G, F#' C' B C F# C' F#
+    G, D' B' A B G F# E
+    D C B A G F# E D
+    C# A' E' F# G E F# G
+    C#, A' E' F# G E F# G
+    C,, A' D E F# D E F#
+    C, A' D E F# D E F#
+    C, A' D F# A C# D .
+    . A, B C D E F# G
+    A F# D E F# G A B
+    C A F# G A B C D
+    Eb D C# D D C B C
+    C A F# E D A B C
+    D, A' D F# A B C A
+    B G D C B G A B
+    D, G B D G A B G
+    C#' Bb A Bb Bb A G# A
+    A G F# G G E C# B
+    A C# E G A C# D C#
+    D A F# E F# A D, F#
+    A, D C# B A G F# E
+    D . C' B A G F# E
+    D C' B A G F# E D
+    C B' A G F# E D C
+    B A' G F# E D C B
+    A G' F# E F# A D, F#
+  `,
 };
 
 const compiled = maraca(
   {
-    data: getPiece(songs.VeryEarly, 6),
+    data: getPiece(songs.MyFoolishHeart),
     isBlock: (x) => x.__type === "block",
     len: (block) =>
       block === null

@@ -170,7 +170,7 @@ const evaluate = (node, context) => {
       if (base === null) return null;
       const block = toBlock(base);
       if (arg in block.values) {
-        return block.values[arg];
+        return block.values[arg] ?? null;
       }
       if (Number.isInteger(arg)) {
         return resolveItems(block.items)[arg - 1] ?? null;

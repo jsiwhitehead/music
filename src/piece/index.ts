@@ -6,16 +6,8 @@ const convert = (note) => mod(note * 7, 12);
 
 const mid = ([start, end]: any) => (start + end) / 2;
 
-const getClosest = (note, roots) => {
-  const dists = roots.map((r) =>
-    Math.abs(r - note - Math.round((r - note) / 12) * 12)
-  );
-  const close = roots[dists.indexOf(Math.min(...dists))];
-  return note + Math.round((close - note) / 12) * 12;
-};
-
-export default (info, time) => {
-  const chords = parse(info);
+export default (info) => {
+  const { time, chords } = parse(info);
 
   let blocks;
   const withBlocks = chords.map((chord) => {
@@ -23,51 +15,60 @@ export default (info, time) => {
       if (chord.chord === "dim") {
         return {
           ...chord,
-          ext: [0, 3, 6, 9],
           lines: [],
         };
       }
       return {
         ...chord,
-        lines: [0, 2, 4, 6, 8, 10, 12].map((x) => convert(chord.key) + x),
+        lines: [0, 2, 4, 6, 8, 10, 12].map((x) => convert(chord.rot) + x),
       };
     }
     let current = [
-      [
-        convert(chord.key + chord.chord[0][0]),
-        convert(chord.key + chord.chord[0][0]) + chord.chord[0][1],
+      chord.chord[0] && [
+        convert(chord.chord[0][0]),
+        convert(chord.chord[0][0]) + chord.chord[0][1],
       ],
-      [
-        convert(chord.key + chord.chord[1][0]),
-        convert(chord.key + chord.chord[1][0]) + chord.chord[1][1],
+      chord.chord[1] && [
+        convert(chord.chord[1][0]),
+        convert(chord.chord[1][0]) + chord.chord[1][1],
       ],
-    ].sort((a, b) => a[0] - b[0]);
+    ].sort((a, b) => (a?.[0] ?? 0) - (b?.[0] ?? 0));
     if (!blocks) {
       blocks = current;
     } else {
       const dir =
-        mid(blocks[0]) - mid(current[0]) + (mid(blocks[1]) - mid(current[1])) >
+        (blocks[0] ? mid(blocks[0]) : mid(blocks[1]) + 3) -
+          (current[0] ? mid(current[0]) : mid(current[1]) + 3) +
+          ((blocks[1] ? mid(blocks[1]) : mid(blocks[0]) - 3) -
+            (current[1] ? mid(current[1]) : mid(current[0]) - 3)) >
         0
           ? 1
           : -1;
       while (true) {
         const next =
           dir === 1
-            ? [current[1], current[0].map((x) => x + 12)]
-            : [current[1].map((x) => x - 12), current[0]];
+            ? [current[1], current[0] && current[0].map((x) => x + 12)]
+            : [current[1] && current[1].map((x) => x - 12), current[0]];
 
         const dists1 = [
-          Math.abs(mid(blocks[0]) - mid(next[0])),
-          Math.abs(mid(blocks[1]) - mid(next[1])),
+          blocks[0] && next[0] ? Math.abs(mid(blocks[0]) - mid(next[0])) : 0,
+          blocks[1] && next[1] ? Math.abs(mid(blocks[1]) - mid(next[1])) : 0,
         ];
         const dists2 = [
-          Math.abs(mid(blocks[0]) - mid(current[0])),
-          Math.abs(mid(blocks[1]) - mid(current[1])),
+          blocks[0] && current[0]
+            ? Math.abs(mid(blocks[0]) - mid(current[0]))
+            : 0,
+          blocks[1] && current[1]
+            ? Math.abs(mid(blocks[1]) - mid(current[1]))
+            : 0,
         ];
         if (
           (dists1[0] + dists1[1] - (dists2[0] + dists2[1]) ||
-            mod(blocks[0][0] - next[0][0], 2) -
-              mod(blocks[0][0] - current[0][0], 2) ||
+            mod((blocks[0] || blocks[1])[0] - (next[0] || next[1])[0], 2) -
+              mod(
+                (blocks[0] || blocks[1])[0] - (current[0] || current[1])[0],
+                2
+              ) ||
             Math.abs(dists1[0] - dists1[1]) - Math.abs(dists2[0] - dists2[1])) <
           0
         ) {
@@ -82,115 +83,141 @@ export default (info, time) => {
       ...chord,
       blocks,
       lines: [
-        ...Array.from({ length: (blocks[0][1] - blocks[0][0]) / 2 - 1 }).map(
-          (_, i) => blocks[0][0] + (i + 1) * 2
-        ),
-        ...Array.from({ length: (blocks[1][1] - blocks[1][0]) / 2 - 1 }).map(
-          (_, i) => blocks[1][0] + (i + 1) * 2
-        ),
+        ...(blocks[0]
+          ? Array.from({ length: (blocks[0][1] - blocks[0][0]) / 2 - 1 }).map(
+              (_, i) => blocks[0][0] + (i + 1) * 2
+            )
+          : []),
+        ...(blocks[1]
+          ? Array.from({ length: (blocks[1][1] - blocks[1][0]) / 2 - 1 }).map(
+              (_, i) => blocks[1][0] + (i + 1) * 2
+            )
+          : []),
       ],
     };
   });
 
-  let roots;
-  const withNotes = withBlocks.map((chord) => {
-    let current = [
-      convert(chord.key),
-      convert(
-        chord.key +
-          (chord.chord === "aug" ? -4 : chord.chord === "dim" ? 6 : chord.root2)
-      ),
-    ].sort((a, b) => a - b);
-    if (!roots) {
-      roots = current;
+  let root;
+  const withRoot = withBlocks.map((chord) => {
+    if (!chord.root) return chord;
+    let current = [convert(chord.root[0]), convert(chord.root[1])].sort(
+      (a, b) => a - b
+    );
+    if (!root) {
+      root = current;
     } else {
-      const dir = roots[0] - current[0] + (roots[1] - current[1]) > 0 ? 1 : -1;
+      const dir = root[0] - current[0] + (root[1] - current[1]) > 0 ? 1 : -1;
       while (true) {
         const next =
           dir === 1
             ? [current[1], current[0] + 12]
             : [current[1] - 12, current[0]];
         if (
-          (Math.abs(roots[0] - next[0]) +
-            Math.abs(roots[1] - next[1]) -
-            (Math.abs(roots[0] - current[0]) +
-              Math.abs(roots[1] - current[1])) ||
-            mod(roots[0] - next[0], 2) - mod(roots[0] - current[0], 2)) < 0
+          (Math.abs(root[0] - next[0]) +
+            Math.abs(root[1] - next[1]) -
+            (Math.abs(root[0] - current[0]) + Math.abs(root[1] - current[1])) ||
+            mod(root[0] - next[0], 2) - mod(root[0] - current[0], 2)) < 0
         ) {
           current = next;
         } else {
           break;
         }
       }
-      roots = current;
+      root = current;
     }
-    return {
-      ...chord,
-      roots,
-      base: getClosest(convert(chord.key + chord.base), roots),
-      ext: chord.ext
-        .map((x) => getClosest(convert(chord.key + x), roots))
-        .sort((a, b) => a - b),
-    };
+    return { ...chord, root };
   });
 
-  const withNotesRange = withNotes.map((chord) => {
-    const notes = chord.melody.filter((x) => x !== null).sort((a, b) => a - b);
+  const withNotesRange = withRoot.map((chord) => {
+    const notes = chord.melody.filter((x) => x !== false).sort((a, b) => a - b);
     if (notes.length === 0) return chord;
     return {
       ...chord,
       notesRange: [notes[0], notes[notes.length - 1]],
     };
   });
-
   const rangeMids = withNotesRange.map((_, i) => {
     const ranges = withNotesRange
       .slice(Math.max(0, i - 3), i + 4)
       .map((chord) => chord.notesRange)
       .filter((r) => r);
+    if (ranges.length === 0) return 0;
     return (
       ranges.reduce((res, r) => res + (r[0] + r[1]) / 2, 0) / ranges.length
     );
   });
   const withRange = withNotesRange.map((chord, i) => {
     if (!chord.blocks) {
-      const boundsBase =
-        chord.chord === "aug"
-          ? [
-              Math.min(chord.notesRange?.[0] ?? rangeMids[i], rangeMids[i] - 8),
-              Math.max(chord.notesRange?.[1] ?? rangeMids[i], rangeMids[i] + 8),
-            ]
-          : [
-              Math.min(chord.notesRange?.[0] ?? rangeMids[i], rangeMids[i] - 9),
-              Math.max(chord.notesRange?.[1] ?? rangeMids[i], rangeMids[i] + 9),
-            ];
-      const bounds =
-        mod(chord.key, 2) === 0
-          ? [
-              Math.round(boundsBase[0] / 2) * 2,
-              Math.round(boundsBase[1] / 2) * 2,
-            ]
-          : [
-              Math.round((boundsBase[0] - 1) / 2) * 2 + 1,
-              Math.round((boundsBase[1] - 1) / 2) * 2 + 1,
-            ];
+      if (chord.chord === "aug") {
+        const boundsBase = [
+          Math.min(
+            (chord.notesRange?.[0] ?? rangeMids[i]) - 2,
+            rangeMids[i] - 8
+          ),
+          Math.max(
+            (chord.notesRange?.[1] ?? rangeMids[i]) - 2,
+            rangeMids[i] + 8
+          ),
+        ];
+        const bounds =
+          chord.rot === 0
+            ? [
+                Math.round(boundsBase[0] / 2) * 2,
+                Math.round(boundsBase[1] / 2) * 2,
+              ]
+            : [
+                Math.round((boundsBase[0] - 1) / 2) * 2 + 1,
+                Math.round((boundsBase[1] - 1) / 2) * 2 + 1,
+              ];
+        return {
+          ...chord,
+          bounds,
+          lines: Array.from({
+            length: (bounds[1] - bounds[0]) / 2 - 1,
+          }).map((_, i) => bounds[0] + (i + 1) * 2),
+        };
+      }
       return {
         ...chord,
-        bounds,
-        ...(chord.chord === "aug"
-          ? {
-              lines: Array.from({
-                length: (bounds[1] - bounds[0]) / 2 - 1,
-              }).map((_, i) => bounds[0] + (i + 1) * 2),
-            }
-          : {}),
+        bounds: [
+          Math.min(
+            (chord.notesRange?.[0] ?? rangeMids[i]) - 2,
+            rangeMids[i] - 9
+          ),
+          Math.max(
+            (chord.notesRange?.[1] ?? rangeMids[i]) - 2,
+            rangeMids[i] + 9
+          ),
+        ],
       };
     }
 
-    const baseDivides = [
-      mid([chord.blocks[0][0], chord.blocks[1][1] - 12]),
-      mid([chord.blocks[0][1], chord.blocks[1][0]]),
-    ];
+    const divideBlocks = [chord.blocks[0], chord.blocks[1]];
+    if (!divideBlocks[0]) {
+      const halfway = (chord.blocks[1][1] - 12 + chord.blocks[1][0]) / 12;
+      divideBlocks[0] = [halfway, halfway];
+    }
+    if (!divideBlocks[1]) {
+      const halfway = (chord.blocks[0][1] + chord.blocks[0][0] + 12) / 12;
+      divideBlocks[1] = [halfway, halfway];
+    }
+
+    const baseDivides =
+      divideBlocks[0] && divideBlocks[1]
+        ? [
+            mid([divideBlocks[0][0], divideBlocks[1][1] - 12]),
+            mid([divideBlocks[0][1], divideBlocks[1][0]]),
+          ]
+        : [
+            mid([
+              (divideBlocks[0] || divideBlocks[1])[0],
+              (divideBlocks[0] || divideBlocks[1])[1] - 12,
+            ]),
+            mid([
+              (divideBlocks[0] || divideBlocks[1])[1],
+              (divideBlocks[0] || divideBlocks[1])[0] + 12,
+            ]),
+          ];
     const divides = [...baseDivides];
 
     const min = chord.notesRange?.[0] ?? rangeMids[i];
@@ -231,14 +258,15 @@ export default (info, time) => {
 
   const withRepeats = withRange.map((chord) => {
     const len = chord.ext.length;
-    while (chord.ext[0] >= chord.bounds[0]) {
-      chord.ext.unshift(...chord.ext.slice(0, len).map((x) => x - 12));
+    const extMapped = chord.ext.map((x) => convert(x)).sort((a, b) => a - b);
+    while (extMapped[0] >= chord.bounds[0]) {
+      extMapped.unshift(...extMapped.slice(0, len).map((x) => x - 12));
     }
-    while (chord.ext[chord.ext.length - 1] <= chord.bounds[1]) {
-      chord.ext.push(...chord.ext.slice(-len).map((x) => x + 12));
+    while (extMapped[extMapped.length - 1] <= chord.bounds[1]) {
+      extMapped.push(...extMapped.slice(-len).map((x) => x + 12));
     }
-    const ext = chord.ext.filter(
-      (x) => x > chord.bounds[0] && x < chord.bounds[1]
+    const ext = extMapped.filter(
+      (x) => x >= chord.bounds[0] && x <= chord.bounds[1]
     );
 
     const len2 = chord.lines.length;
@@ -249,59 +277,83 @@ export default (info, time) => {
       chord.lines.push(...chord.lines.slice(-len2).map((x) => x + 12));
     }
 
-    const base = [chord.base];
-    while (base[0] >= chord.bounds[0]) {
-      base.unshift(...base.slice(0, 1).map((x) => x - 12));
-    }
-    while (base[base.length - 1] <= chord.bounds[1]) {
-      base.push(...base.slice(-1).map((x) => x + 12));
+    const base = chord.base === undefined ? undefined : [convert(chord.base)];
+    if (base) {
+      while (base[0] >= chord.bounds[0]) {
+        base.unshift(...base.slice(0, 1).map((x) => x - 12));
+      }
+      while (base[base.length - 1] <= chord.bounds[1]) {
+        base.push(...base.slice(-1).map((x) => x + 12));
+      }
     }
 
     let first = 0;
-    const roots = [...chord.roots];
-    while (roots[0] >= chord.bounds[0]) {
-      roots.unshift(...roots.slice(0, 2).map((x) => x - 12));
-      first -= 2;
-    }
-    while (roots[roots.length - 1] <= chord.bounds[1]) {
-      roots.push(...roots.slice(-2).map((x) => x + 12));
+    const root = chord.root === undefined ? undefined : [...chord.root];
+    if (root) {
+      while (root[0] >= chord.bounds[0]) {
+        root.unshift(...root.slice(0, 2).map((x) => x - 12));
+        first -= 2;
+      }
+      while (root[root.length - 1] <= chord.bounds[1]) {
+        root.push(...root.slice(-2).map((x) => x + 12));
+      }
     }
 
     return {
       ...chord,
       ext,
       lines: chord.lines
-        .filter((x) => x > chord.bounds[0] && x < chord.bounds[1])
+        .filter((x) => x >= chord.bounds[0] && x <= chord.bounds[1])
         .filter((l) => !ext.some((e) => Math.abs(l - e) === 1)),
-      base: base.filter((x) => x > chord.bounds[0] && x < chord.bounds[1]),
-      rootsRange: [
-        first + roots.findIndex((d) => d > chord.bounds[0]),
-        first + roots.findIndex((d) => d > chord.bounds[1]) - 1,
+      base:
+        base &&
+        base.filter((x) => x >= chord.bounds[0] && x <= chord.bounds[1]),
+      rootRange: root && [
+        first + root.findIndex((d) => d >= chord.bounds[0]),
+        first + root.findIndex((d) => d >= chord.bounds[1]) - 1,
       ],
     };
   });
 
   const result = withRepeats.map((chord, i) => {
-    const thin1 = chord.blocks && chord.blocks[0][0] === chord.blocks[0][1];
-    const thin2 = chord.blocks && chord.blocks[1][0] === chord.blocks[1][1];
+    const thin1 = chord.blocks && chord.blocks[0]?.[0] === chord.blocks[0]?.[1];
+    const thin2 = chord.blocks && chord.blocks[1]?.[0] === chord.blocks[1]?.[1];
     return {
       ...chord,
       curves: [
-        i === 0 ||
-          mod(chord?.blocks?.[0][0] - withRepeats[i - 1]?.blocks?.[0][0], 2) ===
-            0,
-        i === withRepeats.length - 1 ||
-          mod(chord?.blocks?.[0][0] - withRepeats[i + 1]?.blocks?.[0][0], 2) ===
-            0,
+        [
+          i === 0 ||
+            mod(
+              chord?.blocks?.[0]?.[0] - withRepeats[i - 1]?.blocks?.[0]?.[0],
+              2
+            ) === 0,
+          i === withRepeats.length - 1 ||
+            mod(
+              chord?.blocks?.[0]?.[0] - withRepeats[i + 1]?.blocks?.[0]?.[0],
+              2
+            ) === 0,
+        ],
+        [
+          i === 0 ||
+            mod(
+              chord?.blocks?.[1]?.[0] - withRepeats[i - 1]?.blocks?.[1]?.[0],
+              2
+            ) === 0,
+          i === withRepeats.length - 1 ||
+            mod(
+              chord?.blocks?.[1]?.[0] - withRepeats[i + 1]?.blocks?.[1]?.[0],
+              2
+            ) === 0,
+        ],
       ],
       ...(chord.blocks
         ? {
             blocks: [
-              [
+              chord.blocks[0] && [
                 chord.blocks[0][0] - (thin1 ? 0.25 : 0),
                 chord.blocks[0][1] + (thin1 ? 0.25 : 0),
               ],
-              [
+              chord.blocks[1] && [
                 chord.blocks[1][0] - (thin2 ? 0.25 : 0),
                 chord.blocks[1][1] + (thin2 ? 0.25 : 0),
               ],
@@ -311,5 +363,20 @@ export default (info, time) => {
     };
   });
 
-  return result.map((chord) => ({ ...chord, time }));
+  console.log(
+    JSON.stringify(
+      result.map((r) => r.bounds),
+      null,
+      2
+    )
+  );
+
+  return {
+    time,
+    bars: result,
+    range: [
+      Math.floor(Math.min(...result.map((r) => r.bounds[0]))),
+      Math.ceil(Math.max(...result.map((r) => r.bounds[1]))),
+    ],
+  };
 };

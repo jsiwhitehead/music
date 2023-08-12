@@ -1,12 +1,12 @@
 {
   barWidth: 120
   lineHeight: 7
-  barHeight: lineHeight * 40 - 1
+  barHeight: lineHeight * (data.range[2] - data.range[1] + 2) - 1
   curveOffset: lineHeight * 2
   noteSize: lineHeight * 1.6
   overlap: lineHeight * 3
 
-  getY: (y) => lineHeight * (24 - y) - 1
+  getY: (y) => lineHeight * (data.range[2] + 1 - y) - 1
 
   renderCurve: (colour, opacity, stroke, x, dir, ys1, ys2) => {
     mids: [(ys1[1] + ys2[1]) / 2, (ys1[2] + ys2[2]) / 2]
@@ -43,48 +43,50 @@
     if info.blocks then
       for colour in [
         'white'
-        colorsfull[((info.key + info.chordMid) * 2 - 1) % 24]
+        colorsfull[(info.chordMid * 2 - 1) % 24]
       ]
         for i in getRange(info.range[1], info.range[2]) {
           index: (i + 1) % 2
           offset: 12 * floor(i / 2)
           ~
-          [
-            shape: 'rect'
-            fill: colour
-            opacity: if colour != 'white' then 0.5
-            ~
+          if info.blocks[index] then {
             [
-              x + (if info.curves[1] then curveOffset else 0)
-              getY(info.blocks[index][2] + offset)
+              shape: 'rect'
+              fill: colour
+              opacity: if colour != 'white' then 0.5
+              ~
+              [
+                x + (if info.curves[index][1] then curveOffset else 0)
+                getY(info.blocks[index][2] + offset)
+              ]
+              [
+                barWidth
+                  - (if info.curves[index][1] then curveOffset else 0)
+                  - (if info.curves[index][2] then curveOffset else 0)
+                lineHeight * (info.blocks[index][2] - info.blocks[index][1])
+              ]
             ]
-            [
-              barWidth
-                - (if info.curves[1] then curveOffset else 0)
-                - (if info.curves[2] then curveOffset else 0)
-              lineHeight * (info.blocks[index][2] - info.blocks[index][1])
-            ]
-          ]
-          if info.curves[1] & blocks1 then
-            renderCurve(
-              colour
-              if colour != 'white' then 0.5
-              no
-              x
-              1
-              [for y in blocks1[index] getY(y + offset)]
-              [for y in info.blocks[index] getY(y + offset)]
-            )
-          if info.curves[2] & blocks2 then
-            renderCurve(
-              colour
-              if colour != 'white' then 0.5
-              no
-              x + barWidth
-              (-1)
-              [for y in blocks2[index] getY(y + offset)]
-              [for y in info.blocks[index] getY(y + offset)]
-            )
+            if info.curves[index][1] & blocks1 then
+              renderCurve(
+                colour
+                if colour != 'white' then 0.5
+                no
+                x
+                1
+                [for y in blocks1[index] getY(y + offset)]
+                [for y in info.blocks[index] getY(y + offset)]
+              )
+            if info.curves[index][2] & blocks2 then
+              renderCurve(
+                colour
+                if colour != 'white' then 0.5
+                no
+                x + barWidth
+                (-1)
+                [for y in blocks2[index] getY(y + offset)]
+                [for y in info.blocks[index] getY(y + offset)]
+              )
+          }
         }
     else if info.chord = 'aug' then {
       [
@@ -164,9 +166,9 @@
 
   }
 
-  renderNotes: (x, info, roots1, roots2) => {
+  renderNotes: (x, info, root1, root2) => {
 
-    for i in getRange(info.rootsRange[1], info.rootsRange[2]) {
+    for i in getRange(info.rootRange[1], info.rootRange[2]) {
       index: (i + 1) % 2
       offset: 12 * floor(i / 2)
       ~
@@ -176,23 +178,23 @@
         ~
         [
           x + curveOffset
-          getY(info.roots[index] + offset) - 0.75
+          getY(info.root[index] + offset) - 0.75
         ]
         [
           barWidth - curveOffset * 2
           1.5
         ]
       ]
-      if roots1 then
-        if ((roots1[1] - info.roots[1]) % 2 = 2) then
+      if root1 then
+        if ((root1[1] - info.root[1]) % 2 = 2) then
           renderCurve(
             no
             1
             [width: 1.5, color: 'rgb(150, 150, 150)', cap: 'round']
             x
             1
-            [for y in [1, 2] getY(roots1[index] + offset)]
-            [for y in [1, 2] getY(info.roots[index] + offset)]
+            [for y in [1, 2] getY(root1[index] + offset)]
+            [for y in [1, 2] getY(info.root[index] + offset)]
           )
         else [
           shape: 'path'
@@ -201,27 +203,27 @@
           ~
           ['M'
             x
-            getY((roots1[index] + info.roots[index]) / 2 + offset)
+            getY((root1[index] + info.root[index]) / 2 + offset)
           ]
           ['L'
             x
-            getY(info.roots[index] + offset)
+            getY(info.root[index] + offset)
           ]
           ['l'
             curveOffset
             0
           ]
         ]
-      if roots2 then
-        if ((roots2[1] - info.roots[1]) % 2 = 2) then
+      if root2 then
+        if ((root2[1] - info.root[1]) % 2 = 2) then
           renderCurve(
             no
             1
             [width: 1.5, color: 'rgb(150, 150, 150)', cap: 'round']
             x + barWidth
             (-1)
-            [for y in [1, 2] getY(roots2[index] + offset)]
-            [for y in [1, 2] getY(info.roots[index] + offset)]
+            [for y in [1, 2] getY(root2[index] + offset)]
+            [for y in [1, 2] getY(info.root[index] + offset)]
           )
         else [
           shape: 'path'
@@ -230,11 +232,11 @@
           ~
           ['M'
             x + barWidth
-            getY((roots2[index] + info.roots[index]) / 2 + offset)
+            getY((root2[index] + info.root[index]) / 2 + offset)
           ]
           ['L'
             x + barWidth
-            getY(info.roots[index] + offset)
+            getY(info.root[index] + offset)
           ]
           ['l'
             (-curveOffset)
@@ -278,7 +280,7 @@
           fill: 'black'
           ~
           [
-            x - noteSize / 2 + (j - 0.5) * barWidth / info.time
+            x - noteSize / 2 + (j - 0.5) * barWidth / data.time
             getY(note) - noteSize / 2
           ]
           [
@@ -291,7 +293,7 @@
           fill: colors[(note * 7) % 12]
           ~
           [
-            x - (noteSize - 4) / 2 + (j - 0.5) * barWidth / info.time
+            x - (noteSize - 4) / 2 + (j - 0.5) * barWidth / data.time
             getY(note) - (noteSize - 4) / 2
           ]
           [
@@ -306,17 +308,18 @@
   ~
   [
     pad: 50
+    font: 'Atkinson Hyperlegible'
+    size: 14
     flow: 'row'
     fill: '#fafaed'
     style: ['flex-wrap': 'wrap']
     ~
-    for info, i in data [
-      fill: '#fafaed'
-      style: [margin: '0px -{overlap}px']
-      font: 'Atkinson Hyperlegible'
-      size: 14
+    for info, i in data.bars [
+      pad: [bottom: 50]
+      style: [margin: '0 -{overlap}px']
       ~
       [
+        pad: [bottom: 10]
         style: [
           position: 'relative'
           left: '{curveOffset * 2}px'
@@ -329,14 +332,13 @@
         ~
         [
           svg: yes
-          fill: '#fafaed'
           size: [barWidth + overlap * 2, barHeight]
           ~
           {
             bars: [
-              if i = 1 then data[i] else data[i - 1]
-              data[i]
-              if i = len(data) then data[i] else data[i + 1]
+              if i = 1 then data.bars[i] else data.bars[i - 1]
+              data.bars[i]
+              if i = len(data.bars) then data.bars[i] else data.bars[i + 1]
             ]
             ~
             for bar, i in bars
@@ -347,11 +349,11 @@
                 bars[i + 1].blocks
               )
             for bar, i in bars
-              renderNotes(
+              if bar.root then renderNotes(
                 overlap + (i - 2) * barWidth
                 bar,
-                bars[i - 1].roots
-                bars[i + 1].roots
+                bars[i - 1].root
+                bars[i + 1].root
               )
           }
         ]
@@ -367,7 +369,7 @@
             svg: yes
             size: [barWidth, barHeight]
             ~
-            renderMelody(0, data[i])
+            renderMelody(0, data.bars[i])
           ]
         ]
       ]
