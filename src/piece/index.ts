@@ -7,7 +7,7 @@ const convert = (note) => mod(note * 7, 12);
 const mid = ([start, end]: any) => (start + end) / 2;
 
 export default (info) => {
-  const { time, chords } = parse(info);
+  const { time, height, chords } = parse(info);
 
   let blocks;
   const withBlocks = chords.map((chord) => {
@@ -242,7 +242,7 @@ export default (info) => {
     const getBound = (index) =>
       (mod(index, 2) === 0 ? baseDivides[0] : baseDivides[1]) +
       Math.floor(index / 2) * 12;
-    while (range[1] - range[0] < 2) {
+    while (range[1] - range[0] < height - 1) {
       if ((getBound(range[0]) + getBound(range[1] + 1)) / 2 >= rangeMids[i]) {
         range[0] = range[0] - 1;
       } else {
@@ -292,6 +292,21 @@ export default (info) => {
       extra.push(...extra.slice(-len3).map((x) => x + 12));
     }
 
+    const len5 = chord.shape.length;
+    const shape = chord.shape
+      .map((x) => {
+        const r = [convert(x[0]), convert(x[1])];
+        if (r[1] < r[0]) r[1] += 12;
+        return r;
+      })
+      .sort((a, b) => a[0] - b[0]);
+    while (shape[0][0] >= chord.bounds[0]) {
+      shape.unshift(...shape.slice(0, len5).map((x) => [x[0] - 12, x[1] - 12]));
+    }
+    while (shape[shape.length - 1][1] <= chord.bounds[1]) {
+      shape.push(...shape.slice(-len5).map((x) => [x[0] + 12, x[1] + 12]));
+    }
+
     const base = chord.base === undefined ? undefined : [convert(chord.base)];
     if (base) {
       while (base[0] >= chord.bounds[0]) {
@@ -323,6 +338,13 @@ export default (info) => {
       ),
       lines: chord.lines.filter(
         (x) => x >= chord.bounds[0] && x <= chord.bounds[1]
+      ),
+      shape: shape.filter(
+        (x) =>
+          x[0] >= chord.bounds[0] &&
+          x[0] <= chord.bounds[1] &&
+          x[1] >= chord.bounds[0] &&
+          x[1] <= chord.bounds[1]
       ),
       base:
         base &&

@@ -10,7 +10,8 @@
 }
 
 html,
-body {
+body,
+#app {
   height: 100%;
 }
 
@@ -23,6 +24,7 @@ img,
 picture,
 video,
 canvas,
+textarea,
 svg {
   display: block;
   max-width: 100%;

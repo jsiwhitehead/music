@@ -94,7 +94,9 @@ const getFlow = ($flow) => {
 const getTag = ($values) => {
   if (resolve($values.image)) return "img";
   if (resolve($values.link)) return "a";
-  if (resolve($values.input) !== undefined) return "input";
+  if (resolve($values.input) !== undefined) {
+    return resolve($values.big) ? "textarea" : "input";
+  }
   return resolve($values.tag) || "div";
 };
 
@@ -109,11 +111,12 @@ const getItems = (items, $values) => {
   return items;
 };
 
-const getProps = ({ image, link, input }) => {
+const getProps = ({ image, link, input, placeholder }) => {
   const result = {} as any;
   if (image) result.src = image;
   if (link) result.href = link;
   if (input) result.value = input;
+  if (placeholder) result.placeholder = placeholder;
   return result;
 };
 
@@ -124,7 +127,8 @@ const getSetters = ({ hover, click, input }) => {
     result.onmouseleave = () => hover.set(false);
   }
   if (click?.__type === "signal" && click?.set) {
-    result.onclick = () => {
+    result.onclick = (e) => {
+      e.stopPropagation();
       click.set({});
       // setTimeout(() => click.set(false));
     };
@@ -136,7 +140,7 @@ const getSetters = ({ hover, click, input }) => {
 };
 
 const getStyle = (values, context, flow) => {
-  const result = { ...(values.style?.values || {}) } as any;
+  const result = {} as any;
   if (context.inline !== "wrap" && !flow.type) {
     result.display = "flex";
     result.flexDirection = "column";
@@ -249,6 +253,7 @@ const getStyle = (values, context, flow) => {
     result.cursor = "pointer";
     result.userSelect = "none";
   }
+  Object.assign(result, values.style?.values || {});
   return result;
 };
 

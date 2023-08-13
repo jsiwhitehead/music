@@ -11,7 +11,7 @@ const isDef = (x) => (x === undefined ? undefined : true);
 const grammar = String.raw`Chord {
 
   piece
-    = newline* digit newline+ listOf<bar, newline> newline*
+    = newline* digit ("," digit)? "*"? " "* newline+ listOf<bar, newline> newline*
 
   bar
   	= chord? " "* listOf<fullnote, " "+>
@@ -28,7 +28,7 @@ const grammar = String.raw`Chord {
     | "#" ("9" | "11") -- sharp
     | "+" -- augmented
     | "dim7" -- diminished
-    | "sus4" -- suspended
+    | "sus" ("2" | "4") -- suspended
 
   fullnote
     = note (("'" | ",")+)? -- note
@@ -46,9 +46,11 @@ const g = ohm.grammar(grammar);
 const s = g.createSemantics();
 
 s.addAttribute("ast", {
-  piece: (_1, a, _2, b, _3) => ({
+  piece: (_1, a, _2, b, c, _3, _4, d, _5) => ({
     time: parseInt(a.sourceString, 10),
-    bars: b.ast,
+    height: parseInt(b.sourceString.slice(1) || "3", 10),
+    allFifths: c.sourceString === "*",
+    bars: d.ast,
   }),
 
   bar: (a, _1, b) => {
@@ -66,8 +68,16 @@ s.addAttribute("ast", {
 
   chord: (a, b, _1, c, _2, _3) => {
     const notes = new Set(b.ast.reduce((res, x) => [...res, ...x], [0]));
-    if (!notes.has(6) && !notes.has(-4)) notes.add(1);
-    if (!notes.has(-3) && !notes.has(-1)) notes.add(4);
+    if (!notes.has(-3) && !notes.has(-1) && !notes.has(2)) {
+      notes.add(4);
+    }
+    if (
+      !notes.has(6) &&
+      !notes.has(-4) &&
+      (notes.has(2) || notes.has(3) || notes.has(4) || notes.has(5))
+    ) {
+      notes.add(1);
+    }
     const base = c.ast[0] !== undefined ? mod12Dist(c.ast[0] - a.ast) : 0;
     notes.add(base);
     const key = a.ast;
@@ -75,13 +85,38 @@ s.addAttribute("ast", {
     return {
       notes: keyNotes,
       name: a.sourceString + b.sourceString + c.sourceString,
+      tryFifth: !notes.has(6) && !notes.has(-4) ? mod12(key + 1) : false,
       root: [
         key,
-        keyNotes.includes(mod12(key + 1))
+        notes.has(1) || (!notes.has(6) && !notes.has(-4))
           ? mod12(key + 1)
-          : keyNotes.includes(mod12(key + 6))
+          : notes.has(6)
           ? mod12(key + 6)
           : mod12(key + 8),
+      ],
+      shape: [
+        [
+          key,
+          notes.has(4)
+            ? mod12(key + 4)
+            : notes.has(-3)
+            ? mod12(key - 3)
+            : notes.has(-1)
+            ? mod12(key - 1)
+            : notes.has(2)
+            ? mod12(key + 2)
+            : key,
+        ],
+        [
+          notes.has(1) || (!notes.has(6) && !notes.has(-4))
+            ? mod12(key + 1)
+            : notes.has(6)
+            ? mod12(key + 6)
+            : notes.has(8)
+            ? mod12(key + 8)
+            : mod12(key - 1),
+          notes.has(-2) ? mod12(key - 2) : notes.has(5) ? mod12(key + 5) : key,
+        ],
       ],
       base: mod12(base + key),
     };
@@ -89,8 +124,8 @@ s.addAttribute("ast", {
 
   ext_sixnine: (a) =>
     ({
-      "6": [3],
-      "6/9": [2, 3],
+      "6": [3, 4],
+      "6/9": [2, 3, 4],
     }[a.sourceString]),
   ext_dominant: (a) =>
     ({
@@ -122,7 +157,11 @@ s.addAttribute("ast", {
     }[a.sourceString]),
   ext_augmented: (_1) => [-4, 4],
   ext_diminished: (_1) => [-3, 3, 6],
-  ext_suspended: (_1) => [-1],
+  ext_suspended: (_1, a) =>
+    ({
+      "2": [2],
+      "4": [-1],
+    }[a.sourceString]),
 
   fullnote_note: (a, b) => [
     mod12(a.ast * 7),
@@ -160,10 +199,10 @@ const getChord = (notes) => {
 
   if (max1 < 1 && max2 < 1) {
     if (max1 === -1 && max2 === 0) {
-      return { chord: "aug", rot: 0, ext: [] };
+      return { chord: "aug", rot: 0, ext: [], ext2: [] };
     }
     if (max2 === -1 && max1 === 0) {
-      return { chord: "aug", rot: 1, ext: [] };
+      return { chord: "aug", rot: 1, ext: [], ext2: [] };
     }
     throw new Error();
   }
@@ -187,7 +226,7 @@ const getChord = (notes) => {
   const defined1 = totals[max1] === 0;
   const defined2 = totals[max2] === 0;
   if (!defined1 && !defined2) {
-    return { chord: "dim", ext: [...notes] };
+    return { chord: "dim", ext: [...notes], ext2: [] };
   }
 
   const index1 = defined1
@@ -263,7 +302,13 @@ export default (piece) => {
     throw new Error("Parser error");
   }
 
-  const { time, bars } = s(m).ast;
+  const { time, height, allFifths, bars } = s(m).ast;
+
+  if (allFifths) {
+    bars.forEach((chord) => {
+      if (chord.tryFifth !== false) chord.notes.add(chord.tryFifth);
+    });
+  }
 
   for (const _ in [1, 2, 3]) {
     bars.forEach((chord, i) => {
@@ -276,10 +321,11 @@ export default (piece) => {
         const size = [chord.notes, ...prev].reduce((res, x) => res + x.size, 0);
         Array.from({ length: 12 }).forEach((_, j) => {
           if (
+            j === chord.tryFifth ||
             chord.notes.has(mod12(j)) ||
             (chord.notes.has(mod12(j - 1)) && chord.notes.has(mod12(j + 1)))
           ) {
-            if (checkOne(chord.notes, j) >= 0) {
+            if (j === chord.tryFifth || checkOne(chord.notes, j) >= 0) {
               if (checkMulti(prev, j) >= 0) {
                 chord.notes.add(mod12(j));
               }
@@ -362,9 +408,16 @@ export default (piece) => {
   const offset = mod12Dist(averageKey * 7);
   return {
     time,
+    height,
     chords: chords.map((chord) => ({
       ...chord,
       root: isDef(chord.root) && chord.root.map((n) => mod12(n - averageKey)),
+      shape: isDef(chord.shape)
+        ? chord.shape.map((x) => [
+            mod12(x[0] - averageKey),
+            mod12(x[1] - averageKey),
+          ])
+        : [],
       base: isDef(chord.base) && mod12(chord.base - averageKey),
       melody: chord.melody.map((n) => (n === false ? n : n - offset)),
       chord: Array.isArray(chord.chord)

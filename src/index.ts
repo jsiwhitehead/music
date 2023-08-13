@@ -13,6 +13,7 @@ webfont.load({
       "Atkinson Hyperlegible:italic",
       "Atkinson Hyperlegible:bold",
       "Atkinson Hyperlegible:bolditalic",
+      "Roboto Mono",
     ],
   },
 });
@@ -200,7 +201,7 @@ const songs = {
     Bb7sus4 Bm7 Amaj7/Db Abm7 Db13
   `,
   Cello: `
-    8
+    8,4
     G D' B' A B D, B' D,
     G, D' B' A B D, B' D,
     G, E' C' B C E, C' E,
@@ -262,12 +263,112 @@ const songs = {
     C B' A G F# E D C
     B A' G F# E D C B
     A G' F# E F# A D, F#
+    E A F# A G A E A
+    F# A D, A' G A E A
+    F# A D, A' G A E A
+    F# A D, A' E A F# A
+    G A A A B A D, A'
+    A A B A C A D, A'
+    B A C A D A B A
+    C A B A C A A A
+    B A A A B A G A
+    A A G A A A F# A
+    G A F# A G A E A
+    F# A D, E F D F# D
+    G D G#' D A' D, Bb' D,
+    B' D, C' D, C#' D, D' D,
+    Eb' D, E' D, F' D, F#' D,
+    G' B, D, B' G' B, G' B,
+    G' B, D, B' G' B, G' B,
+    G' A, D, A' G' A, G' A,
+    G' A, D, A' G' A, G' A,
+    F#' C D, C' F#' C F#' C
+    F#' C D, C' F#' C F#' C
+    G, B' G'
+  `,
+  GiantSteps: `
+    4,4*
+    Bmaj7: F#
+    D7: D
+    Gmaj7: B
+    Bb7: G . . Bb
+    Ebmaj7:
+    Ebmaj7:
+    Am7: B . . A
+    D7:
+    Gmaj7: D
+    Bb7: Bb
+    Ebmaj7: G
+    F#7: D# . . F#
+    Bmaj7:
+    Bmaj7:
+    Fm7: G
+    Bb7: F . . Bb
+    Ebmaj7:
+    Ebmaj7:
+    Am7: B
+    D7: A . . D
+    Gmaj7:
+    Gmaj7:
+    C#m7: D#
+    F#7: D# . . F#
+    Bmaj7:
+    Bmaj7:
+    Fm7: G
+    Bb7: G . . Bb
+    Ebmaj7:
+    Ebmaj7:
+    C#m7: F# . . F#
+    F#7:
+  `,
+  InMyLife: `
+    4
+    A: C# . A' .
+    A: C#, D E G#
+    E7:
+    E7:
+    A: C#, . A' .
+    A: C#, D E G#
+    E7:
+    E7: . . E F#
+    A: B . A .
+    A: B . C# .
+    F#m: E C#
+    A7: . . B C#
+    D: B . C# B
+    Dm: A . . F
+    A: E C#' . C#
+    A: . . E, F#
+    A: B . A .
+    A: B . C# .
+    F#m: E C#
+    A7: . . B C#
+    D: B . C# B
+    Dm: A . . F
+    A: E . C#' C#
+    A: . . A B
+    F#m: C# B B A
+    F#m: A F# F# A
+    D: C# B
+    D: . . . C#
+    G: D C# B A
+    G: . . . F
+    A: E C#' C# C#
+    A: . . A B
+    F#m: C# B B A
+    F#m: A F# F# A
+    B7: C# B
+    B7: . . . F#
+    Dm: C' B A B
+    Dm: A . . F
+    A: E . C#' C#
+    A:
   `,
 };
 
 const compiled = maraca(
   {
-    data: getPiece(songs.MyFoolishHeart),
+    calc: (x) => getPiece(x),
     isBlock: (x) => x.__type === "block",
     len: (block) =>
       block === null
