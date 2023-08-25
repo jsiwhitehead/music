@@ -120,16 +120,64 @@ const songs = {
     G7: Eb F . F
     Cm: . Eb Eb .
     Cm: . . . .
-    Ebm6/Gb: . . . .
-    Ebm6/Gb: . G . G
+    Cm7b5/Gb: . . . .
+    Cm7b5/Gb: . G . G
     Bb: F . . D
     Bb: . C Bb .
     F7: . . . F
     F7: Eb' . D C
+    Eb/Bb: . . Bb G
     Eb/Bb: Bb
-    Eb/Bb:
     Bb: Bb
     Bb:
+    Bb: F . F F
+    Bb: . F G F
+    Cm7/Bb: . Eb . .
+    Cm7/Bb: . . C D
+    F/A: Eb . Eb Eb
+    F/A: Eb G . F
+    Bb: D . . .
+    Bb: . . F F
+    Gm: Bb Bb Bb Bb
+    Gm: . . G A
+    Cm7: Bb C C C
+    Cm7: . C C C
+    Ab: C . C D
+    Ab: Eb D Bb D
+    Fsus4: C . F, F
+    F: F' . D C
+    Bb: D . . .
+    Eb/Bb: . . . .
+    Bb: . . D D
+    Bb: Eb . F F
+    Ab/Bb: Eb . . .
+    Ab/Bb: . . . .
+    Ab/Bb: . . Eb Eb
+    Ab/Bb: F . . D
+    Eb: C Bb . .
+    Ab/Eb: . . . .
+    Eb: . . . Bb
+    Eb: Eb . F G
+    Fsus4: F . . .
+    Fsus4: . . . .
+    F: . . F F
+    Ab/Eb: F . Ab .
+    Db: F
+    Db:
+    Bb7: . . F F
+    Bb7: Gb Ab . .
+    Ebm: Ab Gb . Gb
+    Ebm:
+    Ebm7b5/Gb:
+    Ebm7b5/Gb: . Bb . Bb
+    Db/Ab: Ab . . F
+    Db/Ab: Eb Db . Bb
+    Absus4: Ab . . Ab
+    Ab7: Gb' . F Eb
+    Gb/Db: Db
+    Gb/Db: . . . Bb
+    Db: Db
+    Db:
   `,
   MyFoolishHeart: `
     4
@@ -363,6 +411,39 @@ const songs = {
     Dm: A . . F
     A: E . C#' C#
     A:
+  `,
+  Chopin: `
+  6
+  C . Db . B
+  F,, . (C'' F Ab C) . (Ab C F F')
+  (F E'') . (Db' E G Bb) . (Bb Db E Db')
+  F, . (C'' F Ab C) . (Ab C F F')
+  (F E'') . (Db' E G Bb) . (Bb Db E Db')
+  F . (C' F Ab C) Db' (Ab, C F C') Db'
+  (Eb,, Eb'') . (C' Ab' Eb') . (Eb, Eb'')
+  (Eb, Eb''') . (Db'' Eb G Db') C' (G, Db' Eb Bb') C'
+  (Ab,, Ab'') . (Ab' C Eb) . (Eb Ab C)
+  (Ab C F) . (Ab C Eb) . (Eb Ab C)
+  (Ab,,) . (Eb''' Ab C Eb) . (C Eb Ab Ab')
+  (Ab G'') . (E' G Bb Db) . (Db E G E')
+  (Ab,) . (Eb'' Ab C Eb) . (C Eb Ab Ab')
+  (Ab G'') . (E' G Bb Db) . (Bb Db G' E')
+  Ab, . (Eb'' Ab C Eb) F' (C, Eb Ab Eb') F'
+  (Eb,,, Gb''') . (Eb'' Gb Bb Gb') . (Bb Eb Gb Gb')
+  (F, Gb''') . (Eb'' A' F') C' (A, Eb' F Eb') Db'
+  (Bb,, Bb'') . (Bb' Db F) . (F Bb Db)
+  Gb, . (Bb' Db Gb Db') Eb' (Gb,, Bb Db Db') Eb''
+  (Db,,, F''') . (Ab'' Db F F') . (F Ab Db F')
+  (Eb, F''') . (Bb'' C Gb' Eb') Bb' (Gb, Bb Eb Db') C''
+  (F,,, A'') . (C'' F A C) . (A C F F')
+  (F E'') . (Db' E G Bb) . (Bb Db E Db')
+  (F,) . (C'' F A C) . (A C F F')
+  (F E'') . (Db' E G Bb) . (Bb Db E Db')
+  F, . (C'' Eb Gb C') Db' (Gb,, Bb Eb C') Db''
+  (F,, Eb'') . (Eb' Gb Bb Eb) . (C Eb Gb Eb')
+  (F,, Eb''') . (Eb'' A' F') C' (A, Eb' F Eb') Db'
+  (Bb,, Bb'') . (Bb' Db F) . (F Bb Db)
+  (C G'') . (Bb' C E) . (G Bb C)
   `,
 };
 

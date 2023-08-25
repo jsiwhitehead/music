@@ -31,8 +31,12 @@ const grammar = String.raw`Chord {
     | "sus" ("2" | "4") -- suspended
 
   fullnote
-    = note (("'" | ",")+)? -- note
+    = pitchnote -- single
+    | "(" listOf<pitchnote, " "+> ")" -- multi
     | "." -- gap
+
+  pitchnote
+    = note (("'" | ",")+)?
 
   note
   	= "A".."G" ("b"+ | "#"+)?
@@ -56,8 +60,10 @@ s.addAttribute("ast", {
   bar: (a, _1, b) => {
     const notes = new Set(a.ast[0]?.notes ?? []);
     const melody = b.ast;
-    for (const n of melody.filter((x) => x !== false)) {
-      notes.add(mod12(n[0] * 7));
+    for (const set of melody) {
+      for (const n of set) {
+        notes.add(mod12(n[0] * 7));
+      }
     }
     return {
       ...(a.ast[0] || {}),
@@ -94,6 +100,18 @@ s.addAttribute("ast", {
           ? mod12(key + 6)
           : mod12(key + 8),
       ],
+      // root: [
+      //   notes.has(4)
+      //     ? mod12(key + 4)
+      //     : notes.has(-3)
+      //     ? mod12(key - 3)
+      //     : notes.has(-1)
+      //     ? mod12(key - 1)
+      //     : notes.has(2)
+      //     ? mod12(key + 2)
+      //     : key,
+      //   notes.has(-2) ? mod12(key - 2) : notes.has(5) ? mod12(key + 5) : key,
+      // ],
       shape: [
         [
           key,
@@ -163,11 +181,14 @@ s.addAttribute("ast", {
       "4": [-1],
     }[a.sourceString]),
 
-  fullnote_note: (a, b) => [
+  fullnote_single: (a) => [a.ast],
+  fullnote_multi: (_1, a, _2) => a.ast,
+  fullnote_gap: (_1) => [],
+
+  pitchnote: (a, b) => [
     mod12(a.ast * 7),
     (b.sourceString[0] === "'" ? 12 : -12) * b.sourceString.length,
   ],
-  fullnote_gap: (_1) => false,
 
   note: (a, b) =>
     mod12(
@@ -185,24 +206,29 @@ s.addAttribute("ast", {
 });
 
 const getChord = (notes) => {
-  const ranges = Array.from({ length: 12 }).map((_, i) =>
-    Array.from({ length: 6 })
-      .map(
-        (_, j) =>
-          (j === 0 || !notes.includes(mod12(i + j * 2 - 7))) &&
-          notes.includes(mod12(i + j * 2))
-      )
-      .findIndex((x) => !x)
-  );
+  const ranges = Array.from({ length: 12 }).map((_, i) => {
+    if (!notes.includes(mod12(i))) return 0;
+    if (notes.includes(mod12(i + 7))) return 1;
+    const max = Array.from({ length: 6 })
+      .map((_, j) => notes.includes(mod12(i + j * 2)))
+      .findIndex((x) => !x);
+    return (
+      max -
+      Array.from({ length: max })
+        .map((_, j) => j === 0 || !notes.includes(mod12(i + j * 2 - 7)))
+        .reverse()
+        .findIndex((x) => x)
+    );
+  });
   const max1 = Math.max(...ranges.filter((_, i) => i % 2 === 0));
   const max2 = Math.max(...ranges.filter((_, i) => i % 2 === 1));
 
   if (max1 < 1 && max2 < 1) {
     if (max1 === -1 && max2 === 0) {
-      return { chord: "aug", rot: 0, ext: [], ext2: [] };
+      return { chord: "aug", rot: 0, ext: [], ext2: [], cover: [] };
     }
     if (max2 === -1 && max1 === 0) {
-      return { chord: "aug", rot: 1, ext: [], ext2: [] };
+      return { chord: "aug", rot: 1, ext: [], ext2: [], cover: [] };
     }
     throw new Error();
   }
@@ -226,7 +252,7 @@ const getChord = (notes) => {
   const defined1 = totals[max1] === 0;
   const defined2 = totals[max2] === 0;
   if (!defined1 && !defined2) {
-    return { chord: "dim", ext: [...notes], ext2: [] };
+    return { chord: "dim", ext: [...notes], ext2: [], cover: [] };
   }
 
   const index1 = defined1
@@ -245,14 +271,27 @@ const getChord = (notes) => {
     chord[1] && chord[1][0] + chord[1][1] / 2,
   ];
 
+  const covered = [] as any[];
+  if (index1 !== false) {
+    for (let i = 1; i < max1; i++) covered[mod12(index1 + 5 + i * 2)] = true;
+  }
+  if (index2 !== false) {
+    for (let i = 1; i < max2; i++) covered[mod12(index2 + 5 + i * 2)] = true;
+  }
+
+  const ext = notes.filter(
+    (x) => x !== index1 && x !== index2 && ranges[x] === 1
+  );
+
   return {
     chord,
     chordMid:
       mids[0] && mids[1]
         ? mod12(mids[0] + mod12Dist(mids[1] - mids[0]) / 2)
         : mids[0] || mids[1],
-    ext: notes.filter((x) => x !== index1 && x !== index2 && ranges[x] === 1),
+    ext,
     ext2: notes.filter((x) => x !== index1 && x !== index2 && ranges[x] === 2),
+    cover: ext.filter((x) => covered[x]),
   };
 };
 
@@ -383,14 +422,17 @@ export default (piece) => {
   const chords = extra.map(({ notes, ...chord }) => ({
     ...chord,
     ...getChord([...notes]),
-    melody: chord.melody.map((n) => {
-      if (n === false) return false;
-      let res = n[0];
-      while (prevMelody - res <= 6) res -= 12;
-      while (prevMelody - res > 6) res += 12;
-      res += n[1];
-      prevMelody = res;
-      return res;
+    melody: chord.melody.map((set) => {
+      const mappedSet = set.map((n) => {
+        let res = n[0];
+        while (prevMelody - res <= 6) res -= 12;
+        while (prevMelody - res > 6) res += 12;
+        res += n[1];
+        prevMelody = res;
+        return res;
+      });
+      if (mappedSet.length > 0) prevMelody = mappedSet[0];
+      return mappedSet;
     }),
   }));
 
@@ -419,7 +461,7 @@ export default (piece) => {
           ])
         : [],
       base: isDef(chord.base) && mod12(chord.base - averageKey),
-      melody: chord.melody.map((n) => (n === false ? n : n - offset)),
+      melody: chord.melody.map((set) => set.map((n) => n - offset)),
       chord: Array.isArray(chord.chord)
         ? [
             chord.chord[0] && [
@@ -435,6 +477,8 @@ export default (piece) => {
       chordMid: isDef(chord.chordMid) && mod12(chord.chordMid - averageKey),
       extra: chord.extra.map((n) => mod12(n - averageKey)),
       ext: chord.ext.map((n) => mod12(n - averageKey)),
+      ext2: chord.ext2.map((n) => mod12(n - averageKey)),
+      cover: chord.cover.map((n) => mod12(n - averageKey)),
     })),
   };
 };

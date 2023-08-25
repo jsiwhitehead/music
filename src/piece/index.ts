@@ -129,7 +129,9 @@ export default (info) => {
   });
 
   const withNotesRange = withRoot.map((chord) => {
-    const notes = chord.melody.filter((x) => x !== false).sort((a, b) => a - b);
+    const notes = chord.melody
+      .reduce((res, set) => [...res, ...set], [])
+      .sort((a, b) => a - b);
     if (notes.length === 0) return chord;
     return {
       ...chord,
@@ -267,12 +269,21 @@ export default (info) => {
     }
 
     const len4 = chord.ext2.length;
-    const ext2 = chord.ext2.map((x) => convert(x) + 3).sort((a, b) => a - b);
+    const ext2 = chord.ext2.map((x) => convert(x)).sort((a, b) => a - b);
     while (ext2[0] >= chord.bounds[0]) {
       ext2.unshift(...ext2.slice(0, len4).map((x) => x - 12));
     }
     while (ext2[ext2.length - 1] <= chord.bounds[1]) {
       ext2.push(...ext2.slice(-len4).map((x) => x + 12));
+    }
+
+    const len6 = chord.cover.length;
+    const cover = chord.cover.map((x) => convert(x)).sort((a, b) => a - b);
+    while (cover[0] >= chord.bounds[0]) {
+      cover.unshift(...cover.slice(0, len6).map((x) => x - 12));
+    }
+    while (cover[cover.length - 1] <= chord.bounds[1]) {
+      cover.push(...cover.slice(-len6).map((x) => x + 12));
     }
 
     const len2 = chord.lines.length;
@@ -292,19 +303,25 @@ export default (info) => {
       extra.push(...extra.slice(-len3).map((x) => x + 12));
     }
 
-    const len5 = chord.shape.length;
-    const shape = chord.shape
-      .map((x) => {
-        const r = [convert(x[0]), convert(x[1])];
-        if (r[1] < r[0]) r[1] += 12;
-        return r;
-      })
-      .sort((a, b) => a[0] - b[0]);
-    while (shape[0][0] >= chord.bounds[0]) {
-      shape.unshift(...shape.slice(0, len5).map((x) => [x[0] - 12, x[1] - 12]));
-    }
-    while (shape[shape.length - 1][1] <= chord.bounds[1]) {
-      shape.push(...shape.slice(-len5).map((x) => [x[0] + 12, x[1] + 12]));
+    const shape =
+      chord.shape ||
+      []
+        .map((x) => {
+          const r = [convert(x[0]), convert(x[1])];
+          if (r[1] < r[0]) r[1] += 12;
+          return r;
+        })
+        .sort((a, b) => a[0] - b[0]);
+    const len5 = shape.length;
+    if (len5 > 0) {
+      while (shape[0][0] >= chord.bounds[0]) {
+        shape.unshift(
+          ...shape.slice(0, len5).map((x) => [x[0] - 12, x[1] - 12])
+        );
+      }
+      while (shape[shape.length - 1][1] <= chord.bounds[1]) {
+        shape.push(...shape.slice(-len5).map((x) => [x[0] + 12, x[1] + 12]));
+      }
     }
 
     const base = chord.base === undefined ? undefined : [convert(chord.base)];
@@ -332,6 +349,7 @@ export default (info) => {
     return {
       ...chord,
       ext: ext.filter((x) => x >= chord.bounds[0] && x <= chord.bounds[1]),
+      cover: cover.filter((x) => x >= chord.bounds[0] && x <= chord.bounds[1]),
       ext2: ext2.filter((x) => x >= chord.bounds[0] && x <= chord.bounds[1]),
       extra: extra.filter(
         (x) => x >= chord.bounds[0] && x + 2 <= chord.bounds[1]

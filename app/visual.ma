@@ -1,11 +1,11 @@
 (text, analyse) => {
   data: calc(text)
 
-  barWidth: 120
-  lineHeight: 7
+  barWidth: data.time * 30
+  lineHeight: 5
   barHeight: lineHeight * (data.range[2] - data.range[1] + 2) - 1
   curveOffset: lineHeight * 2
-  noteSize: lineHeight * 1.6
+  noteSize: lineHeight * 2
   overlap: lineHeight * 3
 
   getY: (y) => lineHeight * (data.range[2] + 1 - y) - 1
@@ -163,13 +163,22 @@
         ]
     }
 
-    for y in info.lines [
+    if no then for y in info.lines [
       shape: 'path'
       stroke: [width: 1, color: 'white', cap: 'round']
       opacity: 0.5
       ~
       ['M', x, getY(y)]
       ['l', barWidth, 0]
+    ]
+
+    for y in info.cover [
+      shape: 'path'
+      stroke: [width: lineHeight * 2, color: '#fafaed', cap: 'round']
+      fill: 'none'
+      ~
+      ['M', x + lineHeight * 1.5, getY(y)]
+      ['L', x + barWidth - lineHeight * 1.5, getY(y)]
     ]
 
     for y in info.ext
@@ -212,7 +221,7 @@
           ~
           [
             x
-            getY(y + 1)
+            getY(y + 2)
           ]
           [
             barWidth
@@ -222,39 +231,39 @@
       else {
         for colour in [
           'white'
-          colorsfull[((y * 7) * 2 - 13) % 24]
+          colorsfull[((y * 7) * 2 + 1) % 24]
         ] [
           shape: 'path'
           stroke: [width: lineHeight * 2, color: colour]
           opacity: if colour != 'white' then 0.5
           fill: 'none'
           ~
-          ['M', x + lineHeight * 1.5, getY(y)]
-          ['L', x + barWidth - lineHeight * 1.5, getY(y)]
+          ['M', x + lineHeight * 1.5, getY(y + 1)]
+          ['L', x + barWidth - lineHeight * 1.5, getY(y + 1)]
         ]
         for colour in [
           'white'
-          colorsfull[((y * 7) * 2 - 13) % 24]
+          colorsfull[((y * 7) * 2 + 1) % 24]
         ] [
           shape: 'path'
           stroke: [width: lineHeight / 2, color: colour, cap: 'round']
           opacity: if colour != 'white' then 0.5
           fill: 'none'
           ~
-          ['M', x + lineHeight * 1.5, getY(y - 0.75)]
-          ['L', x + lineHeight * 1.5, getY(y + 0.75)]
+          ['M', x + lineHeight * 1.5, getY(y + 1 - 0.75)]
+          ['L', x + lineHeight * 1.5, getY(y + 1 + 0.75)]
         ]
         for colour in [
           'white'
-          colorsfull[((y * 7) * 2 - 13) % 24]
+          colorsfull[((y * 7) * 2 + 1) % 24]
         ] [
           shape: 'path'
           stroke: [width: lineHeight / 2, color: colour, cap: 'round']
           opacity: if colour != 'white' then 0.5
           fill: 'none'
           ~
-          ['M', x + barWidth - lineHeight * 1.5, getY(y - 0.75)]
-          ['L', x + barWidth - lineHeight * 1.5, getY(y + 0.75)]
+          ['M', x + barWidth - lineHeight * 1.5, getY(y + 1 - 0.75)]
+          ['L', x + barWidth - lineHeight * 1.5, getY(y + 1 + 0.75)]
         ]
       }
 
@@ -403,8 +412,8 @@
   }
 
   renderMelody: (x, info) => {
-    for note, j in info.melody
-      if note then {
+    for set, j in info.melody
+      for note in set {
         [
           shape: 'ellipse'
           fill: 'black'
@@ -463,7 +472,7 @@
         pad: [bottom: 50]
         style: [margin: '0 -{overlap}px']
         ~
-        [
+        if no then [
           pad: [bottom: 10]
           style: [
             position: 'relative'
