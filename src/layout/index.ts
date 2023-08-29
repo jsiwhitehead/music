@@ -1,9 +1,10 @@
-import { convert, mod } from "../util";
+import { convert } from "../util";
 
 import getBlocks from "./blocks";
 import getRoots from "./roots";
 import getRanges from "./ranges";
 import getCurves from "./curves";
+import getMoves from "./moves";
 import getNotes from "./notes";
 import getThin from "./thin";
 
@@ -20,6 +21,14 @@ export default (bars, height) => {
   );
   const guidesCurves = getCurves(guides);
   const blocksCurves = getCurves(blocks);
+
+  const moves = getMoves(
+    bars.map((bar) => bar.chordNotes),
+    bars.map((bar) => bar.moves),
+    bars.map((bar) => bar.root[0]),
+    ranges.map((r) => r.bounds)
+  );
+
   return bars.map((bar, i) => {
     const root = roots[i] && getNotes([...roots[i]], ranges[i].bounds);
     return {
@@ -39,7 +48,16 @@ export default (bars, height) => {
       ).notes,
       root: roots[i],
       rootRange: root.range,
+      rootOffset: convert(roots[i][0]) === bar.root[0] ? 1 : 2,
       base: getNotes([convert(bar.base)], ranges[i].bounds).notes,
+      moves: moves[i].filter(
+        (x) => x.note >= ranges[i].bounds[0] && x.note <= ranges[i].bounds[1]
+      ),
+      nextMoves: moves[i + 1]?.filter(
+        (x) =>
+          x.note - x.move >= ranges[i].bounds[0] &&
+          x.note - x.move <= ranges[i].bounds[1]
+      ),
     };
   });
 };

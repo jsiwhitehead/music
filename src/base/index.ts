@@ -29,11 +29,22 @@ export default (piece) => {
     });
   }
 
+  const chordNotes = bars.map((bar) => bar.chordNotes);
+
   const notesList = bars.map((bar) => bar.notes);
   extendNotes(
     notesList,
     bars.map((bar) => !allFifths && bar.tryFifth)
   );
+
+  chordNotes.forEach((notes, i) => {
+    if (bars[i].notes.has(bars[i].tryFifth)) notes.add(bars[i].tryFifth);
+  });
+  const moves = chordNotes.map((notes, i) => {
+    return [...notes].filter(
+      (n) => i !== 0 && chordNotes[i - 1].size > 0 && !chordNotes[i - 1].has(n)
+    );
+  });
 
   const guidesList = guideNotes(notesList);
   extendNotes(guidesList);
@@ -49,6 +60,10 @@ export default (piece) => {
       mid: average([...notes]),
       cover,
       ext,
+      moves: moves[i].map((note) => ({
+        note,
+        role: mod12Dist(note - bar.root[0]),
+      })),
       melody: bar.melody.map((set) => {
         const mappedSet = set.map((n) => {
           let res = n[0];
@@ -78,6 +93,8 @@ export default (piece) => {
         cover,
         root,
         base,
+        chordNotes,
+        moves,
         melody,
         tryFifth,
         ...bar
@@ -104,6 +121,13 @@ export default (piece) => {
         cover: cover.map((n) => mod12(n - averageKey)),
         root: isDef(root) && root.map((n) => mod12(n - averageKey)),
         base: isDef(base) && mod12(base - averageKey),
+        chordNotes:
+          isDef(chordNotes) &&
+          [...chordNotes].map((n) => mod12(n - averageKey)),
+        moves: moves.map((x) => ({
+          note: mod12(x.note - averageKey),
+          role: x.role,
+        })),
         melody: melody.map((set) => set.map((n) => n - offset)),
       })
     ),

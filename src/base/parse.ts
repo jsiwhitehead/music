@@ -53,6 +53,7 @@ s.addAttribute("ast", {
 
   bar: (a, _1, b) => {
     const notes = new Set(a.ast[0]?.notes ?? []);
+    const chordNotes = new Set(a.ast[0]?.notes ?? []);
     const melody = b.ast;
     for (const set of melody) {
       for (const n of set) {
@@ -61,6 +62,7 @@ s.addAttribute("ast", {
     }
     return {
       ...(a.ast[0] || {}),
+      chordNotes,
       notes,
       melody,
     };
@@ -93,18 +95,6 @@ s.addAttribute("ast", {
           ? mod12(key + 6)
           : mod12(key + 8),
       ],
-      // root: [
-      //   notes.has(4)
-      //     ? mod12(key + 4)
-      //     : notes.has(-3)
-      //     ? mod12(key - 3)
-      //     : notes.has(-1)
-      //     ? mod12(key - 1)
-      //     : notes.has(2)
-      //     ? mod12(key + 2)
-      //     : key,
-      //   notes.has(-2) ? mod12(key - 2) : notes.has(5) ? mod12(key + 5) : key,
-      // ],
       base: mod12(base + key),
     };
   },

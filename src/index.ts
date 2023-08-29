@@ -57,7 +57,7 @@ const songs = {
     D-: . E . D
     E-7b5: A
     A7b9:
-    D-: F\'
+    D-: F'
     D-: A, . . B
     B-7b5:
     E7: . . D
@@ -67,7 +67,7 @@ const songs = {
     A-7: . C . C
     Bbmaj7: . . . Bb
     Bbmaj7:
-    Bbmaj7: . . F\' E
+    Bbmaj7: . . F' E
     Bbmaj7: . D . D
     A7b9: . . C# E
     A7b9: . C# Bb
@@ -98,7 +98,7 @@ const songs = {
     E/G#: A . G# E
     F#m7: . . F#
     F#m7:
-    Esus4: E . . E
+    E . . E
     Em: F# G
   `,
   CircleOfLife: `
@@ -508,6 +508,7 @@ const compiled = maraca(
         ? block.length
         : block.items.length,
     floor: (num) => Math.floor(num),
+    abs: (num) => Math.abs(num),
     includes: (block, value) =>
       Array.isArray(block)
         ? block.includes(value)

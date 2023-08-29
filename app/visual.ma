@@ -40,6 +40,31 @@
     ]
   }
 
+  renderSingleCurve: (stroke, opacity, x, dir, y1, y2, end) => {
+    mid: (y1 + y2) / 2
+    ~
+    [
+      shape: 'path'
+      stroke: stroke
+      opacity: opacity
+      fill: 'none'
+      ~
+      ['M'
+        x
+        mid
+      ]
+      ['c'
+        dir * curveOffset * 0.25, (y2 - mid) / 2, ','
+        dir * curveOffset * 0.5, y2 - mid, ','
+        dir * curveOffset, y2 - mid
+      ]
+      ['l'
+        dir * end
+        0
+      ]
+    ]
+  }
+
   renderBlocks: (range, blocks, blocks1, blocks2, curves, color, opacity) =>
     for i in getRange(range[1], range[2]) {
       index: (i + 1) % 2
@@ -199,20 +224,21 @@
       offset: 12 * floor(i / 2)
       ~
       [
-        shape: 'rect'
-        fill: 'rgb(140, 140, 140)'
+        shape: 'path'
+        stroke: [width: if index % 2 = info.rootOffset then 3 else 1.5, color: 'rgb(140, 140, 140)', cap: 'round']
+        fill: 'none'
         ~
-        [
-          x + curveOffset
-          getY(info.root[index] + offset) - 0.75
+        ['M'
+          x + (lineHeight * 1.5 + 1)
+          getY(info.root[index] + offset)
         ]
-        [
-          barWidth - curveOffset * 2
-          1.5
+        ['l'
+          barWidth - (lineHeight * 1.5 + 1) * 2
+          0
         ]
       ]
-      if root1 then
-        if ((root1[index] - info.root[index]) % 2 = 2) then
+      if root1 & abs(root1[index] - info.root[index]) <= 2 then
+        if ((root1[index] - info.root[index]) % 2 = 2) | yes then
           renderCurve(
             no
             1
@@ -240,8 +266,8 @@
             0
           ]
         ]
-      if root2 then
-        if ((root2[index] - info.root[index]) % 2 = 2) then
+      if root2 & abs(root2[index] - info.root[index]) <= 2 then
+        if ((root2[index] - info.root[index]) % 2 = 2) | yes then
           renderCurve(
             no
             1
@@ -270,6 +296,38 @@
           ]
         ]
     }
+
+    for move in info.moves {
+      renderSingleCurve(
+        if move.role = 0 & no then
+          [width: 3, color: 'rgb(140, 140, 140)', cap: 'round']
+        else if move.role = 1 & no then
+          [width: 1.5, color: 'rgb(140, 140, 140)', cap: 'round']
+        else
+          [width: 1.5, dash: '3', color: 'rgb(140, 140, 140)', cap: 'round']
+        1
+        x
+        1
+        getY(move.note - move.move)
+        getY(move.note)
+        curveOffset
+      )
+    }
+    for move in info.nextMoves
+      renderSingleCurve(
+        if move.role2 = 0 & no then
+          [width: 3, color: 'rgb(140, 140, 140)', cap: 'round']
+        else if move.role2 = 1 & no then
+          [width: 1.5, color: 'rgb(140, 140, 140)', cap: 'round']
+        else
+          [width: 1.5, dash: '3', color: 'rgb(140, 140, 140)', cap: 'round']
+        1
+        x + barWidth
+        (-1)
+        getY(move.note)
+        getY(move.note - move.move)
+        curveOffset
+      )
 
     for base in info.base {
       [

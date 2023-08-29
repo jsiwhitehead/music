@@ -334,6 +334,9 @@ const updateNode = (effect, node, data, prevContext) => {
           if (stroke.values.cap) {
             e.attr("stroke-linecap", stroke.values.cap);
           }
+          if (stroke.values.dash) {
+            e.attr("stroke-dasharray", stroke.values.dash);
+          }
         }
       }
       if (rotate) {
