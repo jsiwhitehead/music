@@ -2,7 +2,9 @@ import webfont from "webfontloader";
 
 import maraca, { effect } from "./maraca";
 import render from "./render";
-import getPiece from "./piece";
+
+import getBase from "./base";
+import getLayout from "./layout";
 
 import "./style.css";
 
@@ -37,6 +39,41 @@ const source = Object.keys(app).reduce((res, k) => {
 }, {});
 
 const songs = {
+  ChegaDeSaudade: `
+    4
+    D-: F
+    D-: A, . . D
+    D-7/C:
+    D-7/C: . . F
+    E7/B: E
+    E7/B: B . . D
+    E7:
+    E7: . E
+    E-7b5: F
+    E-7b5: Bb, . . C#
+    A7b9:
+    A7b9: . F . E
+    D-: . D . F
+    D-: . E . D
+    E-7b5: A
+    A7b9:
+    D-: F\'
+    D-: A, . . B
+    B-7b5:
+    E7: . . D
+    A-7: C . . E
+    A-7:
+    A-7: . . E D
+    A-7: . C . C
+    Bbmaj7: . . . Bb
+    Bbmaj7:
+    Bbmaj7: . . F\' E
+    Bbmaj7: . D . D
+    A7b9: . . C# E
+    A7b9: . C# Bb
+    A7b9:
+    A7b9: . . A
+  `,
   GodOnlyKnows: `
     4
     D/A:
@@ -445,6 +482,19 @@ const songs = {
   (Bb,, Bb'') . (Bb' Db F) . (F Bb Db)
   (C G'') . (Bb' C E) . (G Bb C)
   `,
+};
+
+const getPiece = (piece) => {
+  const { time, bars, height } = getBase(piece);
+  const layout = getLayout(bars, height);
+  return {
+    time,
+    bars: layout,
+    range: [
+      Math.floor(Math.min(...layout.map((r) => r.bounds[0]))),
+      Math.ceil(Math.max(...layout.map((r) => r.bounds[1]))),
+    ],
+  };
 };
 
 const compiled = maraca(
