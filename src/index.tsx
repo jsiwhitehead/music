@@ -25,8 +25,9 @@ const durationMap = new Map<number, { base: number; dots: number }>([
 ]);
 
 const BASE_HEIGHT = 8;
-const FONT_SIZE = BASE_HEIGHT * 3.4;
+const FONT_SIZE = BASE_HEIGHT * 3.5;
 const NOTE_DIST = BASE_HEIGHT * 3;
+const BRIDGE = BASE_HEIGHT * 1;
 
 const Y_BASELINE = 100;
 
@@ -262,7 +263,10 @@ const DrawEvent: React.FC<{
     ? durationMap.get(duration)!
     : { base: duration, dots: 0 };
   const x =
-    NOTE_DIST / 2 - Math.round(BASE_HEIGHT * 1.13) / 2 + event.time * NOTE_DIST;
+    BRIDGE +
+    NOTE_DIST / 2 -
+    Math.round(BASE_HEIGHT * 1.13) / 2 +
+    event.time * NOTE_DIST;
   if (event.type === "rest") {
     return (
       <Glyph
@@ -324,23 +328,75 @@ const DrawEvent: React.FC<{
   );
 };
 
+const Bridge: React.FC<{
+  a: [number, number, number];
+  b: [number, number, number];
+  colour: string;
+}> = ({ a, b, colour }) => (
+  <polygon
+    points={`${a[0]},${a[2]} ${b[0]},${b[2]} ${b[0]},${b[1]} ${a[0]},${a[1]}`}
+    fill={colour}
+    opacity={0.5}
+  />
+);
+
 const Bar: React.FC<{
   lines: TimedEvent[][];
-  blocks: { start: number; size: number }[];
+  blocks: {
+    start: number;
+    end: number;
+    gap?: boolean;
+    prev: number[];
+    next: number[];
+  }[];
   colour: string;
 }> = ({ lines, blocks, colour }) => (
-  <svg width={NOTE_DIST * 3} height={400} viewBox={`0 0 ${NOTE_DIST * 3} 400`}>
-    {blocks.map(({ start, size }, j) => (
+  <svg
+    width={NOTE_DIST * 3 + BRIDGE * 2}
+    height={300}
+    viewBox={`0 0 ${NOTE_DIST * 3 + BRIDGE * 2} 300`}
+  >
+    {blocks.flatMap(({ start, end, prev, next }, j) => [
+      <Bridge
+        key={`${j}_prev`}
+        a={[0, noteToY(start + prev[0]!), noteToY(end + prev[1]!)]}
+        b={[BRIDGE, noteToY(start), noteToY(end)]}
+        colour={colour}
+      />,
       <rect
-        key={j}
-        x={0}
+        key={`${j}_base`}
+        x={BRIDGE}
         width={NOTE_DIST * 3}
-        y={noteToY(start) - BASE_HEIGHT * size}
-        height={BASE_HEIGHT * size}
+        y={noteToY(end)}
+        height={(BASE_HEIGHT * (end - start)) / 2}
         fill={colour}
         opacity={0.5}
-      />
-    ))}
+      />,
+      <Bridge
+        key={`${j}_next`}
+        a={[BRIDGE + NOTE_DIST * 3, noteToY(start), noteToY(end)]}
+        b={[
+          BRIDGE * 2 + NOTE_DIST * 3,
+          noteToY(start + next[0]!),
+          noteToY(end + next[1]!),
+        ]}
+        colour={colour}
+      />,
+    ])}
+    {blocks.map(({ start, gap }, j) =>
+      gap ? (
+        <rect
+          key={j}
+          x={BRIDGE}
+          width={NOTE_DIST * 3}
+          y={noteToY(start) - BASE_HEIGHT * 2}
+          height={BASE_HEIGHT}
+          rx={BASE_HEIGHT / 2}
+          ry={BASE_HEIGHT / 2}
+          fill="white"
+        />
+      ) : null
+    )}
     {lines.flatMap((line, j) =>
       line.map((event, k) => (
         <DrawEvent key={`${j}_${k}`} event={event} up={j === 0} />
