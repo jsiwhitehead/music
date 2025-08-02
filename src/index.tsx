@@ -24,16 +24,17 @@ const durationMap = new Map<number, { base: number; dots: number }>([
   [1.5, { base: 1, dots: 1 }],
 ]);
 
-const BASE_HEIGHT = 8;
-const FONT_SIZE = BASE_HEIGHT * 3.5;
-const NOTE_DIST = BASE_HEIGHT * 3;
-const BRIDGE = BASE_HEIGHT * 1;
+const TONE_HEIGHT = 5;
+const NOTE_HEIGHT = 7.5;
+const BAR_THIN = 1.25;
+const NOTE_DIST = TONE_HEIGHT * 5;
+const BRIDGE = TONE_HEIGHT * 1;
 
 const Y_BASELINE = 100;
 
 const baseDuration = 0.5;
 
-const noteToY = (note: number) => Y_BASELINE - note * (BASE_HEIGHT / 2);
+const noteToY = (note: number) => Y_BASELINE - note * (TONE_HEIGHT / 2);
 
 type Event =
   | { type: "note"; pitch: number[]; duration: number }
@@ -243,7 +244,7 @@ const Glyph: React.FC<{
     x={x}
     y={y}
     fontFamily="Leland"
-    fontSize={FONT_SIZE}
+    fontSize={NOTE_HEIGHT * 3.8}
     fill={fill}
     stroke={stroke}
     strokeWidth={strokeWidth}
@@ -257,7 +258,9 @@ const Glyph: React.FC<{
 const DrawEvent: React.FC<{
   event: TimedEvent;
   up: boolean;
-}> = ({ event, up }) => {
+  starts: number[];
+  ends: number[];
+}> = ({ event, up, starts, ends }) => {
   const duration = event.duration * baseDuration;
   const { base, dots } = durationMap.has(duration)
     ? durationMap.get(duration)!
@@ -265,7 +268,7 @@ const DrawEvent: React.FC<{
   const x =
     BRIDGE +
     NOTE_DIST / 2 -
-    Math.round(BASE_HEIGHT * 1.13) / 2 +
+    Math.round(NOTE_HEIGHT * 2.2) / 4 +
     event.time * NOTE_DIST;
   if (event.type === "rest") {
     return (
@@ -277,18 +280,27 @@ const DrawEvent: React.FC<{
       />
     );
   }
-  const rightX = x + Math.round(BASE_HEIGHT * 1.13);
+  const rightX = x + Math.round(NOTE_HEIGHT * 2.2) / 2;
   return (
     <>
       {event.pitch.flatMap((p, i) => {
         const y = noteToY(p);
         return [
+          <Glyph
+            key={`${i}_head`}
+            x={x - 0.5}
+            y={y}
+            glpyh={noteGlpyhs.get(base <= 1 ? 1 : base)!}
+            fill={"black"}
+            stroke="white"
+            strokeWidth={0}
+          />,
           up ? (
             <line
               key={`${i}_0`}
               x1={rightX}
               x2={rightX}
-              y1={y - BASE_HEIGHT * 3.5}
+              y1={y - TONE_HEIGHT * 3.5}
               y2={y}
               stroke="black"
               strokeWidth={1}
@@ -299,24 +311,15 @@ const DrawEvent: React.FC<{
               x1={x}
               x2={x}
               y1={y}
-              y2={y + BASE_HEIGHT * 3.5}
+              y2={y + TONE_HEIGHT * 3.5}
               stroke="black"
               strokeWidth={1}
             />
           ),
-          <Glyph
-            key={`${i}_head`}
-            x={x}
-            y={y}
-            glpyh={noteGlpyhs.get(base <= 1 ? 1 : base)!}
-            fill={noteToColour(p)}
-            stroke="black"
-            strokeWidth={1}
-          />,
           ...Array.from({ length: dots }).map((_, j) => (
             <Glyph
               key={`${i}_dots_${j}`}
-              x={rightX + BASE_HEIGHT * (0.4 + 0.7 * j)}
+              x={rightX + TONE_HEIGHT * (0.4 + 0.7 * j)}
               y={y}
               glpyh="augmentationDot"
               fill="black"
@@ -332,11 +335,12 @@ const Bridge: React.FC<{
   a: [number, number, number];
   b: [number, number, number];
   colour: string;
-}> = ({ a, b, colour }) => (
+  opacity: number;
+}> = ({ a, b, colour, opacity }) => (
   <polygon
     points={`${a[0]},${a[2]} ${b[0]},${b[2]} ${b[0]},${b[1]} ${a[0]},${a[1]}`}
     fill={colour}
-    opacity={0.5}
+    opacity={opacity}
   />
 );
 
@@ -350,7 +354,9 @@ const Bar: React.FC<{
     next: number[];
   }[];
   colour: string;
-}> = ({ lines, blocks, colour }) => (
+  first: boolean;
+  last: boolean;
+}> = ({ lines, blocks, colour, first, last }) => (
   <svg
     width={NOTE_DIST * 3 + BRIDGE * 2}
     height={300}
@@ -359,28 +365,38 @@ const Bar: React.FC<{
     {blocks.flatMap(({ start, end, prev, next }, j) => [
       <Bridge
         key={`${j}_prev`}
-        a={[0, noteToY(start + prev[0]!), noteToY(end + prev[1]!)]}
-        b={[BRIDGE, noteToY(start), noteToY(end)]}
+        a={[
+          0,
+          noteToY(start + prev[0]!) - BAR_THIN,
+          noteToY(end + prev[1]!) + BAR_THIN,
+        ]}
+        b={[BRIDGE, noteToY(start) - BAR_THIN, noteToY(end) + BAR_THIN]}
         colour={colour}
+        opacity={0.5}
       />,
       <rect
         key={`${j}_base`}
         x={BRIDGE}
         width={NOTE_DIST * 3}
-        y={noteToY(end)}
-        height={(BASE_HEIGHT * (end - start)) / 2}
+        y={noteToY(end) + BAR_THIN}
+        height={(TONE_HEIGHT * (end - start)) / 2 - BAR_THIN * 2}
         fill={colour}
         opacity={0.5}
       />,
       <Bridge
         key={`${j}_next`}
-        a={[BRIDGE + NOTE_DIST * 3, noteToY(start), noteToY(end)]}
+        a={[
+          BRIDGE + NOTE_DIST * 3,
+          noteToY(start) - BAR_THIN,
+          noteToY(end) + BAR_THIN,
+        ]}
         b={[
           BRIDGE * 2 + NOTE_DIST * 3,
-          noteToY(start + next[0]!),
-          noteToY(end + next[1]!),
+          noteToY(start + next[0]!) - BAR_THIN,
+          noteToY(end + next[1]!) + BAR_THIN,
         ]}
         colour={colour}
+        opacity={0.5}
       />,
     ])}
     {blocks.map(({ start, gap }, j) =>
@@ -389,17 +405,36 @@ const Bar: React.FC<{
           key={j}
           x={BRIDGE}
           width={NOTE_DIST * 3}
-          y={noteToY(start) - BASE_HEIGHT * 2}
-          height={BASE_HEIGHT}
-          rx={BASE_HEIGHT / 2}
-          ry={BASE_HEIGHT / 2}
+          y={noteToY(start) - TONE_HEIGHT * 2 + BAR_THIN}
+          height={TONE_HEIGHT - BAR_THIN * 2}
+          rx={(TONE_HEIGHT - BAR_THIN * 2) / 2}
+          ry={(TONE_HEIGHT - BAR_THIN * 2) / 2}
           fill="white"
         />
       ) : null
     )}
+    {first && (
+      <line x1={0} x2={0} y1={0} y2={300} stroke="white" strokeWidth={1} />
+    )}
+    {last && (
+      <line
+        x1={NOTE_DIST * 3 + BRIDGE * 2}
+        x2={NOTE_DIST * 3 + BRIDGE * 2}
+        y1={0}
+        y2={300}
+        stroke="white"
+        strokeWidth={1}
+      />
+    )}
     {lines.flatMap((line, j) =>
       line.map((event, k) => (
-        <DrawEvent key={`${j}_${k}`} event={event} up={j === 0} />
+        <DrawEvent
+          key={`${j}_${k}`}
+          event={event}
+          starts={blocks.map((b) => b.start)}
+          ends={blocks.map((b) => b.end)}
+          up={j === 0}
+        />
       ))
     )}
   </svg>
@@ -408,7 +443,13 @@ const Bar: React.FC<{
 const App: React.FC = () => (
   <div>
     {timedBars.map((lines, i) => (
-      <Bar key={i} lines={lines} {...blocks[i]!} />
+      <Bar
+        key={i}
+        lines={lines}
+        first={i % 4 === 1}
+        last={i % 4 === 0}
+        {...blocks[i]!}
+      />
     ))}
   </div>
 );
