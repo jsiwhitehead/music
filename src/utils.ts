@@ -35,15 +35,15 @@ const notesToFifths = (notes: number[]) => {
     .reverse();
   let filled = pattern;
   for (let i = 0; i < 5; i++) {
-    filled = filled.map((p, i) => {
+    filled = filled.map((p, j) => {
       if (p) return p;
-      if (filled[mod(i - 7, 12)] || filled[mod(i + 7, 12)]) {
+      if (filled[mod(j - 7, 12)] || filled[mod(j + 7, 12)]) {
         return false;
       }
-      if (filled[mod(i - 2, 12)] && filled[mod(i - 2, 12)]) {
+      if (filled[mod(j - 2, 12)] && filled[mod(j + 2, 12)]) {
         return true;
       }
-      if (filled[mod(i - 1, 12)] && filled[mod(i - 1, 12)]) {
+      if (filled[mod(j - 1, 12)] && filled[mod(j + 1, 12)]) {
         return true;
       }
       return false;

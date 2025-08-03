@@ -24,9 +24,9 @@ const durationMap = new Map<number, { base: number; dots: number }>([
   [1.5, { base: 1, dots: 1 }],
 ]);
 
-const TONE_HEIGHT = 5;
+const TONE_HEIGHT = 6;
 const NOTE_HEIGHT = 7.5;
-const BAR_THIN = 1.25;
+const BAR_THIN = 2;
 const NOTE_DIST = TONE_HEIGHT * 5;
 const BRIDGE = TONE_HEIGHT * 1;
 
@@ -244,7 +244,7 @@ const Glyph: React.FC<{
     x={x}
     y={y}
     fontFamily="Leland"
-    fontSize={NOTE_HEIGHT * 3.8}
+    fontSize={NOTE_HEIGHT * 3.9}
     fill={fill}
     stroke={stroke}
     strokeWidth={strokeWidth}
