@@ -1,15 +1,9 @@
 import colours from "./colours.json";
 
-const mod = (n: number, m: number) => ((n % m) + m) % m;
+export const mod = (n: number, m: number) => ((n % m) + m) % m;
 
 const modDist = (a: number, b: number, m: number) =>
   Math.min(mod(a - b, m), mod(b - a, m));
-
-// const modDistDir = (a: number, b: number, m: number) => {
-//   const d1 = mod(a - b, m);
-//   const d2 = mod(b - a, m);
-//   return d1 < d2 ? -d1 : d2;
-// };
 
 const noteToFifth = (note: number) => mod(note * 7, 12);
 
@@ -53,10 +47,17 @@ const allKeys = [
 ].flatMap((base) =>
   array12.map((n) => ({
     notes: base.notes.map((x) => mod(x + n, 12)),
-    starts: base.starts.map((x) => mod(x + n, 12)),
+    starts: base.starts.map((x) => x + n),
     strong: base.strong,
   }))
 );
+
+const getMids = (x: { start: number; end: number }[]): [number, number] => [
+  (x[0]!.end + x[1]!.start) / 2,
+  (x[1]!.end + x[0]!.start + 12) / 2,
+];
+const midsDist = (a: [number, number], b: [number, number]) =>
+  Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
 
 const keysDist = (a: number, b: number) =>
   Math.min(
@@ -80,7 +81,7 @@ const minimiseSelection = (
   let bestSelection: null | number[] = null;
   let bestScore = Infinity;
 
-  function backtrack(index: number, currentSelection: number[]) {
+  const backtrack = (index: number, currentSelection: number[]) => {
     if (index === arrays.length) {
       const score = scoreFn(currentSelection);
       if (score < bestScore) {
@@ -95,10 +96,47 @@ const minimiseSelection = (
       backtrack(index + 1, currentSelection);
       currentSelection.pop();
     }
-  }
+  };
 
   backtrack(0, []);
   return bestSelection!;
+};
+
+const runLengthsCircular = (arr: number[]) => {
+  let result = Array<number>(arr.length).fill(0);
+  let n = arr.length;
+  let i = 0;
+
+  let runs: { start: number; length: number }[] = [];
+  while (i < n) {
+    if (arr[i] === 1) {
+      let start = i;
+      while (i < n && arr[i] === 1) i++;
+      runs.push({ start, length: i - start });
+    } else {
+      i++;
+    }
+  }
+
+  if (
+    runs.length > 1 &&
+    runs[0]!.start === 0 &&
+    runs[runs.length - 1]!.start + runs[runs.length - 1]!.length === n
+  ) {
+    runs[0] = {
+      start: runs[runs.length - 1]!.start,
+      length: runs[0]!.length + runs[runs.length - 1]!.length,
+    };
+    runs.pop();
+  }
+
+  runs.forEach((run) => {
+    for (let j = 0; j < run.length; j++) {
+      result[(run.start + j) % n] = run.length;
+    }
+  });
+
+  return result;
 };
 
 export const barsToBlocks = (bars: number[][]) => {
@@ -126,14 +164,23 @@ export const barsToBlocks = (bars: number[][]) => {
       return {
         all: allKeys.map((_, i) => i),
         some: [],
+        dim: mod(dim[0]!, 3),
       };
     }
 
-    const options = dim.map((i) => notes.map((n, j) => (j === i ? 0 : n)));
+    const semis = runLengthsCircular(notes)
+      .map((x, i) => (x >= 3 ? i : -1))
+      .filter((i) => i !== -1);
+
+    const thinnedNotes = notes.map((n, i) => (semis.includes(i) ? 0 : n));
+
+    const options = dim.map((i) =>
+      thinnedNotes.map((n, j) => (j === i ? 0 : n))
+    );
 
     const all = allKeys
       .map((key, i) =>
-        notes.every((n, j) => n === 0 || key.notes.includes(j)) ? i : -1
+        thinnedNotes.every((n, j) => n === 0 || key.notes.includes(j)) ? i : -1
       )
       .filter((i) => i !== -1);
 
@@ -227,34 +274,38 @@ export const barsToBlocks = (bars: number[][]) => {
   );
 
   const blocks = unpackedKeys.map((key, i) => {
+    if (barKeys[i]!.dim !== undefined) {
+      return [0, 3, 6, 9].map((n) => ({
+        start: barKeys[i]!.dim! + n,
+        end: barKeys[i]!.dim! + n + 2,
+        mids: [],
+      }));
+    }
+
     const k = allKeys[key]!;
     const res = [
       {
         start: k.starts[0]!,
         end: k.starts[0]! + (k.strong ? 4 : 2),
-        gaps: [] as number[],
+        mids: [] as number[],
       },
       {
         start: k.starts[1]!,
         end: k.starts[1]! + (k.strong ? 6 : 8),
-        gaps: [] as number[],
+        mids: [] as number[],
       },
     ];
     for (const r of res) {
-      r.gaps = Array.from({ length: (r.end - r.start) / 2 })
-        .map((_, i) => i * 2 + 1)
-        .filter((n) => noteSets[i]!.has(mod(r.start + n, 12)));
+      r.mids = Array.from({ length: (r.end - r.start) / 2 }).map((_, i) =>
+        mod(r.start + i * 2 + 1, 12)
+      );
     }
     return res;
   });
 
-  console.log(blocks);
+  console.log(blocks.slice(0, 5));
 
   let lastMids: null | [number, number] = null;
-  const getMids = (x: { start: number; end: number }[]): [number, number] => [
-    (x[0]!.end + x[1]!.start) / 2,
-    (x[1]!.end + x[0]!.start + 12) / 2,
-  ];
   const moved = blocks.map((x) => {
     if (x.length !== 2) return x;
     if (!lastMids) {
@@ -275,12 +326,7 @@ export const barsToBlocks = (bars: number[][]) => {
               res[0]!,
             ];
         const nextMids = getMids(next);
-        if (
-          Math.abs(nextMids[0] - lastMids[0]) +
-            Math.abs(nextMids[1] - lastMids[1]) >
-          Math.abs(resMids[0] - lastMids[0]) +
-            Math.abs(resMids[1] - lastMids[1])
-        ) {
+        if (midsDist(nextMids, lastMids) > midsDist(resMids, lastMids)) {
           break;
         }
         res = next;
@@ -293,8 +339,10 @@ export const barsToBlocks = (bars: number[][]) => {
 
   const connected = moved.map((m, i) =>
     m.map((x, j) => {
-      const prev = moved[i - 1]?.[j];
-      const next = moved[i + 1]?.[j];
+      const prev =
+        m.length === 2 && moved[i - 1]?.length === 2 && moved[i - 1]?.[j];
+      const next =
+        m.length === 2 && moved[i + 1]?.length === 2 && moved[i + 1]?.[j];
       return {
         ...x,
         prev: prev
@@ -328,13 +376,16 @@ export const barsToBlocks = (bars: number[][]) => {
     }
     return {
       blocks: res.filter((x) => min <= x.end && x.start <= max),
-      colour: notesToColour(
-        connected[i]!.flatMap(({ start, end }) =>
-          Array.from({ length: (end - start) / 2 + 1 }).map((_, j) =>
-            mod(start + j * 2, 12)
-          )
-        )
-      ),
+      colour:
+        connected[i]!.length > 2
+          ? "#999"
+          : notesToColour(
+              connected[i]!.flatMap(({ start, end }) =>
+                Array.from({ length: (end - start) / 2 + 1 }).map((_, j) =>
+                  mod(start + j * 2, 12)
+                )
+              )
+            ),
     };
   });
 };

@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 
 import fontInfo from "../leland/glyphnames.json";
 
-import { barsToBlocks, noteToColour } from "./utils";
+import { barsToBlocks, mod } from "./utils";
 
 const noteGlpyhs = new Map<number, keyof typeof fontInfo>([
   [4, "noteheadWhole"],
@@ -199,6 +199,187 @@ const bars: Event[][][] = [
       { type: "note", pitch: [-14, -9, -5], duration: 1 },
     ],
   ],
+
+  [
+    [
+      { type: "rest", duration: 2 },
+      { type: "note", pitch: [-2], duration: 1 },
+    ],
+    [
+      { type: "note", pitch: [-21], duration: 1 },
+      { type: "note", pitch: [-17, -9], duration: 1 },
+      { type: "note", pitch: [-14, -9, -5], duration: 1 },
+    ],
+  ],
+  [
+    [{ type: "note", pitch: [7], duration: 3 }],
+    [
+      { type: "note", pitch: [-21], duration: 1 },
+      { type: "note", pitch: [-17, -9], duration: 1 },
+      { type: "note", pitch: [-14, -9, -5], duration: 1 },
+    ],
+  ],
+  [
+    [
+      { type: "note", pitch: [5], duration: 0.5 },
+      { type: "note", pitch: [7], duration: 0.5 },
+      { type: "note", pitch: [5], duration: 0.5 },
+      { type: "note", pitch: [4], duration: 0.5 },
+      { type: "note", pitch: [5], duration: 0.5 },
+      { type: "note", pitch: [7], duration: 0.5 },
+    ],
+    [
+      { type: "note", pitch: [-21], duration: 1 },
+      { type: "note", pitch: [-16, -10], duration: 1 },
+      { type: "note", pitch: [-13, -10, -4], duration: 1 },
+    ],
+  ],
+  [
+    [
+      { type: "note", pitch: [5], duration: 1 },
+      { type: "note", pitch: [3], duration: 2 },
+    ],
+    [
+      { type: "note", pitch: [-21], duration: 1 },
+      { type: "note", pitch: [-17, -9], duration: 1 },
+      { type: "note", pitch: [-14, -9, -5], duration: 1 },
+    ],
+  ],
+  [
+    [
+      { type: "note", pitch: [3], duration: 0.5 },
+      { type: "note", pitch: [5], duration: 0.5 },
+      { type: "note", pitch: [3], duration: 0.5 },
+      { type: "note", pitch: [2], duration: 0.5 },
+      { type: "note", pitch: [3], duration: 0.5 },
+      { type: "note", pitch: [5], duration: 0.5 },
+    ],
+    [
+      { type: "note", pitch: [-22], duration: 1 },
+      { type: "note", pitch: [-17, -9], duration: 1 },
+      { type: "note", pitch: [-14, -9, -5], duration: 1 },
+    ],
+  ],
+  [
+    [
+      { type: "note", pitch: [7], duration: 0.5 },
+      { type: "note", pitch: [-1], duration: 0.5 },
+      { type: "note", pitch: [0], duration: 0.5 },
+      { type: "note", pitch: [1], duration: 0.5 },
+      { type: "note", pitch: [0], duration: 0.5 },
+      { type: "note", pitch: [5], duration: 0.5 },
+    ],
+    [
+      { type: "note", pitch: [-24], duration: 1 },
+      { type: "note", pitch: [-17, -8], duration: 1 },
+      { type: "note", pitch: [-14, -8, -5], duration: 1 },
+    ],
+  ],
+  [
+    [
+      { type: "note", pitch: [4], duration: 0.5 },
+      { type: "note", pitch: [8], duration: 0.5 },
+      { type: "note", pitch: [7], duration: 0.5 },
+      { type: "note", pitch: [13], duration: 0.5 },
+      { type: "note", pitch: [12], duration: 0.5 },
+      { type: "note", pitch: [7], duration: 0.5 },
+    ],
+    [
+      { type: "note", pitch: [-24], duration: 1 },
+      { type: "note", pitch: [-17, -8], duration: 1 },
+      { type: "note", pitch: [-12, -8, -2], duration: 1 },
+    ],
+  ],
+  [
+    [{ type: "note", pitch: [10], duration: 3 }],
+    [
+      { type: "note", pitch: [-31], duration: 1 },
+      { type: "note", pitch: [-19, -11], duration: 1 },
+      { type: "note", pitch: [-14, -11, -8], duration: 1 },
+    ],
+  ],
+  [
+    [
+      { type: "note", pitch: [8], duration: 2 },
+      { type: "note", pitch: [7], duration: 1 },
+    ],
+    [
+      { type: "note", pitch: [-31], duration: 1 },
+      { type: "note", pitch: [-19, -12], duration: 1 },
+      { type: "note", pitch: [-16, -12, -7], duration: 1 },
+    ],
+  ],
+  [
+    [{ type: "note", pitch: [5], duration: 3 }],
+    [
+      { type: "note", pitch: [-26], duration: 1 },
+      { type: "note", pitch: [-19, -10], duration: 1 },
+      { type: "note", pitch: [-14, -10, -4], duration: 1 },
+    ],
+  ],
+  [
+    [
+      { type: "note", pitch: [7], duration: 1 },
+      { type: "note", pitch: [7], duration: 1 },
+      { type: "note", pitch: [2], duration: 1 },
+    ],
+    [
+      { type: "note", pitch: [-25], duration: 1 },
+      { type: "note", pitch: [-17, -7], duration: 1 },
+      { type: "note", pitch: [-10, -7, -5], duration: 1 },
+    ],
+  ],
+  [
+    [{ type: "note", pitch: [3], duration: 3 }],
+    [
+      { type: "note", pitch: [-24], duration: 1 },
+      { type: "note", pitch: [-17, -9], duration: 1 },
+      { type: "note", pitch: [-12, -9, -5], duration: 1 },
+    ],
+  ],
+  [
+    [{ type: "note", pitch: [0], duration: 3 }],
+    [
+      { type: "note", pitch: [-27], duration: 1 },
+      { type: "note", pitch: [-18, -9], duration: 1 },
+      { type: "note", pitch: [-12, -9, -6], duration: 1 },
+    ],
+  ],
+  [
+    [
+      { type: "note", pitch: [-2], duration: 1 },
+      { type: "note", pitch: [14], duration: 1 },
+      { type: "note", pitch: [12], duration: 1 },
+    ],
+    [
+      { type: "note", pitch: [-26], duration: 1 },
+      { type: "note", pitch: [-19, -9], duration: 1 },
+      { type: "note", pitch: [-14, -9, -4], duration: 1 },
+    ],
+  ],
+  [
+    [
+      { type: "note", pitch: [10], duration: 0.5 },
+      { type: "note", pitch: [8], duration: 0.5 },
+      { type: "note", pitch: [7], duration: 0.5 },
+      { type: "note", pitch: [8], duration: 0.5 },
+      { type: "note", pitch: [0], duration: 0.5 },
+      { type: "note", pitch: [2], duration: 0.5 },
+    ],
+    [
+      { type: "note", pitch: [-38], duration: 1 },
+      { type: "note", pitch: [-19, -10], duration: 1 },
+      { type: "note", pitch: [-14, -4], duration: 1 },
+    ],
+  ],
+  [
+    [{ type: "note", pitch: [3], duration: 3 }],
+    [
+      { type: "note", pitch: [-33], duration: 1 },
+      { type: "note", pitch: [-17, -9], duration: 1 },
+      { type: "note", pitch: [-14, -9, -5], duration: 1 },
+    ],
+  ],
 ];
 
 const lineNotes = Array.from({ length: 2 }).map((_, i) =>
@@ -257,10 +438,9 @@ const Glyph: React.FC<{
 
 const DrawEvent: React.FC<{
   event: TimedEvent;
+  mids: Set<number>;
   up: boolean;
-  starts: number[];
-  ends: number[];
-}> = ({ event, up, starts, ends }) => {
+}> = ({ event, mids, up }) => {
   const duration = event.duration * baseDuration;
   const { base, dots } = durationMap.has(duration)
     ? durationMap.get(duration)!
@@ -286,6 +466,20 @@ const DrawEvent: React.FC<{
       {event.pitch.flatMap((p, i) => {
         const y = noteToY(p);
         return [
+          ...(mids.has(mod(p, 12))
+            ? [
+                <line
+                  key={`${i}_mid`}
+                  x1={x - NOTE_HEIGHT * 0.5}
+                  x2={rightX + NOTE_HEIGHT * 0.5}
+                  y1={y}
+                  y2={y}
+                  stroke="black"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                />,
+              ]
+            : []),
           <Glyph
             key={`${i}_head`}
             x={x - 0.5}
@@ -349,7 +543,7 @@ const Bar: React.FC<{
   blocks: {
     start: number;
     end: number;
-    gaps: number[];
+    mids: number[];
     prev: number[];
     next: number[];
   }[];
@@ -399,20 +593,6 @@ const Bar: React.FC<{
         opacity={0.5}
       />,
     ])}
-    {blocks.flatMap(({ start, gaps }, j) =>
-      gaps.map((g, k) => (
-        <rect
-          key={`${j}_${k}`}
-          x={BRIDGE}
-          width={NOTE_DIST * 3}
-          y={noteToY(start + g) - (TONE_HEIGHT - BAR_THIN * 2) / 2}
-          height={TONE_HEIGHT - BAR_THIN * 2}
-          rx={TONE_HEIGHT - BAR_THIN * 2}
-          ry={TONE_HEIGHT - BAR_THIN * 2}
-          fill="white"
-        />
-      ))
-    )}
     {first && (
       <line x1={0} x2={0} y1={0} y2={300} stroke="white" strokeWidth={1} />
     )}
@@ -431,8 +611,7 @@ const Bar: React.FC<{
         <DrawEvent
           key={`${j}_${k}`}
           event={event}
-          starts={blocks.map((b) => b.start)}
-          ends={blocks.map((b) => b.end)}
+          mids={new Set(blocks.flatMap((b) => b.mids))}
           up={j === 0}
         />
       ))
