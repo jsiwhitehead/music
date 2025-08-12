@@ -5,11 +5,11 @@ const mod = (n: number, m: number) => ((n % m) + m) % m;
 const modDist = (a: number, b: number, m: number) =>
   Math.min(mod(a - b, m), mod(b - a, m));
 
-const modDistDir = (a: number, b: number, m: number) => {
-  const d1 = mod(a - b, m);
-  const d2 = mod(b - a, m);
-  return d1 < d2 ? -d1 : d2;
-};
+// const modDistDir = (a: number, b: number, m: number) => {
+//   const d1 = mod(a - b, m);
+//   const d2 = mod(b - a, m);
+//   return d1 < d2 ? -d1 : d2;
+// };
 
 const noteToFifth = (note: number) => mod(note * 7, 12);
 
@@ -33,23 +33,7 @@ const notesToFifths = (notes: number[]) => {
   const pattern = [...parsed[base]!.toString(2)]
     .map((x) => x === "1")
     .reverse();
-  let filled = pattern;
-  for (let i = 0; i < 5; i++) {
-    filled = filled.map((p, j) => {
-      if (p) return p;
-      if (filled[mod(j - 7, 12)] || filled[mod(j + 7, 12)]) {
-        return false;
-      }
-      if (filled[mod(j - 2, 12)] && filled[mod(j + 2, 12)]) {
-        return true;
-      }
-      if (filled[mod(j - 1, 12)] && filled[mod(j + 1, 12)]) {
-        return true;
-      }
-      return false;
-    });
-  }
-  return { base, pattern: filled };
+  return { base, pattern };
 };
 
 const notesToColour = (notes: number[]) => {
@@ -63,74 +47,208 @@ const notesToColour = (notes: number[]) => {
   );
 };
 
+const allKeys = [
+  { notes: [0, 2, 4, 5, 7, 9, 11], starts: [0, 5], strong: true },
+  { notes: [0, 2, 3, 5, 7, 9, 11], starts: [0, 3], strong: false },
+].flatMap((base) =>
+  array12.map((n) => ({
+    notes: base.notes.map((x) => mod(x + n, 12)),
+    starts: base.starts.map((x) => mod(x + n, 12)),
+    strong: base.strong,
+  }))
+);
+
+const keysDist = (a: number, b: number) =>
+  Math.min(
+    modDist(allKeys[a]!.starts[0]!, allKeys[b]!.starts[0]!, 12) +
+      modDist(allKeys[a]!.starts[1]!, allKeys[b]!.starts[1]!, 12),
+    modDist(allKeys[a]!.starts[0]!, allKeys[b]!.starts[1]!, 12) +
+      modDist(allKeys[a]!.starts[1]!, allKeys[b]!.starts[0]!, 12)
+  );
+const allKeysDist = (keys: number[]) => {
+  let totalDist = 0;
+  for (let i = 1; i < keys.length; i++) {
+    totalDist += keysDist(keys[i - 1]!, keys[i]!);
+  }
+  return totalDist;
+};
+
+const minimiseSelection = (
+  arrays: number[][],
+  scoreFn: (x: number[]) => number
+) => {
+  let bestSelection: null | number[] = null;
+  let bestScore = Infinity;
+
+  function backtrack(index: number, currentSelection: number[]) {
+    if (index === arrays.length) {
+      const score = scoreFn(currentSelection);
+      if (score < bestScore) {
+        bestScore = score;
+        bestSelection = [...currentSelection];
+      }
+      return;
+    }
+
+    for (let value of arrays[index]!) {
+      currentSelection.push(value);
+      backtrack(index + 1, currentSelection);
+      currentSelection.pop();
+    }
+  }
+
+  backtrack(0, []);
+  return bestSelection!;
+};
+
 export const barsToBlocks = (bars: number[][]) => {
-  const barFillsBase = bars.map((notes) => {
-    const { base, pattern } = notesToFifths(notes);
-    const filled = new Set(
-      pattern
-        .map((p, i) => (p ? i : null))
-        .filter((x) => x !== null)
-        .map((n) => mod((base + n) * 7, 12))
-    );
-    return array12.map((i) => {
-      if (filled.has(mod(i + 1, 12))) return -1;
-      return filled.has(i) && filled.has(mod(i + 2, 12)) ? 1 : 0;
-    });
-  });
-  const barFills = barFillsBase.map((fills, i) => {
-    return fills.map((f, j) => {
-      if (f === 1) return true;
-      if (f === -1) return false;
-      const prev =
-        barFillsBase
-          .slice(0, i)
-          .map((f) => f[j]!)
-          .findLast((f) => f !== 0) !== -1;
-      const next =
-        barFillsBase
-          .slice(i + 1)
-          .map((f) => f[j]!)
-          .find((f) => f !== 0) !== -1;
-      return prev && next;
-    });
-  });
+  const noteSets = bars.map((notes) => new Set(notes.map((n) => mod(n, 12))));
 
-  const runs = barFills.map((fills) => {
-    const wrapped = [...fills, ...fills];
-    return array12
-      .map((i) =>
-        wrapped[i] && !wrapped[mod(i - 2, 12)]
-          ? wrapped
-              .slice(i)
-              .filter((_, j) => j % 2 === 0)
-              .indexOf(false)
-          : 0
+  const barNotes = noteSets.map((set) =>
+    array12.map((j) => (set.has(j) ? 1 : 0))
+  );
+
+  const barKeys = barNotes.map((notes) => {
+    const dim = notes
+      .map((n, i) => {
+        if (n === 0) return -1;
+        if (
+          [0, 3, 6, 9].map((x) => mod(i + x, 12)).filter((j) => notes[j] === 1)
+            .length >= 3
+        ) {
+          return i;
+        }
+        return -1;
+      })
+      .filter((i) => i !== -1);
+
+    if (dim.length === notes.filter((n) => n === 1).length) {
+      return {
+        all: allKeys.map((_, i) => i),
+        some: [],
+      };
+    }
+
+    const options = dim.map((i) => notes.map((n, j) => (j === i ? 0 : n)));
+
+    const all = allKeys
+      .map((key, i) =>
+        notes.every((n, j) => n === 0 || key.notes.includes(j)) ? i : -1
       )
-      .map((size, start) => ({ start, size }))
-      .filter((x) => x.size > 0);
+      .filter((i) => i !== -1);
+
+    return {
+      all,
+      some: allKeys
+        .map((key, i) =>
+          options.some((optNotes) =>
+            optNotes.every((n, j) => n === 0 || key.notes.includes(j))
+          )
+            ? i
+            : -1
+        )
+        .filter((i) => i !== -1 && !all.includes(i)),
+    };
   });
 
-  const blocks = runs
-    .map((r) => {
-      const gapRun = r.find(
-        (x) =>
-          x.size === 1 &&
-          r.some((y) => y.size === 1 && mod(y.start - x.start, 12) === 4)
-      );
-      if (!gapRun) return r;
-      return [
-        ...r.filter(
-          (x) =>
-            !(
-              x.size === 1 &&
-              (x.start === gapRun.start ||
-                mod(x.start - gapRun.start, 12) === 4)
-            )
-        ),
-        { start: gapRun.start, size: 3, gap: true },
-      ].sort((a, b) => a.start - b.start);
-    })
-    .map((x) => x.map(({ size, ...y }) => ({ ...y, end: y.start + size * 2 })));
+  const allStrongKeys = barKeys.map((keys, i) => {
+    let current = keys.all.filter((k) => allKeys[k]!.strong);
+    if (current.length === 0) {
+      current = keys.some.filter((k) => allKeys[k]!.strong);
+    }
+    let index = i - 1;
+    while (true) {
+      const next = (barKeys[index]?.all || [])
+        .filter((k) => allKeys[k]!.strong)
+        .filter((k) => current.includes(k));
+      if (next.length === 0) break;
+      current = next;
+      index--;
+    }
+    index = i + 1;
+    while (true) {
+      const next = (barKeys[index]?.all || [])
+        .filter((k) => allKeys[k]!.strong)
+        .filter((k) => current.includes(k));
+      if (next.length === 0) break;
+      current = next;
+      index++;
+    }
+    return current;
+  });
+
+  const strongKeys: number[][] = [];
+  let lastSetIndex = 0;
+  let currentKeys = allKeys.map((_, i) => i);
+  allStrongKeys.forEach((keys, i) => {
+    const next = currentKeys.filter((x) => keys.includes(x));
+    if (next.length > 0) {
+      currentKeys = next;
+    } else {
+      const key = currentKeys;
+      for (let j = lastSetIndex; j < i; j++) {
+        strongKeys[j] = key;
+      }
+      lastSetIndex = i;
+      currentKeys = keys;
+    }
+  });
+  for (let j = lastSetIndex; j < barKeys.length; j++) {
+    strongKeys[j] = currentKeys;
+  }
+
+  const resKeys = strongKeys.map((keys) => keys[0]!);
+
+  const packedKeys = [];
+  let i = 0;
+  while (i < resKeys.length) {
+    let len = resKeys.slice(i).findIndex((key) => key !== resKeys[i]);
+    if (len === -1) len = resKeys.length - i;
+
+    const sliceKeys = barKeys
+      .slice(i, i + len)
+      .map((x) => [...x.all, ...x.some]);
+    const opts = sliceKeys[0]!.filter((k) =>
+      sliceKeys.every((x) => x.includes(k))
+    );
+
+    packedKeys.push({ keys: opts, length: len });
+
+    i += len;
+  }
+
+  const selection = minimiseSelection(
+    packedKeys.map((x) => x.keys),
+    allKeysDist
+  );
+
+  const unpackedKeys = packedKeys.flatMap((p, i) =>
+    Array.from<number>({ length: p.length }).fill(selection[i]!)
+  );
+
+  const blocks = unpackedKeys.map((key, i) => {
+    const k = allKeys[key]!;
+    const res = [
+      {
+        start: k.starts[0]!,
+        end: k.starts[0]! + (k.strong ? 4 : 2),
+        gaps: [] as number[],
+      },
+      {
+        start: k.starts[1]!,
+        end: k.starts[1]! + (k.strong ? 6 : 8),
+        gaps: [] as number[],
+      },
+    ];
+    for (const r of res) {
+      r.gaps = Array.from({ length: (r.end - r.start) / 2 })
+        .map((_, i) => i * 2 + 1)
+        .filter((n) => noteSets[i]!.has(mod(r.start + n, 12)));
+    }
+    return res;
+  });
+
+  console.log(blocks);
 
   let lastMids: null | [number, number] = null;
   const getMids = (x: { start: number; end: number }[]): [number, number] => [
@@ -138,6 +256,7 @@ export const barsToBlocks = (bars: number[][]) => {
     (x[1]!.end + x[0]!.start + 12) / 2,
   ];
   const moved = blocks.map((x) => {
+    if (x.length !== 2) return x;
     if (!lastMids) {
       lastMids = getMids(x);
       return x;

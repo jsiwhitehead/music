@@ -25,7 +25,7 @@ const durationMap = new Map<number, { base: number; dots: number }>([
 ]);
 
 const TONE_HEIGHT = 6;
-const NOTE_HEIGHT = 7.5;
+const NOTE_HEIGHT = 7;
 const BAR_THIN = 2;
 const NOTE_DIST = TONE_HEIGHT * 5;
 const BRIDGE = TONE_HEIGHT * 1;
@@ -349,7 +349,7 @@ const Bar: React.FC<{
   blocks: {
     start: number;
     end: number;
-    gap?: boolean;
+    gaps: number[];
     prev: number[];
     next: number[];
   }[];
@@ -399,19 +399,19 @@ const Bar: React.FC<{
         opacity={0.5}
       />,
     ])}
-    {blocks.map(({ start, gap }, j) =>
-      gap ? (
+    {blocks.flatMap(({ start, gaps }, j) =>
+      gaps.map((g, k) => (
         <rect
-          key={j}
+          key={`${j}_${k}`}
           x={BRIDGE}
           width={NOTE_DIST * 3}
-          y={noteToY(start) - TONE_HEIGHT * 2 + BAR_THIN}
+          y={noteToY(start + g) - (TONE_HEIGHT - BAR_THIN * 2) / 2}
           height={TONE_HEIGHT - BAR_THIN * 2}
-          rx={(TONE_HEIGHT - BAR_THIN * 2) / 2}
-          ry={(TONE_HEIGHT - BAR_THIN * 2) / 2}
+          rx={TONE_HEIGHT - BAR_THIN * 2}
+          ry={TONE_HEIGHT - BAR_THIN * 2}
           fill="white"
         />
-      ) : null
+      ))
     )}
     {first && (
       <line x1={0} x2={0} y1={0} y2={300} stroke="white" strokeWidth={1} />
