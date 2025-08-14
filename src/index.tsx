@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import fontInfo from "../leland/glyphnames.json";
 
 import bars from "./piece";
-import { barsToBlocks, mod } from "./utils";
+import { mod, extendBlocks, notesToColour } from "./utils";
 
 const noteGlpyhs = new Map<number, keyof typeof fontInfo>([
   [4, "noteheadWhole"],
@@ -43,7 +43,7 @@ type TimedEvent =
 
 const lineNotes = Array.from({ length: 2 }).map((_, i) =>
   bars
-    .flatMap((lines) => lines[i]!)
+    .flatMap(({ lines }) => lines[i]!)
     .filter((e) => e.type === "note")
     .flatMap((e) => e.pitch)
 );
@@ -51,7 +51,7 @@ const middles = lineNotes.map((notes) =>
   Math.round((Math.min(...notes) + Math.max(...notes)) / 2)
 );
 
-const timedBars: TimedEvent[][][] = bars.map((lines) =>
+const timedBars: TimedEvent[][][] = bars.map(({ lines }) =>
   lines.map((line, i) => {
     let current = 0;
     return line.map((l) => {
@@ -63,8 +63,20 @@ const timedBars: TimedEvent[][][] = bars.map((lines) =>
   })
 );
 
-const blocks = barsToBlocks(
-  bars.map((lines) =>
+let currentBlocks;
+const baseBlocks = bars.map(({ blocks }) => {
+  if (blocks) {
+    currentBlocks = blocks.map((b, i) => ({
+      start: b,
+      end: (i + 1 < blocks.length ? blocks[i + 1]! : blocks[0]! + 12) - 1,
+    }));
+  }
+  return currentBlocks!;
+});
+
+const blocks = extendBlocks(
+  baseBlocks,
+  bars.map(({ lines }) =>
     lines
       .flatMap((s) => s)
       .filter((s) => s.type === "note")
@@ -202,11 +214,15 @@ const Bar: React.FC<{
   blocks: {
     start: number;
     end: number;
-    mids: number[];
     prev: number[];
     next: number[];
+    innerStart: number;
+    innerEnd: number;
+    innerPrev: number[];
+    innerNext: number[];
+    mids: number[];
   }[];
-  colour: string;
+  colour: string | null;
   first: boolean;
   last: boolean;
 }> = ({ lines, blocks, colour, first, last }) => (
@@ -215,43 +231,126 @@ const Bar: React.FC<{
     height={280}
     viewBox={`0 0 ${NOTE_DIST * 3 + BRIDGE * 2} 280`}
   >
-    {blocks.flatMap(({ start, end, prev, next }, j) => [
-      <Bridge
-        key={`${j}_prev`}
-        a={[
-          0,
-          noteToY(start + prev[0]!) - BAR_THIN,
-          noteToY(end + prev[1]!) + BAR_THIN,
-        ]}
-        b={[BRIDGE, noteToY(start) - BAR_THIN, noteToY(end) + BAR_THIN]}
-        colour={colour}
-        opacity={0.5}
-      />,
-      <rect
-        key={`${j}_base`}
-        x={BRIDGE}
-        width={NOTE_DIST * 3}
-        y={noteToY(end) + BAR_THIN}
-        height={(TONE_HEIGHT * (end - start)) / 2 - BAR_THIN * 2}
-        fill={colour}
-        opacity={0.5}
-      />,
-      <Bridge
-        key={`${j}_next`}
-        a={[
-          BRIDGE + NOTE_DIST * 3,
-          noteToY(start) - BAR_THIN,
-          noteToY(end) + BAR_THIN,
-        ]}
-        b={[
-          BRIDGE * 2 + NOTE_DIST * 3,
-          noteToY(start + next[0]!) - BAR_THIN,
-          noteToY(end + next[1]!) + BAR_THIN,
-        ]}
-        colour={colour}
-        opacity={0.5}
-      />,
-    ])}
+    {blocks.flatMap(
+      (
+        { start, end, prev, next, innerStart, innerEnd, innerPrev, innerNext },
+        j
+      ) => [
+        <Bridge
+          key={`${j}_prev`}
+          a={[
+            0,
+            noteToY(start + prev[0]!) - BAR_THIN,
+            noteToY(end + prev[1]!) + BAR_THIN,
+          ]}
+          b={[BRIDGE, noteToY(start) - BAR_THIN, noteToY(end) + BAR_THIN]}
+          colour="#ccc"
+          opacity={0.5}
+        />,
+        <rect
+          key={`${j}_base`}
+          x={BRIDGE}
+          width={NOTE_DIST * 3}
+          y={noteToY(end) + BAR_THIN}
+          height={(TONE_HEIGHT * (end - start)) / 2 - BAR_THIN * 2}
+          fill="#ccc"
+          opacity={0.5}
+        />,
+        <Bridge
+          key={`${j}_next`}
+          a={[
+            BRIDGE + NOTE_DIST * 3,
+            noteToY(start) - BAR_THIN,
+            noteToY(end) + BAR_THIN,
+          ]}
+          b={[
+            BRIDGE * 2 + NOTE_DIST * 3,
+            noteToY(start + next[0]!) - BAR_THIN,
+            noteToY(end + next[1]!) + BAR_THIN,
+          ]}
+          colour="#ccc"
+          opacity={0.5}
+        />,
+        <Bridge
+          key={`${j}_innerprev`}
+          a={[
+            0,
+            noteToY(innerStart + innerPrev[0]!) - BAR_THIN,
+            noteToY(innerEnd + innerPrev[1]!) + BAR_THIN,
+          ]}
+          b={[
+            BRIDGE,
+            noteToY(innerStart) - BAR_THIN,
+            noteToY(innerEnd) + BAR_THIN,
+          ]}
+          colour="white"
+          opacity={1}
+        />,
+        <rect
+          key={`${j}_innerbase`}
+          x={BRIDGE}
+          width={NOTE_DIST * 3}
+          y={noteToY(innerEnd) + BAR_THIN}
+          height={(TONE_HEIGHT * (innerEnd - innerStart)) / 2 - BAR_THIN * 2}
+          fill="white"
+          opacity={1}
+        />,
+        <Bridge
+          key={`${j}_innernext`}
+          a={[
+            BRIDGE + NOTE_DIST * 3,
+            noteToY(innerStart) - BAR_THIN,
+            noteToY(innerEnd) + BAR_THIN,
+          ]}
+          b={[
+            BRIDGE * 2 + NOTE_DIST * 3,
+            noteToY(innerStart + innerNext[0]!) - BAR_THIN,
+            noteToY(innerEnd + innerNext[1]!) + BAR_THIN,
+          ]}
+          colour="white"
+          opacity={1}
+        />,
+        <Bridge
+          key={`${j}_innerprev`}
+          a={[
+            0,
+            noteToY(innerStart + innerPrev[0]!) - BAR_THIN,
+            noteToY(innerEnd + innerPrev[1]!) + BAR_THIN,
+          ]}
+          b={[
+            BRIDGE,
+            noteToY(innerStart) - BAR_THIN,
+            noteToY(innerEnd) + BAR_THIN,
+          ]}
+          colour={colour || notesToColour([start, end])}
+          opacity={0.5}
+        />,
+        <rect
+          key={`${j}_innerbase`}
+          x={BRIDGE}
+          width={NOTE_DIST * 3}
+          y={noteToY(innerEnd) + BAR_THIN}
+          height={(TONE_HEIGHT * (innerEnd - innerStart)) / 2 - BAR_THIN * 2}
+          fill={colour || notesToColour([start, end])}
+          opacity={0.5}
+        />,
+        <Bridge
+          key={`${j}_innernext`}
+          a={[
+            BRIDGE + NOTE_DIST * 3,
+            noteToY(innerStart) - BAR_THIN,
+            noteToY(innerEnd) + BAR_THIN,
+          ]}
+          b={[
+            BRIDGE * 2 + NOTE_DIST * 3,
+            noteToY(innerStart + innerNext[0]!) - BAR_THIN,
+            noteToY(innerEnd + innerNext[1]!) + BAR_THIN,
+          ]}
+          colour={colour || notesToColour([start, end])}
+          opacity={0.5}
+        />,
+      ]
+    )}
     {first && (
       <line x1={0} x2={0} y1={0} y2={300} stroke="white" strokeWidth={1} />
     )}
