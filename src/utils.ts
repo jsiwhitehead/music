@@ -259,7 +259,7 @@ export const barsToBlocks = (bars: number[][]) => {
       sliceKeys.every((x) => x.includes(k))
     );
 
-    packedKeys.push({ keys: opts, length: len });
+    packedKeys.push({ keys: resKeys[i]! === 3 ? [3] : opts, length: len });
 
     i += len;
   }
