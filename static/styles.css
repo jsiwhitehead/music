@@ -1,0 +1,144 @@
+@layer reset, app;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  button,
+  h1,
+  h2,
+  li,
+  ul,
+  p {
+    margin: 0;
+  }
+
+  button {
+    font: inherit;
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+}
+
+@layer app {
+  :root {
+    --background: #f6f1e6;
+    --border-color: rgba(32, 29, 24, 0.12);
+    --muted-color: rgba(32, 29, 24, 0.68);
+    --panel-color: rgba(255, 255, 255, 0.48);
+    --text-color: #201d18;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--text-color);
+    font-family: "Source Serif 4", Georgia, serif;
+  }
+
+  .library {
+    width: min(56rem, calc(100vw - 2rem));
+    margin: 0 auto;
+    padding: 1.75rem 0 2.5rem;
+  }
+
+  h1 {
+    font-size: clamp(1.85rem, 4vw, 2.6rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+  }
+
+  .composer-heading,
+  .performers,
+  .work-cell {
+    color: var(--muted-color);
+    line-height: 1.5;
+  }
+
+  .composer-section + .composer-section {
+    margin-top: 1.35rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .composer-section:first-of-type {
+    margin-top: 0.85rem;
+  }
+
+  .composer-heading {
+    font-size: 1.05rem;
+    color: var(--text-color);
+  }
+
+  .recordings {
+    margin-top: 0.3rem;
+  }
+
+  .recording-row {
+    display: grid;
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.38rem 0;
+  }
+
+  .recording-row + .recording-row {
+    border-top: 1px solid rgba(32, 29, 24, 0.07);
+  }
+
+  .work-cell,
+  .performers {
+    min-width: 0;
+  }
+
+  .work-cell {
+    color: rgba(32, 29, 24, 0.86);
+  }
+
+  .work-cell[aria-hidden="true"] {
+    visibility: hidden;
+  }
+
+  .performers {
+    color: var(--text-color);
+  }
+
+  .recording-row button {
+    padding: 0.24rem 0.68rem;
+    border: 1px solid rgba(32, 29, 24, 0.16);
+    border-radius: 999px;
+    background: var(--panel-color);
+    color: var(--text-color);
+    cursor: pointer;
+  }
+
+  .recording-row button:hover {
+    background: rgba(255, 255, 255, 0.68);
+    border-color: rgba(32, 29, 24, 0.24);
+  }
+
+  .recording-row button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+}
