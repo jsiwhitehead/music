@@ -19,13 +19,53 @@ export const library: ComposerGroup[] = [
     composer: "Johann Sebastian Bach",
     works: [
       {
-        title: "Brandenburg Concertos",
+        title: "Goldberg Variations",
         recordings: [
+          { performers: "Glenn Gould (1955)", listId: "", startVideoId: "" },
+          { performers: "Angela Hewitt", listId: "", startVideoId: "" },
+        ],
+      },
+      {
+        title: "The Well-Tempered Clavier, Book I",
+        recordings: [
+          { performers: "Angela Hewitt", listId: "", startVideoId: "" },
           {
-            performers: "The English Concert; Trevor Pinnock",
+            performers: "Sviatoslav Richter",
             listId: "",
             startVideoId: "",
           },
+        ],
+      },
+      {
+        title: "English Suites",
+        recordings: [
+          { performers: "Angela Hewitt", listId: "", startVideoId: "" },
+        ],
+      },
+      {
+        title: "Cello Suites",
+        recordings: [
+          {
+            performers: "Pablo Casals",
+            listId: "",
+            startVideoId: "",
+          },
+          {
+            performers: "Steven Isserlis",
+            listId: "",
+            startVideoId: "",
+          },
+        ],
+      },
+      {
+        title: "Sonatas and Partitas for Solo Violin",
+        recordings: [
+          {
+            performers: "Arthur Grumiaux",
+            listId: "",
+            startVideoId: "",
+          },
+          { performers: "Hilary Hahn", listId: "", startVideoId: "" },
         ],
       },
       {
@@ -56,54 +96,8 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "Goldberg Variations",
-        recordings: [
-          { performers: "Glenn Gould (1955)", listId: "", startVideoId: "" },
-          { performers: "Angela Hewitt", listId: "", startVideoId: "" },
-        ],
-      },
-      {
-        title: "The Well-Tempered Clavier, Book I",
-        recordings: [
-          { performers: "Angela Hewitt", listId: "", startVideoId: "" },
-          {
-            performers: "Sviatoslav Richter",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Cello Suites",
-        recordings: [
-          {
-            performers: "Pablo Casals",
-            listId: "",
-            startVideoId: "",
-          },
-          {
-            performers: "Steven Isserlis",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Sonatas and Partitas for Solo Violin",
-        recordings: [
-          {
-            performers: "Arthur Grumiaux",
-            listId: "",
-            startVideoId: "",
-          },
-          { performers: "Hilary Hahn", listId: "", startVideoId: "" },
-        ],
-      },
-      {
-        title: "English Suites",
-        recordings: [
-          { performers: "Angela Hewitt", listId: "", startVideoId: "" },
-        ],
+        title: "Selected Organ Chorales",
+        recordings: [],
       },
     ],
   },
@@ -111,30 +105,14 @@ export const library: ComposerGroup[] = [
     composer: "George Frideric Handel",
     works: [
       {
+        title: "Keyboard Suites",
+        recordings: [],
+      },
+      {
         title: "Messiah",
         recordings: [
           {
             performers: "English Concert; Trevor Pinnock",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Water Music",
-        recordings: [
-          {
-            performers: "English Baroque Soloists; John Eliot Gardiner",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Music for the Royal Fireworks",
-        recordings: [
-          {
-            performers: "The English Concert; Trevor Pinnock",
             listId: "",
             startVideoId: "",
           },
@@ -146,6 +124,21 @@ export const library: ComposerGroup[] = [
     composer: "Joseph Haydn",
     works: [
       {
+        title: "Piano Trios",
+        recordings: [],
+      },
+      {
+        title: "String Quartets, Op. 76",
+        recordings: [
+          { performers: "Takacs Quartet", listId: "", startVideoId: "" },
+          {
+            performers: "Quatuor Mosaiques",
+            listId: "",
+            startVideoId: "",
+          },
+        ],
+      },
+      {
         title: "Symphony No. 88",
         recordings: [
           {
@@ -156,45 +149,8 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "Symphony No. 94 'Surprise'",
-        recordings: [
-          {
-            performers: "Royal Concertgebouw Orchestra; Colin Davis",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Symphony No. 104 'London'",
-        recordings: [
-          {
-            performers: "Royal Concertgebouw Orchestra; Colin Davis",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "String Quartets, Op. 76",
-        recordings: [
-          { performers: "Takács Quartet", listId: "", startVideoId: "" },
-          {
-            performers: "Quatuor Mosaïques",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Cello Concerto No. 1 in C major",
-        recordings: [
-          {
-            performers: "Steven Isserlis; Bremen German Chamber Philharmonic",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "The Seven Last Words of Our Saviour from the Cross",
+        recordings: [],
       },
       {
         title: "The Creation",
@@ -205,7 +161,7 @@ export const library: ComposerGroup[] = [
             startVideoId: "",
           },
           {
-            performers: "Freiburg Baroque Orchestra; René Jacobs",
+            performers: "Freiburg Baroque Orchestra; Rene Jacobs",
             listId: "",
             startVideoId: "",
           },
@@ -217,56 +173,24 @@ export const library: ComposerGroup[] = [
     composer: "Wolfgang Amadeus Mozart",
     works: [
       {
-        title: "Symphony No. 40",
-        recordings: [
-          {
-            performers: "Vienna Philharmonic; Karl Böhm",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Fantasia in C minor, K. 475",
+        recordings: [],
       },
       {
-        title: "Symphony No. 41 'Jupiter'",
-        recordings: [
-          {
-            performers: "Vienna Philharmonic; Karl Böhm",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Piano Sonatas Nos. 1-5",
+        recordings: [],
       },
       {
-        title: "Requiem",
-        recordings: [
-          {
-            performers:
-              "English Baroque Soloists; Monteverdi Choir; John Eliot Gardiner",
-            listId: "",
-            startVideoId: "",
-          },
-          {
-            performers: "Staatskapelle Dresden; Peter Schreier",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Piano Sonatas Nos. 6-18",
+        recordings: [],
       },
       {
-        title: "Clarinet Concerto",
-        recordings: [
-          {
-            performers:
-              "Sabine Meyer; Staatskapelle Dresden; Herbert Blomstedt",
-            listId: "",
-            startVideoId: "",
-          },
-          {
-            performers: "Thea King; English Chamber Orchestra; Jeffrey Tate",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Piano Concerto No. 17",
+        recordings: [],
+      },
+      {
+        title: "Piano Concerto No. 19",
+        recordings: [],
       },
       {
         title: "Piano Concerto No. 20",
@@ -294,11 +218,44 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "String Quintets",
+        title: "Piano Concerto No. 24",
+        recordings: [],
+      },
+      {
+        title: "Piano Concerto No. 27",
+        recordings: [],
+      },
+      {
+        title: "Serenata notturna, K. 239",
+        recordings: [],
+      },
+      {
+        title: "Clarinet Concerto",
         recordings: [
-          { performers: "Talich Quartet", listId: "", startVideoId: "" },
           {
-            performers: "Amadeus Quartet; Cecil Aronowitz",
+            performers:
+              "Sabine Meyer; Staatskapelle Dresden; Herbert Blomstedt",
+            listId: "",
+            startVideoId: "",
+          },
+          {
+            performers: "Thea King; English Chamber Orchestra; Jeffrey Tate",
+            listId: "",
+            startVideoId: "",
+          },
+        ],
+      },
+      {
+        title: "Requiem",
+        recordings: [
+          {
+            performers:
+              "English Baroque Soloists; Monteverdi Choir; John Eliot Gardiner",
+            listId: "",
+            startVideoId: "",
+          },
+          {
+            performers: "Staatskapelle Dresden; Peter Schreier",
             listId: "",
             startVideoId: "",
           },
@@ -310,46 +267,8 @@ export const library: ComposerGroup[] = [
     composer: "Ludwig van Beethoven",
     works: [
       {
-        title: "Symphony No. 3 'Eroica'",
-        recordings: [
-          {
-            performers: "Berlin Philharmonic; Herbert von Karajan (1963)",
-            listId: "",
-            startVideoId: "",
-          },
-          {
-            performers:
-              "Orchestre Révolutionnaire et Romantique; John Eliot Gardiner",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Symphony No. 5",
-        recordings: [
-          {
-            performers: "Vienna Philharmonic; Carlos Kleiber",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Symphony No. 9",
-        recordings: [
-          {
-            performers: "Berlin Philharmonic; Herbert von Karajan (1963)",
-            listId: "",
-            startVideoId: "",
-          },
-          {
-            performers:
-              "Orchestre Révolutionnaire et Romantique; John Eliot Gardiner",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Piano Concertos Nos. 1-5",
+        recordings: [],
       },
       {
         title: "Violin Concerto",
@@ -363,25 +282,8 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "Piano Concerto No. 5 'Emperor'",
-        recordings: [
-          {
-            performers: "Emil Gilels; Cleveland Orchestra; George Szell",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Piano Sonata No. 14 'Moonlight'",
-        recordings: [
-          { performers: "Wilhelm Kempff", listId: "", startVideoId: "" },
-          {
-            performers: "Maurizio Pollini",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Piano Sonata No. 8 'Pathetique'",
+        recordings: [],
       },
       {
         title: "Piano Sonata No. 21 'Waldstein'",
@@ -402,31 +304,14 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "Piano Sonata No. 29 'Hammerklavier'",
-        recordings: [
-          {
-            performers: "Maurizio Pollini",
-            listId: "",
-            startVideoId: "",
-          },
-          { performers: "Alfred Brendel", listId: "", startVideoId: "" },
-        ],
+        title: "Piano Sonatas Nos. 27-31",
+        recordings: [],
       },
       {
         title: "Piano Sonata No. 32, Op. 111",
         recordings: [
           {
             performers: "Maurizio Pollini",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Late String Quartets",
-        recordings: [
-          {
-            performers: "Quartetto Italiano",
             listId: "",
             startVideoId: "",
           },
@@ -444,11 +329,27 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
+        title: "Symphony No. 3 'Eroica'",
+        recordings: [
+          {
+            performers: "Berlin Philharmonic; Herbert von Karajan (1963)",
+            listId: "",
+            startVideoId: "",
+          },
+          {
+            performers:
+              "Orchestre Revolutionnaire et Romantique; John Eliot Gardiner",
+            listId: "",
+            startVideoId: "",
+          },
+        ],
+      },
+      {
         title: "Missa solemnis",
         recordings: [
           {
             performers:
-              "Monteverdi Choir; Orchestre Révolutionnaire et Romantique; John Eliot Gardiner",
+              "Monteverdi Choir; Orchestre Revolutionnaire et Romantique; John Eliot Gardiner",
             listId: "",
             startVideoId: "",
           },
@@ -461,36 +362,14 @@ export const library: ComposerGroup[] = [
     works: [
       {
         title: "Symphony No. 8 'Unfinished'",
-        recordings: [
-          {
-            performers: "Royal Concertgebouw Orchestra; Bernard Haitink",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        recordings: [],
       },
       {
         title: "Symphony No. 9 'Great'",
-        recordings: [
-          {
-            performers: "Royal Concertgebouw Orchestra; Nikolaus Harnoncourt",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        recordings: [],
       },
       {
-        title: "String Quintet in C major",
-        recordings: [
-          {
-            performers: "Alban Berg Quartet; Heinrich Schiff",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Piano Sonata in B-flat major D960",
+        title: "Piano Sonata in B-flat major, D. 960",
         recordings: [
           { performers: "Alfred Brendel", listId: "", startVideoId: "" },
           {
@@ -515,36 +394,84 @@ export const library: ComposerGroup[] = [
           },
         ],
       },
+      {
+        title: "Erlkonig",
+        recordings: [],
+      },
+      {
+        title: "Auf dem Wasser zu singen",
+        recordings: [],
+      },
+      {
+        title: "6 Moments musicaux, D. 780",
+        recordings: [],
+      },
+      {
+        title: "4 Impromptus, D. 899",
+        recordings: [],
+      },
+      {
+        title: "4 Impromptus, D. 935",
+        recordings: [],
+      },
+      {
+        title: "String Quintet in C major",
+        recordings: [
+          {
+            performers: "Alban Berg Quartet; Heinrich Schiff",
+            listId: "",
+            startVideoId: "",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    composer: "Felix Mendelssohn",
+    works: [
+      {
+        title: "Violin Concerto",
+        recordings: [],
+      },
+      {
+        title: "Songs Without Words",
+        recordings: [],
+      },
+    ],
+  },
+  {
+    composer: "Frederic Chopin",
+    works: [
+      {
+        title: "Ballades",
+        recordings: [],
+      },
+      {
+        title: "Scherzos",
+        recordings: [],
+      },
+      {
+        title: "Piano Concerto No. 1",
+        recordings: [],
+      },
+      {
+        title: "Preludes",
+        recordings: [],
+      },
     ],
   },
   {
     composer: "Johannes Brahms",
     works: [
       {
-        title: "Symphony No. 1",
-        recordings: [
-          {
-            performers: "Berlin Philharmonic; Herbert von Karajan (1963)",
-            listId: "",
-            startVideoId: "",
-          },
-          {
-            performers: "Vienna Philharmonic; Carlos Kleiber",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Piano Concerto No. 1",
+        recordings: [],
       },
       {
-        title: "Symphony No. 4",
+        title: "Piano Concerto No. 2",
         recordings: [
           {
-            performers: "Berlin Philharmonic; Herbert von Karajan (1963)",
-            listId: "",
-            startVideoId: "",
-          },
-          {
-            performers: "Vienna Philharmonic; Carlos Kleiber",
+            performers: "Emil Gilels; Berlin Philharmonic; Eugen Jochum",
             listId: "",
             startVideoId: "",
           },
@@ -562,14 +489,12 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "Piano Concerto No. 2",
-        recordings: [
-          {
-            performers: "Emil Gilels; Berlin Philharmonic; Eugen Jochum",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Piano Sonata No. 3",
+        recordings: [],
+      },
+      {
+        title: "Late Piano Pieces Opp. 117-119",
+        recordings: [],
       },
       {
         title: "A German Requiem",
@@ -582,31 +507,47 @@ export const library: ComposerGroup[] = [
           },
         ],
       },
+    ],
+  },
+  {
+    composer: "Max Bruch",
+    works: [
       {
-        title: "Clarinet Quintet",
-        recordings: [
-          {
-            performers: "Amadeus Quartet; Gervase de Peyer",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Violin Concerto No. 1",
+        recordings: [],
       },
     ],
   },
   {
-    composer: "Antonín Dvořák",
+    composer: "Cesar Franck",
     works: [
       {
-        title: "Symphony No. 9 'From the New World'",
-        recordings: [
-          {
-            performers: "Czech Philharmonic; Karel Ančerl",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Violin Sonata",
+        recordings: [],
       },
+    ],
+  },
+  {
+    composer: "Richard Strauss",
+    works: [
+      {
+        title: "Four Last Songs",
+        recordings: [],
+      },
+    ],
+  },
+  {
+    composer: "Richard Wagner",
+    works: [
+      {
+        title: "Siegfried Idyll",
+        recordings: [],
+      },
+    ],
+  },
+  {
+    composer: "Antonin Dvorak",
+    works: [
       {
         title: "Cello Concerto",
         recordings: [
@@ -619,9 +560,17 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "String Quartet No. 12 'American'",
+        title: "Symphony No. 8",
+        recordings: [],
+      },
+      {
+        title: "Symphony No. 9 'From the New World'",
         recordings: [
-          { performers: "Takács Quartet", listId: "", startVideoId: "" },
+          {
+            performers: "Czech Philharmonic; Karel Ancerl",
+            listId: "",
+            startVideoId: "",
+          },
         ],
       },
       {
@@ -633,6 +582,15 @@ export const library: ComposerGroup[] = [
             startVideoId: "",
           },
         ],
+      },
+    ],
+  },
+  {
+    composer: "Gabriel Faure",
+    works: [
+      {
+        title: "Requiem",
+        recordings: [],
       },
     ],
   },
@@ -655,30 +613,10 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "Symphony No. 5",
-        recordings: [
-          {
-            performers: "Berlin Philharmonic; Claudio Abbado",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
         title: "Symphony No. 9",
         recordings: [
           {
             performers: "Berlin Philharmonic; Herbert von Karajan",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Das Lied von der Erde",
-        recordings: [
-          {
-            performers: "Vienna Philharmonic; Bruno Walter (1960)",
             listId: "",
             startVideoId: "",
           },
@@ -705,16 +643,6 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "Prélude à l'après-midi d'un faune",
-        recordings: [
-          {
-            performers: "Cleveland Orchestra; Pierre Boulez (1993)",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
         title: "Preludes, Book I",
         recordings: [
           {
@@ -725,40 +653,14 @@ export const library: ComposerGroup[] = [
         ],
       },
       {
-        title: "Preludes, Book II",
-        recordings: [
-          {
-            performers: "Walter Gieseking",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "String Quartet",
-        recordings: [
-          {
-            performers: "Quartetto Italiano",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Violin Sonata",
+        recordings: [],
       },
     ],
   },
   {
     composer: "Maurice Ravel",
     works: [
-      {
-        title: "Daphnis et Chloé",
-        recordings: [
-          {
-            performers: "Boston Symphony Orchestra; Charles Munch",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
       {
         title: "Piano Concerto in G major",
         recordings: [
@@ -780,157 +682,35 @@ export const library: ComposerGroup[] = [
           },
         ],
       },
+    ],
+  },
+  {
+    composer: "Edvard Grieg",
+    works: [
       {
-        title: "String Quartet",
-        recordings: [
-          {
-            performers: "Quartetto Italiano",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Piano Concerto",
+        recordings: [],
+      },
+      {
+        title: "Lyric Pieces",
+        recordings: [],
       },
     ],
   },
   {
-    composer: "Jean Sibelius",
+    composer: "Isaac Albeniz",
     works: [
       {
-        title: "Symphony No. 2",
-        recordings: [
-          {
-            performers: "London Symphony Orchestra; Colin Davis",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Iberia",
+        recordings: [],
       },
       {
-        title: "Symphony No. 5",
-        recordings: [
-          {
-            performers: "Helsinki Philharmonic; Paavo Berglund",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Navarra",
+        recordings: [],
       },
       {
-        title: "Violin Concerto",
-        recordings: [
-          {
-            performers:
-              "David Oistrakh; Moscow Philharmonic; Gennady Rozhdestvensky",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    composer: "Igor Stravinsky",
-    works: [
-      {
-        title: "The Firebird",
-        recordings: [
-          {
-            performers: "Columbia Symphony Orchestra; Igor Stravinsky",
-            listId: "",
-            startVideoId: "",
-          },
-          {
-            performers: "Cleveland Orchestra; Pierre Boulez",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Petrushka",
-        recordings: [
-          {
-            performers: "Columbia Symphony Orchestra; Igor Stravinsky",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "The Rite of Spring",
-        recordings: [
-          {
-            performers: "Cleveland Orchestra; Pierre Boulez",
-            listId: "",
-            startVideoId: "",
-          },
-          {
-            performers: "Columbia Symphony Orchestra; Igor Stravinsky",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    composer: "Dmitri Shostakovich",
-    works: [
-      {
-        title: "Symphony No. 5",
-        recordings: [
-          {
-            performers: "Leningrad Philharmonic Orchestra; Yevgeny Mravinsky",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Symphony No. 10",
-        recordings: [
-          {
-            performers: "Berlin Philharmonic; Herbert von Karajan",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "String Quartet No. 8",
-        recordings: [
-          {
-            performers: "Borodin Quartet",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-      {
-        title: "Cello Concerto No. 1",
-        recordings: [
-          {
-            performers:
-              "Mstislav Rostropovich; Leningrad Philharmonic Orchestra; Yevgeny Mravinsky",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    composer: "Hector Berlioz",
-    works: [
-      {
-        title: "Symphonie fantastique",
-        recordings: [
-          {
-            performers: "Boston Symphony Orchestra; Charles Munch",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Suite espanola No. 1, Op. 47",
+        recordings: [],
       },
     ],
   },
@@ -950,58 +730,33 @@ export const library: ComposerGroup[] = [
     ],
   },
   {
-    composer: "Anton Bruckner",
-    works: [
-      {
-        title: "Symphony No. 7",
-        recordings: [
-          {
-            performers: "Vienna Philharmonic; Herbert von Karajan",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
-      },
-    ],
-  },
-  {
     composer: "Edward Elgar",
     works: [
       {
-        title: "Enigma Variations",
-        recordings: [
-          {
-            performers: "London Symphony Orchestra; Adrian Boult",
-            listId: "",
-            startVideoId: "",
-          },
-        ],
+        title: "Cello Concerto",
+        recordings: [],
       },
     ],
   },
   {
-    composer: "Béla Bartók",
+    composer: "Jean Sibelius",
     works: [
       {
-        title: "Music for Strings, Percussion and Celesta",
+        title: "Violin Concerto",
         recordings: [
           {
-            performers: "Chicago Symphony Orchestra; Fritz Reiner (1958)",
+            performers:
+              "David Oistrakh; Moscow Philharmonic; Gennady Rozhdestvensky",
             listId: "",
             startVideoId: "",
           },
         ],
       },
-    ],
-  },
-  {
-    composer: "Sergei Prokofiev",
-    works: [
       {
         title: "Symphony No. 5",
         recordings: [
           {
-            performers: "Berlin Philharmonic; Claudio Abbado",
+            performers: "Helsinki Philharmonic; Paavo Berglund",
             listId: "",
             startVideoId: "",
           },
