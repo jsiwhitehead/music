@@ -2,7 +2,7 @@
 
 ## What this repo is
 
-Music is a TypeScript project for building and managing a local catalogue of classical recordings, then compiling selected recordings into YouTube Music playlists for playback.
+Music is a TypeScript project for building and managing a local catalogue of classical recordings, then opening selected recordings directly in YouTube Music.
 
 Work in progress.
 
