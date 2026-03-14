@@ -104,66 +104,115 @@ function getPlaybackUrl(recording: LinkedRecording): string {
   return `https://music.youtube.com/watch?${search.toString()}`;
 }
 
-function createRecordingRow(
-  workTitle: string,
-  recording: LinkedRecording,
-): HTMLLIElement {
-  const row = document.createElement("li");
-  row.className = "recording-row";
+function getComposerLabel(composer: string): string {
+  const parts = composer.trim().split(/\s+/);
+  return parts.at(-1) ?? composer;
+}
 
-  const work = document.createElement("span");
-  work.className = "work-cell";
-  work.textContent = workTitle;
-  if (workTitle.length === 0) {
-    work.setAttribute("aria-hidden", "true");
+function getRecordingLabel(performers: string): string {
+  return performers.replace(/\s+\([^()]+\)$/, "");
+}
+
+function createCell(
+  className: string,
+  textContent?: string,
+): HTMLTableCellElement {
+  const cell = document.createElement("td");
+  cell.className = className;
+  if (textContent !== undefined) {
+    cell.textContent = textContent;
+  }
+  return cell;
+}
+
+function createRecordingLink(recording: LinkedRecording): HTMLAnchorElement {
+  const link = document.createElement("a");
+  link.className = "recording-link";
+  link.href = getPlaybackUrl(recording);
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = getRecordingLabel(recording.performers);
+  return link;
+}
+
+function createRecordingsList(recordings: LinkedRecording[]): HTMLUListElement {
+  const list = document.createElement("ul");
+  list.className = "recordings-list";
+
+  for (const recording of recordings) {
+    const item = document.createElement("li");
+    item.className = "recordings-item";
+    item.append(createRecordingLink(recording));
+    list.append(item);
   }
 
-  const performers = document.createElement("span");
-  performers.className = "performers";
-  performers.textContent = recording.performers;
+  return list;
+}
 
-  const button = document.createElement("button");
-  button.type = "button";
-  button.textContent = "Play";
-  button.addEventListener("click", () => {
-    window.open(getPlaybackUrl(recording), "_blank", "noopener,noreferrer");
-  });
+function createWorkRow(
+  composer: string,
+  work: Work,
+  showComposer: boolean,
+): HTMLTableRowElement | null {
+  const linkedRecordings = work.recordings.filter(hasPlaybackIds);
 
-  row.append(work, performers, button);
+  if (linkedRecordings.length === 0) {
+    return null;
+  }
+
+  const row = document.createElement("tr");
+  row.className = "work-row";
+
+  const composerCell = createCell(
+    "composer-cell",
+    showComposer ? getComposerLabel(composer) : undefined,
+  );
+  if (!showComposer) {
+    composerCell.classList.add("composer-cell--empty");
+    composerCell.setAttribute("aria-hidden", "true");
+  }
+
+  const workCell = createCell("work-cell", work.title);
+  const recordingsCell = createCell("recordings-cell");
+  recordingsCell.append(createRecordingsList(linkedRecordings));
+
+  row.append(composerCell, workCell, recordingsCell);
+  return row;
+}
+
+function createBoundaryRow(position: "top" | "bottom"): HTMLTableRowElement {
+  const row = document.createElement("tr");
+  row.className = `composer-boundary-row composer-boundary-row--${position}`;
+
+  for (let index = 0; index < 3; index += 1) {
+    const cell = document.createElement("td");
+    cell.className = "composer-boundary-cell";
+    row.append(cell);
+  }
+
   return row;
 }
 
 function createComposerSection(
   composerGroup: ComposerGroup,
-): HTMLElement | null {
-  const rows: HTMLLIElement[] = [];
-
-  for (const work of composerGroup.works) {
-    const linkedRecordings = work.recordings.filter(hasPlaybackIds);
-
-    for (const [recordingIndex, recording] of linkedRecordings.entries()) {
-      rows.push(
-        createRecordingRow(recordingIndex === 0 ? work.title : "", recording),
-      );
-    }
-  }
+): HTMLTableSectionElement | null {
+  const rows = composerGroup.works
+    .map((work, index) =>
+      createWorkRow(composerGroup.composer, work, index === 0),
+    )
+    .filter((row): row is HTMLTableRowElement => row !== null);
 
   if (rows.length === 0) {
     return null;
   }
 
-  const composerSection = document.createElement("section");
-  composerSection.className = "composer-section";
-
-  const composerHeading = document.createElement("h2");
-  composerHeading.className = "composer-heading";
-  composerHeading.textContent = composerGroup.composer;
-
-  const recordings = document.createElement("ul");
-  recordings.className = "recordings";
-  recordings.append(...rows);
-
-  composerSection.append(composerHeading, recordings);
+  const composerSection = document.createElement("tbody");
+  composerSection.className = "composer-group";
+  composerSection.append(
+    createBoundaryRow("top"),
+    ...rows,
+    createBoundaryRow("bottom"),
+  );
   return composerSection;
 }
 
@@ -180,12 +229,15 @@ function main(): void {
   const heading = document.createElement("h1");
   heading.textContent = "Music";
 
-  app.append(heading);
+  const table = document.createElement("table");
+  table.className = "library-table";
+
+  app.append(heading, table);
 
   for (const composerGroup of library) {
     const composerSection = createComposerSection(composerGroup);
     if (composerSection === null) continue;
-    app.append(composerSection);
+    table.append(composerSection);
   }
 
   root.append(app);

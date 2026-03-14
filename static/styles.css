@@ -21,124 +21,120 @@
     margin: 0;
   }
 
-  button,
   h1,
-  h2,
   li,
-  ul,
   p {
     margin: 0;
   }
 
-  button {
-    font: inherit;
-  }
-
   ul {
+    margin: 0;
     padding: 0;
-    list-style: none;
   }
 }
 
 @layer app {
   :root {
-    --background: #f6f1e6;
-    --border-color: rgba(32, 29, 24, 0.12);
-    --muted-color: rgba(32, 29, 24, 0.68);
-    --panel-color: rgba(255, 255, 255, 0.48);
-    --text-color: #201d18;
+    --background: #fafaf9;
+    --ink-rgb: 31 35 40;
+    --link-rgb: 26 92 184;
   }
 
   body {
     min-height: 100vh;
     background: var(--background);
-    color: var(--text-color);
-    font-family: "Source Serif 4", Georgia, serif;
+    color: rgb(var(--ink-rgb));
+    font-size: 16px;
+    font-family: system-ui, sans-serif;
   }
 
   .library {
-    width: min(56rem, calc(100vw - 2rem));
-    margin: 0 auto;
-    padding: 1.75rem 0 2.5rem;
+    padding: 2rem;
   }
 
   h1 {
-    font-size: clamp(1.85rem, 4vw, 2.6rem);
+    font-size: 1.85rem;
     line-height: 1.1;
     letter-spacing: 0.02em;
   }
 
-  .composer-heading,
-  .performers,
-  .work-cell {
-    color: var(--muted-color);
-    line-height: 1.5;
+  .composer-cell,
+  .work-cell,
+  .recording-link {
+    color: rgb(var(--ink-rgb) / 0.68);
+    line-height: 1.4;
   }
 
-  .composer-section + .composer-section {
-    margin-top: 1.35rem;
-    padding-top: 0.85rem;
-    border-top: 1px solid var(--border-color);
+  .library-table {
+    width: 100%;
+    margin-top: 0.65rem;
+    border-collapse: collapse;
   }
 
-  .composer-section:first-of-type {
-    margin-top: 0.85rem;
+  .library-table td {
+    vertical-align: top;
   }
 
-  .composer-heading {
-    font-size: 1.05rem;
-    color: var(--text-color);
+  .composer-boundary-cell {
+    height: 1rem;
   }
 
-  .recordings {
-    margin-top: 0.3rem;
+  .composer-boundary-row--top .composer-boundary-cell {
+    border-top: 1px solid rgb(var(--ink-rgb) / 0.15);
   }
 
-  .recording-row {
-    display: grid;
-    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.85rem;
-    padding: 0.38rem 0;
-  }
-
-  .recording-row + .recording-row {
-    border-top: 1px solid rgba(32, 29, 24, 0.07);
+  .composer-cell {
+    min-width: 0;
+    padding: 0.14rem 1rem 0.14rem 0;
   }
 
   .work-cell,
-  .performers {
+  .recordings-cell {
     min-width: 0;
+    padding: 0.14rem 1rem;
+  }
+
+  .composer-cell {
+    color: rgb(var(--ink-rgb));
+    font-weight: 600;
+    white-space: nowrap;
   }
 
   .work-cell {
-    color: rgba(32, 29, 24, 0.86);
+    color: rgb(var(--ink-rgb) / 0.86);
   }
 
-  .work-cell[aria-hidden="true"] {
-    visibility: hidden;
+  .composer-group .work-row:nth-child(even) .work-cell,
+  .composer-group .work-row:nth-child(even) .recordings-cell {
+    background: rgb(var(--ink-rgb) / 0.025);
   }
 
-  .performers {
-    color: var(--text-color);
+  .recordings-list {
+    margin: 0;
+    padding-left: 1rem;
   }
 
-  .recording-row button {
-    padding: 0.24rem 0.68rem;
-    border: 1px solid rgba(32, 29, 24, 0.16);
-    border-radius: 999px;
-    background: var(--panel-color);
-    color: var(--text-color);
-    cursor: pointer;
+  .recordings-item {
+    margin: 0;
   }
 
-  .recording-row button:hover {
-    background: rgba(255, 255, 255, 0.68);
-    border-color: rgba(32, 29, 24, 0.24);
+  .recordings-item:not(:last-child) {
+    margin-bottom: 0.18rem;
   }
 
-  .recording-row button:disabled {
-    cursor: wait;
-    opacity: 0.7;
+  .recordings-item::marker {
+    color: rgb(var(--ink-rgb) / 0.42);
+  }
+
+  .recording-link {
+    display: block;
+    color: rgb(var(--link-rgb));
+    text-decoration: none;
+  }
+
+  .recording-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.14em;
   }
 }
