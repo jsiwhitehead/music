@@ -5,8 +5,11 @@ Johann Sebastian Bach
   The Well-Tempered Clavier, Book I
     Angela Hewitt |  |
     Sviatoslav Richter |  |
-  English Suites
+  The Well-Tempered Clavier, Book II
+  Brandenburg Concertos
+  Partitas
     Angela Hewitt |  |
+  The Art of Fugue
   Cello Suites
     Pablo Casals |  |
     Steven Isserlis |  |
@@ -18,15 +21,15 @@ Johann Sebastian Bach
   St Matthew Passion
     Monteverdi Choir; English Baroque Soloists; John Eliot Gardiner |  |
     Dunedin Consort; John Butt |  |
-  Selected Organ Chorales
+  Orgelbüchlein
 
 George Frideric Handel
-  Keyboard Suites
+  Keyboard Suites (selected)
   Messiah
     English Concert; Trevor Pinnock |  |
 
 Joseph Haydn
-  Piano Trios
+  Late Piano Trios
   String Quartets, Op. 76
     Takacs Quartet |  |
     Quatuor Mosaiques |  |
@@ -39,74 +42,101 @@ Joseph Haydn
 
 Wolfgang Amadeus Mozart
   Fantasia in C minor, K. 475
-  Piano Sonatas Nos. 1-5
-  Piano Sonatas Nos. 6-18
-  Piano Concerto No. 17
-  Piano Concerto No. 19
+  Piano Sonata in A minor, K. 310
+  Piano Sonata in B-flat major, K. 333
+  Piano Sonata in C minor, K. 457
+  Piano Sonata in D major, K. 576
   Piano Concerto No. 20
     Mitsuko Uchida; English Chamber Orchestra |  |
     Clara Haskil; Igor Markevitch |  |
+  Piano Concerto No. 21
   Piano Concerto No. 23
     Mitsuko Uchida; English Chamber Orchestra |  |
   Piano Concerto No. 24
   Piano Concerto No. 27
-  Serenata notturna, K. 239
-  Clarinet Concerto
+  Le nozze di Figaro - Overture
+  Don Giovanni - Overture
+  Clarinet Concerto in A major, K. 622
     Sabine Meyer; Staatskapelle Dresden; Herbert Blomstedt |  |
     Thea King; English Chamber Orchestra; Jeffrey Tate |  |
-  Requiem
+  Requiem in D minor, K. 626
     English Baroque Soloists; Monteverdi Choir; John Eliot Gardiner |  |
     Staatskapelle Dresden; Peter Schreier |  |
+  String Quintet in G minor, K. 516
 
 Ludwig van Beethoven
-  Piano Concertos Nos. 1-5
+  Piano Concerto No. 4 in G major
+  Piano Concerto No. 5 in E-flat major 'Emperor'
   Violin Concerto
     Itzhak Perlman; Philharmonia Orchestra; Carlo Maria Giulini |  |
-  Piano Sonata No. 8 'Pathetique'
+  Piano Sonata No. 8 in C minor 'Pathétique'
   Piano Sonata No. 21 'Waldstein'
     Alfred Brendel |  |
     Wilhelm Kempff |  |
   Piano Sonata No. 23 'Appassionata'
     Sviatoslav Richter |  |
     Alfred Brendel |  |
-  Piano Sonatas Nos. 27-31
+  Piano Sonata No. 30, Op. 109
+  Piano Sonata No. 31, Op. 110
   Piano Sonata No. 32, Op. 111
     Maurizio Pollini |  |
+  String Quartet No. 7 in F major, Op. 59 No. 1 'Razumovsky'
+  String Quartet No. 14 in C-sharp minor, Op. 131
   Diabelli Variations
     Alfred Brendel |  |
     Maurizio Pollini |  |
   Symphony No. 3 'Eroica'
     Berlin Philharmonic; Herbert von Karajan (1963) |  |
     Orchestre Revolutionnaire et Romantique; John Eliot Gardiner |  |
+  Symphony No. 5
+  Symphony No. 7
+  Symphony No. 9
   Missa solemnis
     Monteverdi Choir; Orchestre Revolutionnaire et Romantique; John Eliot Gardiner |  |
 
 Franz Schubert
   Symphony No. 8 'Unfinished'
-  Symphony No. 9 'Great'
+  Symphony No. 9 in C major 'Great'
+  Piano Sonata in C minor, D. 958
+  Piano Sonata in A major, D. 959
   Piano Sonata in B-flat major, D. 960
     Alfred Brendel |  |
     Sviatoslav Richter |  |
   Winterreise
     Dietrich Fischer-Dieskau; Gerald Moore |  |
     Ian Bostridge; Julius Drake |  |
-  Erlkonig
-  Auf dem Wasser zu singen
+  Schwanengesang
   6 Moments musicaux, D. 780
   4 Impromptus, D. 899
   4 Impromptus, D. 935
+  Piano Trio No. 2
+  String Quartet No. 14 'Death and the Maiden'
   String Quintet in C major
     Alban Berg Quartet; Heinrich Schiff |  |
 
 Felix Mendelssohn
   Violin Concerto
-  Songs Without Words
+  Symphony No. 4 'Italian'
+  Songs Without Words (selected)
 
 Frederic Chopin
   Ballades
   Scherzos
-  Piano Concerto No. 1
   Preludes
+  Nocturnes
+  Etudes, Op. 10
+  Etudes, Op. 25
+  Piano Sonata No. 3
+
+Franz Liszt
+  Piano Sonata in B minor
+    Martha Argerich |  |
+
+Robert Schumann
+  Piano Quintet in E-flat major
+
+Richard Wagner
+  Tristan und Isolde - Prelude and Liebestod
 
 Johannes Brahms
   Piano Concerto No. 1
@@ -114,24 +144,21 @@ Johannes Brahms
     Emil Gilels; Berlin Philharmonic; Eugen Jochum |  |
   Violin Concerto
     Arthur Grumiaux; New Philharmonia Orchestra; Colin Davis |  |
+  Symphony No. 4
   Piano Sonata No. 3
+  Violin Sonata No. 1
+  Cello Sonata No. 1
+  Clarinet Quintet
+  Piano Quintet in F minor
   Late Piano Pieces Opp. 117-119
   A German Requiem
     Bavarian Radio Symphony Orchestra; Wolfgang Sawallisch |  |
+  Symphony No. 1
 
-Max Bruch
-  Violin Concerto No. 1
+Anton Bruckner
+  Symphony No. 7
 
-Cesar Franck
-  Violin Sonata
-
-Richard Strauss
-  Four Last Songs
-
-Richard Wagner
-  Siegfried Idyll
-
-Antonin Dvorak
+Antonin Dvořák
   Cello Concerto
     Mstislav Rostropovich; Berlin Philharmonic; Herbert von Karajan |  |
   Symphony No. 8
@@ -140,7 +167,32 @@ Antonin Dvorak
   Piano Quintet No. 2
     Sviatoslav Richter; Borodin Quartet |  |
 
-Gabriel Faure
+Pyotr Ilyich Tchaikovsky
+  Symphony No. 6 'Pathétique'
+  Violin Concerto
+
+Edvard Grieg
+  Piano Concerto
+  Lyric Pieces (selected)
+
+Cesar Franck
+  Violin Sonata
+
+Gabriel Fauré
+  Requiem
+  Nocturnes (selected)
+
+Max Bruch
+  Violin Concerto No. 1
+
+Edward Elgar
+  Cello Concerto
+  Enigma Variations
+
+Hector Berlioz
+  Symphonie fantastique
+
+Giuseppe Verdi
   Requiem
 
 Gustav Mahler
@@ -154,34 +206,39 @@ Claude Debussy
   La mer
     Boston Symphony Orchestra; Charles Munch |  |
     Cleveland Orchestra; Pierre Boulez (1994) |  |
+  Prélude à l'après-midi d'un faune
+  String Quartet in G minor
+  Images for Orchestra
+  Images, Book I
+  Estampes
   Preludes, Book I
     Walter Gieseking |  |
-  Violin Sonata
-
-Maurice Ravel
-  Piano Concerto in G major
-    Martha Argerich; Berlin Radio Symphony Orchestra; Claudio Abbado |  |
-  Gaspard de la nuit
-    Martha Argerich |  |
-
-Edvard Grieg
-  Piano Concerto
-  Lyric Pieces
-
-Isaac Albeniz
-  Iberia
-  Navarra
-  Suite espanola No. 1, Op. 47
-
-Franz Liszt
-  Piano Sonata in B minor
-    Martha Argerich |  |
-
-Edward Elgar
-  Cello Concerto
 
 Jean Sibelius
   Violin Concerto
     David Oistrakh; Moscow Philharmonic; Gennady Rozhdestvensky |  |
   Symphony No. 5
     Helsinki Philharmonic; Paavo Berglund |  |
+  Symphony No. 7
+
+Isaac Albéniz
+  Iberia
+  Suite española No. 1, Op. 47
+
+Maurice Ravel
+  Piano Concerto in G major
+    Martha Argerich; Berlin Radio Symphony Orchestra; Claudio Abbado |  |
+  Gaspard de la nuit
+    Martha Argerich |  |
+  Miroirs
+  Le Tombeau de Couperin
+  Daphnis et Chloé Suite No. 2
+
+Richard Strauss
+  Four Last Songs
+
+Sergei Rachmaninoff
+  Piano Concerto No. 2
+
+Igor Stravinsky
+  The Rite of Spring

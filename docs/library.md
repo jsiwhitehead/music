@@ -26,6 +26,7 @@ Rules:
 - The library SHOULD NOT pursue chronological balance for its own sake across earlier, core, and later repertoire.
 - Sonata-, concerto-, and other solo-centered repertoire SHOULD generally receive more curatorial depth than small-ensemble chamber repertoire.
 - Repertoire outside the main center of gravity MAY be included when it is exceptional, clearly useful, or fills an important gap in the listening guide.
+- A small number of opera excerpts or overtures MAY be included when they function convincingly as self-contained listening works.
 - Reflective vocal or sacred repertoire MAY justify inclusion beyond what raw category size alone would suggest.
 - Full operas are excluded initially because they sit outside the library's current listening center of gravity and require a different curation approach at work and recording level.
 - Library size is not fixed and MAY grow organically.
@@ -47,8 +48,10 @@ composer -> work -> recording
 
 - A work SHOULD be the musical unit that listeners normally choose intentionally.
 - A work MAY be a collection of related pieces when that reflects natural listening practice.
+- Broad bodies of repertoire SHOULD use a `selected` label when the library is intentionally curating from a larger corpus rather than treating the whole corpus as one practical listening unit.
 - Granularity SHOULD remain practical rather than strictly musicological or taxonomic.
 - Work boundaries SHOULD reflect lived listening habits, especially when listeners tend to return to a named set, book, cycle, or other practical grouping as one unit.
+- A work MAY be an overture, prelude, or other excerpt when that excerpt has an established independent concert or listening life.
 - The library MUST NOT model movements, track structures, or album groupings as primary organizational units.
 - Recordings SHOULD represent performances by specific performers, rather than album packaging.
 
