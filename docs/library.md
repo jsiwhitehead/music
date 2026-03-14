@@ -1,6 +1,6 @@
 # Curated Classical Listening Library - Approach
 
-This document defines the curation approach for the listening library. The library is a listening guide, not a historical catalog or complete discography. Its purpose is to provide reliable entry points into great works through outstanding recordings, with clarity, musical quality, and practical long-term listening use as the guiding priorities.
+This document defines the curation approach for the listening library. The library is a listening guide, not a historical catalogue or complete discography. It is meant to provide reliable entry points into great works through outstanding recordings, with clarity, musical quality, and practical long-term listening use as the guiding priorities.
 
 ## Listening profile
 
@@ -11,16 +11,13 @@ Rules:
 - Keyboard-led, solo, and concerto-like listening SHOULD be treated as the dominant priority areas.
 - The library SHOULD favor substantial repertoire suited to focused repeat listening over lighter, occasional, or primarily social repertoire.
 
-Notes:
-
-- The listening profile is selective rather than neutral. It is shaped more by repeatable private listening than by historical survey goals.
-
 ## Repertoire
 
 Rules:
 
 - The library SHOULD focus on the central classical repertoire.
-- A work SHOULD be included when it is historically important, widely performed or recorded, consistently recommended by critics and reference guides, and likely to sustain repeat listening.
+- A work SHOULD be included when it is historically important, widely performed or recorded, and consistently recommended by critics and reference guides.
+- A work SHOULD also be likely to sustain repeat listening.
 - Expansion SHOULD prioritize important missing works and priority listening areas over expanding discographies for completeness alone.
 - The repertoire SHOULD naturally include orchestral works, concertos, chamber music, keyboard works, and vocal or choral works, but coverage SHOULD be weighted by long-term listening priority rather than strict category symmetry.
 - The library SHOULD NOT pursue chronological balance for its own sake across earlier, core, and later repertoire.
@@ -30,9 +27,6 @@ Rules:
 - Reflective vocal or sacred repertoire MAY justify inclusion beyond what raw category size alone would suggest.
 - Full operas are excluded initially because they sit outside the library's current listening center of gravity and require a different curation approach at work and recording level.
 - Library size is not fixed and MAY grow organically.
-
-Notes:
-
 - The library MAY distinguish between a wider discovery layer and a smaller core of works that justify deeper coverage.
 - A one-time interesting work is less important than a work likely to become part of regular listening life.
 
@@ -54,17 +48,16 @@ composer -> work -> recording
 - A work MAY be an overture, prelude, or other excerpt when that excerpt has an established independent concert or listening life.
 - The library MUST NOT model movements, track structures, or album groupings as primary organizational units.
 - Recordings SHOULD represent performances by specific performers, rather than album packaging.
-
-Examples:
-
-- symphony
-- concerto
-- chamber work
-- keyboard work
-
-Notes:
-
-- The aim is practical organization, not exhaustive taxonomic precision.
+- Work titles SHOULD favor familiar listener-facing names over maximal catalogue formality, including only the key, opus, or catalogue detail that materially helps identification.
+- Nicknames and quoted identifiers SHOULD use typographic quotation marks.
+- Catalogue numbers SHOULD be included when they materially help identification, especially for Bach, Mozart, and Schubert.
+- Within a composer, works SHOULD generally be ordered for browsing as:
+  1. solo keyboard / solo instrumental
+  2. chamber
+  3. concertos
+  4. orchestral
+  5. vocal / sacred
+- Typographic punctuation in `src/library.txt`, including curly quotation marks and en dashes where appropriate, is intentional and part of the library's house style.
 
 ## Recordings
 
@@ -74,17 +67,29 @@ Rules:
 - Recordings SHOULD be chosen primarily for musical authority, interpretive insight, ensemble quality, and recording clarity.
 - Musical conviction SHOULD matter more than purely technical sound quality.
 - Each work SHOULD ideally have one reference recording that serves as the default listening recommendation.
-- Additional recordings SHOULD be included only when they add meaningful perspective, such as a distinct interpretive approach, historical significance, clearly superior musicianship or sound, or support for a work that is likely to remain in regular rotation.
+- Additional recordings SHOULD be included only when they add meaningful perspective, such as a distinct interpretive approach, historical significance, clearly superior musicianship or sound, or support for a work that is likely to remain in regular rotation, rather than simply documenting what exists.
 - Recordings SHOULD be selected work by work, rather than determined by album groupings or recording cycles.
 - Recordings from any period MAY be included when they offer exceptional musical insight.
-
-Typical outcome:
-
-- most works: one recording
-- core works: two or three recordings
-- exceptional cases: more when repeated listening clearly justifies it
-
-Notes:
-
+- Performer names SHOULD be listed in listening order: soloist, collaborator or ensemble, then conductor where applicable.
+- Recording order within a work SHOULD communicate priority:
+  1. default reference
+  2. contrasting alternative
+  3. historical or special-case alternative
 - A small set of recordings should represent a work clearly and authoritatively rather than attempting to document every notable interpretation.
-- Additional recordings are valuable when they help a listener understand the work more fully or keep a core work fresh over sustained return listening, not simply because they exist.
+- Typical outcome:
+  1. most works: one recording
+  2. core works: two or three recordings
+  3. exceptional cases: more when repeated listening clearly justifies it
+
+## Library File Format
+
+Rules:
+
+- Recording entries in `src/library.txt` MUST use:
+
+```text
+performers | listId | startVideoId
+```
+
+- The performer field MUST always be present.
+- `listId` and `startVideoId` MAY remain empty while links are still being curated.

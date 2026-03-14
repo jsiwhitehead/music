@@ -1,6 +1,7 @@
 Johann Sebastian Bach
   Goldberg Variations
     Murray Perahia |  |
+    András Schiff |  |
     Glenn Gould (1955) |  |
   The Well-Tempered Clavier, Book I
     Angela Hewitt |  |
@@ -9,28 +10,30 @@ Johann Sebastian Bach
   The Well-Tempered Clavier, Book II
     Angela Hewitt |  |
     András Schiff |  |
-  Brandenburg Concertos
-    European Brandenburg Ensemble; Trevor Pinnock |  |
   Partitas
     Angela Hewitt |  |
     Trevor Pinnock |  |
-  The Art of Fugue
-    Rachel Podger; Brecon Baroque |  |
+  Orgelbüchlein
+    Marie-Claire Alain |  |
   Cello Suites
     Steven Isserlis |  |
-    Pablo Casals |  |
     David Watkin |  |
+    Pablo Casals |  |
   Sonatas and Partitas for Solo Violin
+    Rachel Podger |  |
     Hilary Hahn |  |
     Arthur Grumiaux |  |
-    Rachel Podger |  |
-  Mass in B minor
+  The Art of Fugue
+    Rachel Podger; Brecon Baroque |  |
+  Brandenburg Concertos
+    European Brandenburg Ensemble; Trevor Pinnock |  |
+  Cantata BWV 140 “Wachet auf”
     Monteverdi Choir; English Baroque Soloists; John Eliot Gardiner |  |
   St Matthew Passion
     Monteverdi Choir; English Baroque Soloists; John Eliot Gardiner |  |
     Dunedin Consort; John Butt |  |
-  Orgelbüchlein
-    Marie-Claire Alain |  |
+  Mass in B minor
+    Monteverdi Choir; English Baroque Soloists; John Eliot Gardiner |  |
 
 George Frideric Handel
   Keyboard Suites (selected)
@@ -47,6 +50,8 @@ Joseph Haydn
     Quatuor Mosaiques |  |
   Symphony No. 88
     Royal Concertgebouw Orchestra; Colin Davis |  |
+  Symphony No. 104 “London”
+    Academy of Ancient Music; Christopher Hogwood |  |
   The Seven Last Words of Our Saviour from the Cross
     The Lindsays |  |
   The Creation
@@ -58,12 +63,14 @@ Wolfgang Amadeus Mozart
     Mitsuko Uchida |  |
   Piano Sonata in A minor, K. 310
     Mitsuko Uchida |  |
-  Piano Sonata in B-flat major, K. 333
-    Mitsuko Uchida |  |
   Piano Sonata in C minor, K. 457
     Mitsuko Uchida |  |
   Piano Sonata in D major, K. 576
     Mitsuko Uchida |  |
+  String Quartet No. 19 “Dissonance”
+    Alban Berg Quartett |  |
+  String Quintet in G minor, K. 516
+    Antoine Tamestit; Quatuor Ebène |  |
   Piano Concerto No. 20
     Mitsuko Uchida; English Chamber Orchestra |  |
     Clara Haskil; Igor Markevitch |  |
@@ -75,38 +82,28 @@ Wolfgang Amadeus Mozart
     Mitsuko Uchida; English Chamber Orchestra |  |
   Piano Concerto No. 27
     Mitsuko Uchida; English Chamber Orchestra |  |
-  Symphony No. 40
-    Freiburger Barockorchester; René Jacobs |  |
-  Symphony No. 41 'Jupiter'
-    English Baroque Soloists; John Eliot Gardiner |  |
-    Vienna Philharmonic; Leonard Bernstein |  |
   Clarinet Concerto in A major, K. 622
     Thea King; English Chamber Orchestra; Jeffrey Tate |  |
     Sabine Meyer; Staatskapelle Dresden; Herbert Blomstedt |  |
+  Symphony No. 40
+    Freiburger Barockorchester; René Jacobs |  |
+  Symphony No. 41 “Jupiter”
+    English Baroque Soloists; John Eliot Gardiner |  |
+    Vienna Philharmonic; Leonard Bernstein |  |
   Requiem in D minor, K. 626
     English Baroque Soloists; Monteverdi Choir; John Eliot Gardiner |  |
     Staatskapelle Dresden; Peter Schreier |  |
-  String Quartet No. 19 'Dissonance'
-    Alban Berg Quartett |  |
-  String Quintet in G minor, K. 516
-    Antoine Tamestit; Quatuor Ebène |  |
 
 Ludwig van Beethoven
-  Piano Concerto No. 4 in G major
-    András Schiff; Staatskapelle Dresden; Bernard Haitink |  |
-  Piano Concerto No. 5 in E-flat major 'Emperor'
-    Alfred Brendel; Vienna Philharmonic; Simon Rattle |  |
-  Violin Concerto
-    Itzhak Perlman; Philharmonia Orchestra; Carlo Maria Giulini |  |
-  Piano Sonata No. 8 in C minor 'Pathétique'
+  Piano Sonata No. 8 “Pathétique”
     Wilhelm Kempff |  |
-  Piano Sonata No. 21 'Waldstein'
+  Piano Sonata No. 21 “Waldstein”
     Alfred Brendel |  |
     Wilhelm Kempff |  |
-  Piano Sonata No. 23 'Appassionata'
+  Piano Sonata No. 23 “Appassionata”
     Sviatoslav Richter |  |
     Alfred Brendel |  |
-  Piano Sonata No. 29 'Hammerklavier'
+  Piano Sonata No. 29 “Hammerklavier”
     Maurizio Pollini |  |
   Piano Sonata No. 30, Op. 109
     Maurizio Pollini |  |
@@ -114,36 +111,48 @@ Ludwig van Beethoven
     Maurizio Pollini |  |
   Piano Sonata No. 32, Op. 111
     Maurizio Pollini |  |
-  String Quartet No. 7 in F major, Op. 59 No. 1 'Razumovsky'
-    Takács Quartet |  |
-  String Quartet No. 14 in C-sharp minor, Op. 131
-    Takács Quartet |  |
-  String Quartet No. 15 in A minor, Op. 132
-    Takács Quartet |  |
   Diabelli Variations
     Alfred Brendel |  |
     Maurizio Pollini |  |
-  Symphony No. 3 'Eroica'
-    Berlin Philharmonic; Herbert von Karajan (1963) |  |
+  Piano Trio No. 7 “Archduke”
+    Beaux Arts Trio |  |
+  String Quartet No. 7 “Razumovsky”
+    Takács Quartet |  |
+  String Quartet No. 14, Op. 131
+    Takács Quartet |  |
+    Quartetto Italiano |  |
+  String Quartet No. 15, Op. 132
+    Takács Quartet |  |
+  Piano Concerto No. 4
+    András Schiff; Staatskapelle Dresden; Bernard Haitink |  |
+  Piano Concerto No. 5 “Emperor”
+    Alfred Brendel; Vienna Philharmonic; Simon Rattle |  |
+  Violin Concerto
+    Isabelle Faust; Orchestra Mozart; Claudio Abbado |  |
+    Itzhak Perlman; Philharmonia Orchestra; Carlo Maria Giulini |  |
+  Symphony No. 3 “Eroica”
     Orchestre Révolutionnaire et Romantique; John Eliot Gardiner |  |
+    Berlin Philharmonic; Herbert von Karajan (1963) |  |
   Symphony No. 5
     Vienna Philharmonic; Carlos Kleiber |  |
-  Symphony No. 6 'Pastoral'
+  Symphony No. 6 “Pastoral”
     Vienna Philharmonic; Karl Böhm |  |
   Symphony No. 7
     Vienna Philharmonic; Carlos Kleiber |  |
   Symphony No. 9
-    Berlin Philharmonic; Herbert von Karajan (1963) |  |
     Orchestre Révolutionnaire et Romantique; John Eliot Gardiner |  |
+    Berlin Philharmonic; Herbert von Karajan (1963) |  |
     Bayreuth Festival Orchestra; Wilhelm Furtwängler (1951) |  |
   Missa solemnis
     Monteverdi Choir; Orchestre Révolutionnaire et Romantique; John Eliot Gardiner |  |
 
 Franz Schubert
-  Symphony No. 8 'Unfinished'
-    Royal Concertgebouw Orchestra; Bernard Haitink |  |
-  Symphony No. 9 in C major 'Great'
-    Berlin Philharmonic; Günter Wand |  |
+  6 Moments musicaux, D. 780
+    Alfred Brendel |  |
+  4 Impromptus, D. 899
+    Radu Lupu |  |
+  4 Impromptus, D. 935
+    Radu Lupu |  |
   Piano Sonata in C minor, D. 958
     Alfred Brendel |  |
     Mitsuko Uchida |  |
@@ -152,41 +161,45 @@ Franz Schubert
   Piano Sonata in B-flat major, D. 960
     Alfred Brendel |  |
     Sviatoslav Richter |  |
+  Piano Trio No. 2
+    Beaux Arts Trio |  |
+  Piano Quintet in A major, D. 667 “Trout”
+    Clifford Curzon; Vienna Octet |  |
+  String Quartet No. 14 “Death and the Maiden”
+    Takács Quartet |  |
+  String Quintet in C major
+    Alban Berg Quartet; Heinrich Schiff |  |
+  Symphony No. 8 “Unfinished”
+    Royal Concertgebouw Orchestra; Bernard Haitink |  |
+  Symphony No. 9 in C major “Great”
+    Berlin Philharmonic; Günter Wand |  |
   Winterreise
     Dietrich Fischer-Dieskau; Gerald Moore |  |
     Ian Bostridge; Julius Drake |  |
   Schwanengesang
     Dietrich Fischer-Dieskau; Gerald Moore |  |
-  6 Moments musicaux, D. 780
-    Alfred Brendel |  |
-  4 Impromptus, D. 899
-    Radu Lupu |  |
-  4 Impromptus, D. 935
-    Radu Lupu |  |
-  Piano Trio No. 2
-    Beaux Arts Trio |  |
-  String Quartet No. 14 'Death and the Maiden'
-    Takács Quartet |  |
-  String Quintet in C major
-    Alban Berg Quartet; Heinrich Schiff |  |
 
 Felix Mendelssohn
-  Violin Concerto
-    James Ehnes; Philharmonia Orchestra; Vladimir Ashkenazy |  |
-  Symphony No. 4 'Italian'
-    London Symphony Orchestra; Claudio Abbado |  |
   Songs Without Words (selected)
     Daniel Barenboim |  |
+  Octet in E-flat major
+    Academy of St Martin in the Fields Chamber Ensemble |  |
+  Violin Concerto
+    James Ehnes; Philharmonia Orchestra; Vladimir Ashkenazy |  |
+  Symphony No. 4 “Italian”
+    London Symphony Orchestra; Claudio Abbado |  |
 
-Frederic Chopin
+Frédéric Chopin
+  Nocturnes
+    Arthur Rubinstein |  |
+  Preludes
+    Martha Argerich |  |
   Ballades
     Krystian Zimerman |  |
   Scherzos
     Sviatoslav Richter |  |
-  Preludes
-    Martha Argerich |  |
-  Nocturnes
-    Arthur Rubinstein |  |
+  Barcarolle
+    Krystian Zimerman |  |
   Etudes, Op. 10
     Maurizio Pollini |  |
   Etudes, Op. 25
@@ -207,25 +220,18 @@ Robert Schumann
     Ian Bostridge; Julius Drake |  |
   Piano Quintet in E-flat major
     Martha Argerich; Mischa Maisky; Gidon Kremer; Yuri Bashmet; Valentin Berlinsky |  |
+  Symphony No. 4
+    Cleveland Orchestra; George Szell |  |
 
 Richard Wagner
-  Tristan und Isolde - Prelude and Liebestod
+  Tristan und Isolde: Prelude and Liebestod
     Berlin Philharmonic; Wilhelm Furtwängler |  |
 
 Johannes Brahms
-  Piano Concerto No. 1
-    Emil Gilels; Cleveland Orchestra; George Szell |  |
-  Piano Concerto No. 2
-    Emil Gilels; Berlin Philharmonic; Eugen Jochum |  |
-  Violin Concerto
-    Arthur Grumiaux; New Philharmonia Orchestra; Colin Davis |  |
-  Symphony No. 3
-    Vienna Philharmonic; Carlos Kleiber |  |
-  Symphony No. 4
-    Vienna Philharmonic; Carlos Kleiber |  |
-    Pittsburgh Symphony Orchestra; Manfred Honeck |  |
   Piano Sonata No. 3
     Krystian Zimerman |  |
+  Late Piano Pieces Opp. 117–119
+    Radu Lupu |  |
   Violin Sonata No. 1
     Gidon Kremer; Martha Argerich |  |
   Cello Sonata No. 1
@@ -234,30 +240,41 @@ Johannes Brahms
     Amadeus Quartet; Karl Leister |  |
   Piano Quintet in F minor
     András Schiff; Takács Quartet |  |
-  Late Piano Pieces Opp. 117-119
-    Radu Lupu |  |
-  A German Requiem
-    Vienna Philharmonic; Wiener Singverein; Herbert von Karajan |  |
+  Piano Concerto No. 1
+    Emil Gilels; Cleveland Orchestra; George Szell |  |
+  Piano Concerto No. 2
+    Emil Gilels; Berlin Philharmonic; Eugen Jochum |  |
+  Violin Concerto
+    Arthur Grumiaux; New Philharmonia Orchestra; Colin Davis |  |
   Symphony No. 1
     London Philharmonic Orchestra; Vladimir Jurowski |  |
+  Symphony No. 3
+    Vienna Philharmonic; Carlos Kleiber |  |
+  Symphony No. 4
+    Vienna Philharmonic; Carlos Kleiber |  |
+    Pittsburgh Symphony Orchestra; Manfred Honeck |  |
+  A German Requiem
+    Vienna Philharmonic; Wiener Singverein; Herbert von Karajan |  |
 
 Anton Bruckner
   Symphony No. 7
     Royal Concertgebouw Orchestra; Bernard Haitink |  |
 
-Antonin Dvořák
+Antonín Dvořák
   Cello Concerto
     Mstislav Rostropovich; Berlin Philharmonic; Herbert von Karajan |  |
   Symphony No. 8
     Czech Philharmonic; Rafael Kubelík |  |
-  Symphony No. 9 'From the New World'
+  Symphony No. 9 “From the New World”
     Czech Philharmonic; Karel Ancerl |  |
   Piano Quintet No. 2
     Sviatoslav Richter; Borodin Quartet |  |
 
 Pyotr Ilyich Tchaikovsky
-  Symphony No. 6 'Pathétique'
+  Symphony No. 6 “Pathétique”
     Leningrad Philharmonic Orchestra; Evgeny Mravinsky |  |
+  Piano Concerto No. 1
+    Martha Argerich; Berlin Philharmonic; Claudio Abbado |  |
   Violin Concerto
     David Oistrakh; Philadelphia Orchestra; Eugene Ormandy |  |
 
@@ -267,7 +284,7 @@ Edvard Grieg
   Lyric Pieces (selected)
     Leif Ove Andsnes |  |
 
-Cesar Franck
+César Franck
   Violin Sonata
     Arthur Grumiaux; Clara Haskil |  |
 
@@ -297,32 +314,37 @@ Giuseppe Verdi
     Orchestra dell'Accademia di Santa Cecilia; Antonio Pappano |  |
 
 Gustav Mahler
-  Symphony No. 2 'Resurrection'
+  Symphony No. 2 “Resurrection”
     London Symphony Orchestra; Leonard Bernstein |  |
     Royal Concertgebouw Orchestra; Bernard Haitink |  |
+  Symphony No. 5
+    Lucerne Festival Orchestra; Claudio Abbado |  |
+    Vienna Philharmonic; Leonard Bernstein |  |
   Symphony No. 9
     Royal Concertgebouw Orchestra; Bernard Haitink |  |
     Berlin Philharmonic; Herbert von Karajan |  |
     Vienna Philharmonic; Leonard Bernstein |  |
 
 Claude Debussy
+  Suite bergamasque
+    Walter Gieseking |  |
+  Estampes
+    Jean-Efflam Bavouzet |  |
+  Images, Book I
+    Jean-Efflam Bavouzet |  |
+  Préludes, Book I
+    Walter Gieseking |  |
+  String Quartet in G minor
+    Alban Berg Quartett |  |
+  Prélude à l'après-midi d'un faune
+    Cleveland Orchestra; Pierre Boulez |  |
+  Nocturnes
+    Royal Concertgebouw Orchestra; Bernard Haitink |  |
+  Images for Orchestra
+    Cleveland Orchestra; Pierre Boulez |  |
   La mer
     Boston Symphony Orchestra; Charles Munch |  |
     Cleveland Orchestra; Pierre Boulez (1994) |  |
-  Prélude à l'après-midi d'un faune
-    Cleveland Orchestra; Pierre Boulez |  |
-  String Quartet in G minor
-    Alban Berg Quartett |  |
-  Images for Orchestra
-    Cleveland Orchestra; Pierre Boulez |  |
-  Images, Book I
-    Jean-Efflam Bavouzet |  |
-  Estampes
-    Jean-Efflam Bavouzet |  |
-  Preludes, Book I
-    Walter Gieseking |  |
-  Suite bergamasque
-    Walter Gieseking |  |
 
 Jean Sibelius
   Violin Concerto
@@ -341,18 +363,20 @@ Isaac Albéniz
     Alicia de Larrocha |  |
 
 Maurice Ravel
-  Piano Concerto in G major
-    Martha Argerich; Berlin Radio Symphony Orchestra; Claudio Abbado |  |
-  Gaspard de la nuit
-    Martha Argerich |  |
   Miroirs
     Arturo Benedetti Michelangeli |  |
+  Gaspard de la nuit
+    Martha Argerich |  |
+  Piano Concerto in G major
+    Martha Argerich; Berlin Radio Symphony Orchestra; Claudio Abbado |  |
   Le Tombeau de Couperin
     Jean-Yves Thibaudet |  |
   Daphnis et Chloé Suite No. 2
     Montreal Symphony Orchestra; Charles Dutoit |  |
 
 Richard Strauss
+  Don Juan
+    Berlin Philharmonic; Herbert von Karajan |  |
   Four Last Songs
     Jessye Norman; Leipzig Gewandhaus Orchestra; Kurt Masur |  |
 
@@ -362,9 +386,26 @@ Sergei Rachmaninoff
   Piano Concerto No. 3
     Vladimir Horowitz; New York Philharmonic; Eugene Ormandy |  |
 
+Nikolai Rimsky-Korsakov
+  Scheherazade
+    Chicago Symphony Orchestra; Fritz Reiner |  |
+
+Sergei Prokofiev
+  Piano Concerto No. 3
+    Martha Argerich; Berlin Philharmonic; Claudio Abbado |  |
+
 Igor Stravinsky
   Petrushka
     Cleveland Orchestra; Pierre Boulez |  |
   The Rite of Spring
     Cleveland Orchestra; Pierre Boulez |  |
     Chicago Symphony Orchestra; Georg Solti |  |
+
+Dmitri Shostakovich
+  Symphony No. 5
+    Berlin Philharmonic; Mariss Jansons |  |
+
+Béla Bartók
+  Concerto for Orchestra
+    Chicago Symphony Orchestra; Fritz Reiner |  |
+    Budapest Festival Orchestra; Iván Fischer |  |
