@@ -85,11 +85,18 @@ Rules:
 
 Rules:
 
-- Recording entries in `src/library.txt` MUST use:
+- Recording entries in `src/library.txt` MUST use one of these forms:
+
+```text
+performers
+```
+
+or
 
 ```text
 performers | listId | startVideoId
 ```
 
 - The performer field MUST always be present.
-- `listId` and `startVideoId` MAY remain empty while links are still being curated.
+- The curated library in `src/library.txt` is authoritative even when a playable link is not currently available.
+- The app MAY omit recordings that do not have both `listId` and `startVideoId`.

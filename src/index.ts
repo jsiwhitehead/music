@@ -2,6 +2,11 @@ import libraryCatalog from "./library.txt" with { type: "text" };
 
 type Recording = {
   performers: string;
+  listId?: string;
+  startVideoId?: string;
+};
+
+type LinkedRecording = Recording & {
   listId: string;
   startVideoId: string;
 };
@@ -16,20 +21,32 @@ type ComposerGroup = {
   works: Work[];
 };
 
+function hasPlaybackIds(recording: Recording): recording is LinkedRecording {
+  return Boolean(recording.listId && recording.startVideoId);
+}
+
 function parseRecording(line: string): Recording {
   const parts = line.split("|").map((part) => part.trim());
+  const performers = parts[0];
 
-  if (parts.length !== 3 || parts[0] === "") {
+  if (performers === undefined || performers === "") {
     throw new Error(`Invalid recording line: "${line}"`);
   }
 
-  const [performers, listId, startVideoId] = parts as [string, string, string];
-
-  return {
-    performers,
-    listId,
-    startVideoId,
-  };
+  switch (parts.length) {
+    case 1:
+      return { performers };
+    case 3: {
+      const [, listId, startVideoId] = parts as [string, string, string];
+      return {
+        performers,
+        listId,
+        startVideoId,
+      };
+    }
+    default:
+      throw new Error(`Invalid recording line: "${line}"`);
+  }
 }
 
 function parseLibrary(catalog: string): ComposerGroup[] {
@@ -47,33 +64,30 @@ function parseLibrary(catalog: string): ComposerGroup[] {
       continue;
     }
 
-    if (indentation === 0) {
-      currentComposer = { composer: trimmed, works: [] };
-      library.push(currentComposer);
-      currentWork = null;
-      continue;
+    switch (indentation) {
+      case 0:
+        currentComposer = { composer: trimmed, works: [] };
+        library.push(currentComposer);
+        currentWork = null;
+        break;
+      case 2:
+        if (currentComposer === null) {
+          throw new Error(`Work without composer: "${line}"`);
+        }
+
+        currentWork = { title: trimmed, recordings: [] };
+        currentComposer.works.push(currentWork);
+        break;
+      case 4:
+        if (currentWork === null) {
+          throw new Error(`Recording without work: "${line}"`);
+        }
+
+        currentWork.recordings.push(parseRecording(trimmed));
+        break;
+      default:
+        throw new Error(`Invalid indentation: "${line}"`);
     }
-
-    if (indentation === 2) {
-      if (currentComposer === null) {
-        throw new Error(`Work without composer: "${line}"`);
-      }
-
-      currentWork = { title: trimmed, recordings: [] };
-      currentComposer.works.push(currentWork);
-      continue;
-    }
-
-    if (indentation === 4) {
-      if (currentWork === null) {
-        throw new Error(`Recording without work: "${line}"`);
-      }
-
-      currentWork.recordings.push(parseRecording(trimmed));
-      continue;
-    }
-
-    throw new Error(`Invalid indentation: "${line}"`);
   }
 
   return library;
@@ -81,13 +95,7 @@ function parseLibrary(catalog: string): ComposerGroup[] {
 
 const library = parseLibrary(libraryCatalog);
 
-function getPlaybackUrl(recording: Recording): string {
-  if (recording.listId === "" || recording.startVideoId === "") {
-    throw new Error(
-      "Set the recording listId and startVideoId values in src/library.txt.",
-    );
-  }
-
+function getPlaybackUrl(recording: LinkedRecording): string {
   const search = new URLSearchParams({
     list: recording.listId,
     v: recording.startVideoId,
@@ -98,7 +106,7 @@ function getPlaybackUrl(recording: Recording): string {
 
 function createRecordingRow(
   workTitle: string,
-  recording: Recording,
+  recording: LinkedRecording,
 ): HTMLLIElement {
   const row = document.createElement("li");
   row.className = "recording-row";
@@ -125,7 +133,25 @@ function createRecordingRow(
   return row;
 }
 
-function createComposerSection(composerGroup: ComposerGroup): HTMLElement {
+function createComposerSection(
+  composerGroup: ComposerGroup,
+): HTMLElement | null {
+  const rows: HTMLLIElement[] = [];
+
+  for (const work of composerGroup.works) {
+    const linkedRecordings = work.recordings.filter(hasPlaybackIds);
+
+    for (const [recordingIndex, recording] of linkedRecordings.entries()) {
+      rows.push(
+        createRecordingRow(recordingIndex === 0 ? work.title : "", recording),
+      );
+    }
+  }
+
+  if (rows.length === 0) {
+    return null;
+  }
+
   const composerSection = document.createElement("section");
   composerSection.className = "composer-section";
 
@@ -135,14 +161,7 @@ function createComposerSection(composerGroup: ComposerGroup): HTMLElement {
 
   const recordings = document.createElement("ul");
   recordings.className = "recordings";
-
-  for (const work of composerGroup.works) {
-    for (const [recordingIndex, recording] of work.recordings.entries()) {
-      recordings.append(
-        createRecordingRow(recordingIndex === 0 ? work.title : "", recording),
-      );
-    }
-  }
+  recordings.append(...rows);
 
   composerSection.append(composerHeading, recordings);
   return composerSection;
@@ -164,7 +183,9 @@ function main(): void {
   app.append(heading);
 
   for (const composerGroup of library) {
-    app.append(createComposerSection(composerGroup));
+    const composerSection = createComposerSection(composerGroup);
+    if (composerSection === null) continue;
+    app.append(composerSection);
   }
 
   root.append(app);
