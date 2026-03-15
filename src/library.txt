@@ -229,32 +229,32 @@ Richard Wagner
 
 Johannes Brahms
   Piano Sonata No. 3
-    Krystian Zimerman |  |
+    Krystian Zimerman
   Late Piano Pieces Opp. 117–119
-    Radu Lupu |  |
+    Radu Lupu (1970-76) | OLAK5uy_kVYEG29P_GOFmM71eHcT5f5kwG3LOzueE | g5Ao5cbSzq4
   Violin Sonata No. 1
-    Gidon Kremer; Martha Argerich |  |
+    Josef Suk; Julius Katchen (1967) | OLAK5uy_nL9iZUO4aPT6b7-1XSrhJ8eVj7jrh25TU | GNVuj9sUtLA
   Cello Sonata No. 1
-    Mstislav Rostropovich; Rudolf Serkin |  |
+    Mstislav Rostropovich; Rudolf Serkin | OLAK5uy_lHZSHyhNvxq3nygnOKUJAz53PvuxDqK0k (1982) | fswUjjn6LvQ
   Clarinet Quintet
-    Amadeus Quartet; Karl Leister |  |
+    Amadeus Quartet; Karl Leister (1967) | OLAK5uy_noiUJkg0LAgukRm6r2orwOQxe9IfM1ajI | 8OXUhidLdCo
   Piano Quintet in F minor
-    András Schiff; Takács Quartet |  |
+    András Schiff; Takács Quartet (1990) | OLAK5uy_mKyzWECQ3pDoDsxEGJP27wMJ8osF-K2XY | L-cU6jtgRBM
   Piano Concerto No. 1
-    Emil Gilels; Cleveland Orchestra; George Szell |  |
+    Emil Gilels; Berlin Philharmonic; Eugen Jochum (1972) | OLAK5uy_n2S50n4EPlZxGHRnS5CEeD0WInnGO5z_0 | 7-vmMDu73Hg
   Piano Concerto No. 2
-    Emil Gilels; Berlin Philharmonic; Eugen Jochum |  |
+    Emil Gilels; Berlin Philharmonic; Eugen Jochum (1972) | OLAK5uy_n2S50n4EPlZxGHRnS5CEeD0WInnGO5z_0 | nbRj1vhoeMA
   Violin Concerto
-    Arthur Grumiaux; New Philharmonia Orchestra; Colin Davis |  |
+    Arthur Grumiaux; New Philharmonia Orchestra; Colin Davis (1971) | OLAK5uy_myoWKrgrNlAk3XBtC9nhwp3o7G5XPP3I8 | 3wd3kLn_CAk
   Symphony No. 1
-    London Philharmonic Orchestra; Vladimir Jurowski |  |
+    London Philharmonic Orchestra; Vladimir Jurowski (2008) | OLAK5uy_mimem3YyjyHs3nEgi8Wbc-5l0XAfVtaew | QHkvshcBpnY
   Symphony No. 3
-    Vienna Philharmonic; Carlos Kleiber |  |
+    London Philharmonic Orchestra; Eugen Jochum (1996) | OLAK5uy_mY8o5KVriBJQBPXtHH0X5ZYEBKr4x0NW0 | O0KI0du5z2Y
   Symphony No. 4
-    Vienna Philharmonic; Carlos Kleiber |  |
-    Pittsburgh Symphony Orchestra; Manfred Honeck |  |
+    Vienna Philharmonic; Carlos Kleiber (1980) | OLAK5uy_nc5vU6u-b5usuk63Nx92wHAtRqNgP2NrA | s4eN4kgOCE8
+    Pittsburgh Symphony Orchestra; Manfred Honeck (2017) | OLAK5uy_mvLiZY8AGLwW-riyEWeWOnsV-MjbmV_Kw | luMVuuZ8_S4
   A German Requiem
-    Vienna Philharmonic; Wiener Singverein; Herbert von Karajan |  |
+    Philharmonia Chorus; Philharmonia Orchestra; Otto Klemperer (1961) | OLAK5uy_mtByoyObnPPeXVKxrZRISmA2KNTbEZdKo | xXUv-SZSGPc
 
 Anton Bruckner
   Symphony No. 7
@@ -291,7 +291,7 @@ César Franck
 Gabriel Fauré
   Requiem
     Choir of St John’s College, Cambridge; George Guest |  |
-    London Symphony Orchestra Chamber Ensemble; Tenebrae; Nigel Short |  |
+    Tenebrae; London Symphony Orchestra Chamber Ensemble; Nigel Short |  |
   Nocturnes (selected)
     Jean-Philippe Collard |  |
 
