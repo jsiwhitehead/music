@@ -35,18 +35,19 @@ Johann Sebastian Bach
     Dunedin Consort; John Butt (2008) | OLAK5uy_k72gxNBP9WmuOOi9roYkJCaJgzZ5NWEbI | BTalijb8Dfw
   Mass in B minor
     Monteverdi Choir; English Baroque Soloists; John Eliot Gardiner (1985) | OLAK5uy_npdcSxTFKLWRbXquQEd7_6DwPonRVSfSE | pxtqMne9gCo
+    Pygmalion; Raphaël Pichon (2025) | OLAK5uy_lkVIugWC3I4uXD8ZE__LgxOY_JO84o4_I | EQiTv9mhc2Q
 
 George Frideric Handel
   Keyboard Suites (selected)
     Trevor Pinnock (1980) | OLAK5uy_mPqYJ-vOGOhaEK_JXG0pGqyZ9uQtOkyN8 | T2eqXSLwaNo
   Messiah
     English Concert; Trevor Pinnock (1988) | OLAK5uy_nZTu-rIjtrzmrv3VG_dAZ2Ceh9PB_003k | R101rdJIyVc
-    Monteverdi Choir; English Baroque Soloists; John Eliot Gardiner (1982) | OLAK5uy_neGi2tDWmRn9oqMQ2ZrkOwCwtvFZPZCE4 | s2EuUfKLI30
+    Gaechinger Cantorey; Hans-Christoph Rademann (2020) | OLAK5uy_kZpbij0xxywfTlkTno3LOhNwWfe8d8wEc | 40yD2DpAi5o
 
 Joseph Haydn
   String Quartets, Op. 76
-    Takács Quartet (1997–1998) | OLAK5uy_l4WfzWlX-Q5CRjWC30asNdRqVNveVdNIQ | UoT4nmeCQwQ
     Quatuor Mosaiques (1994–95) | OLAK5uy_lsZAWeHg-WBkFtG6LYMP2uejuM0euTcgc | 7ctcaaFlACo
+    Takács Quartet (1997–1998) | OLAK5uy_l4WfzWlX-Q5CRjWC30asNdRqVNveVdNIQ | UoT4nmeCQwQ
   Late Piano Trios
     Beaux Arts Trio (1978–85) | OLAK5uy_n0QKypuTgc-jcDe3cEL-1pqqx4tVJjSqI | 4ypoHJCM2UQ
   The Seven Last Words of Our Saviour from the Cross
@@ -141,8 +142,8 @@ Ludwig van Beethoven
   Symphony No. 7
     Vienna Philharmonic; Carlos Kleiber (1976) | OLAK5uy_n4Jw_jGEMAY8kWJLuZvtFrciuztfzjVJU | a5Lm81xEzmQ
   Symphony No. 9
-    Orchestre Révolutionnaire et Romantique; John Eliot Gardiner (1992) | OLAK5uy_neiO-JwEDlJ0p2B8ah7ftF_EOMnOe1mws | VlOLBB3Rdck
     Berlin Philharmonic; Herbert von Karajan (1963) | OLAK5uy_lkfkr9pyJn464b4PfJHeUYqVbQm7oaw2Q | S2U2RN1G-EY
+    Orchestre Révolutionnaire et Romantique; John Eliot Gardiner (1992) | OLAK5uy_neiO-JwEDlJ0p2B8ah7ftF_EOMnOe1mws | VlOLBB3Rdck
     Bayreuth Festival Orchestra; Wilhelm Furtwängler (1951) | OLAK5uy_kY6FUaFvR2pGgVzIRcGLMdX9LoojQVZ7s | mndw_akxoQM
   Missa solemnis
     Monteverdi Choir; Orchestre Révolutionnaire et Romantique; John Eliot Gardiner (1990) | OLAK5uy_lGfS0Xe4QVjoh9PaUzIxkz7fOFnipyGzY | b4iSmbYhYbY
@@ -217,7 +218,7 @@ Robert Schumann
   Kreisleriana
     Mitsuko Uchida (1994) | OLAK5uy_m8I7zjS0heiv65KIGE7TlM1MRBucsgj-o | UjZrB_6_MTk
   Piano Quintet in E-flat major
-    Martha Argerich; Dora Schwarzberg; Lucy Hall; Nobuko Imai; Mischa Maisky | OLAK5uy_kAXX0VFIXxYpLD16ujsgnxkBzoVZPR0XQ | DwtXWEIco-w
+    Martha Argerich; Dora Schwarzberg; Lucy Hall; Nobuko Imai; Mischa Maisky (1994) | OLAK5uy_kAXX0VFIXxYpLD16ujsgnxkBzoVZPR0XQ | DwtXWEIco-w
   Symphony No. 4
     Cleveland Orchestra; George Szell (1960) | OLAK5uy_mK2YKI2Us5WzKlnJAKc3BqFGRYT8CDgOk | fOg6n6rbfYs
   Dichterliebe
@@ -318,18 +319,19 @@ Giuseppe Verdi
 
 Gustav Mahler
   Symphony No. 2 “Resurrection”
-    London Symphony Orchestra; Leonard Bernstein |  |
-    Royal Concertgebouw Orchestra; Bernard Haitink |  |
+    City of Birmingham Symphony Orchestra; Simon Rattle (1986) |  |
+    London Symphony Orchestra; Leonard Bernstein (1973) |  |
+    Royal Concertgebouw Orchestra; Bernard Haitink (1968) |  |
   Symphony No. 5
+    Vienna Philharmonic; Leonard Bernstein (1987) |  |
     Lucerne Festival Orchestra; Claudio Abbado |  |
-    Vienna Philharmonic; Leonard Bernstein |  |
   Symphony No. 9
+    Berlin Philharmonic; Claudio Abbado (1999) |  |
     Royal Concertgebouw Orchestra; Bernard Haitink |  |
-    Berlin Philharmonic; Herbert von Karajan |  |
-    Vienna Philharmonic; Leonard Bernstein |  |
 
 Claude Debussy
   Préludes, Book I
+    Jean-Yves Thibaudet |  |
     Walter Gieseking |  |
   Suite bergamasque
     Walter Gieseking |  |
@@ -338,30 +340,34 @@ Claude Debussy
   Images, Book I
     Jean-Efflam Bavouzet |  |
   String Quartet in G minor
+    Quatuor Ebène (2008) |  |
     Alban Berg Quartett |  |
   La mer
-    Boston Symphony Orchestra; Charles Munch |  |
+    Royal Concertgebouw Orchestra; Bernard Haitink |  |
+    Boston Symphony Orchestra; Charles Munch (1958) |  |
   Prélude à l’après-midi d’un faune
     Cleveland Orchestra; Pierre Boulez |  |
   Nocturnes
     Royal Concertgebouw Orchestra; Bernard Haitink |  |
   Images for Orchestra
-    Cleveland Orchestra; Pierre Boulez |  |
-    Cleveland Orchestra; Pierre Boulez (1994) |  |
+    Cleveland Orchestra; Pierre Boulez (1991) |  |
 
 Jean Sibelius
   Violin Concerto
+    Ida Haendel; Bournemouth Symphony Orchestra; Paavo Berglund |  |
     David Oistrakh; Moscow Philharmonic; Gennady Rozhdestvensky |  |
   Symphony No. 2
-    Boston Symphony Orchestra; Colin Davis |  |
+    London Symphony Orchestra; Colin Davis |  |
   Symphony No. 5
-    Helsinki Philharmonic; Paavo Berglund |  |
+    London Symphony Orchestra; Colin Davis |  |
+    Helsinki Philharmonic; Paavo Berglund (1984) |  |
   Symphony No. 7
     Berlin Philharmonic; Herbert von Karajan |  |
+    Minnesota Orchestra; Osmo Vänskä |  |
 
 Isaac Albéniz
   Iberia
-    Alicia de Larrocha |  |
+    Alicia de Larrocha (1986) |  |
   Suite española No. 1, Op. 47
     Alicia de Larrocha |  |
 
@@ -369,29 +375,31 @@ Maurice Ravel
   Miroirs
     Arturo Benedetti Michelangeli |  |
   Gaspard de la nuit
+    Jean-Yves Thibaudet |  |
     Martha Argerich |  |
   Le Tombeau de Couperin
     Jean-Yves Thibaudet |  |
   Piano Concerto in G major
-    Martha Argerich; Berlin Radio Symphony Orchestra; Claudio Abbado |  |
+    Martha Argerich; Berlin Philharmonic; Claudio Abbado |  |
   Daphnis et Chloé Suite No. 2
     Montreal Symphony Orchestra; Charles Dutoit |  |
 
 Richard Strauss
   Don Juan
-    Berlin Philharmonic; Herbert von Karajan |  |
+    Chicago Symphony Orchestra; Fritz Reiner (1954) |  |
   Four Last Songs
     Jessye Norman; Leipzig Gewandhaus Orchestra; Kurt Masur |  |
 
 Sergei Rachmaninoff
   Piano Concerto No. 2
-    Vladimir Ashkenazy; London Symphony Orchestra; Anatole Fistoulari |  |
+    Vladimir Ashkenazy; Moscow Philharmonic Orchestra; Kirill Kondrashin (1963) |  |
   Piano Concerto No. 3
-    Vladimir Horowitz; New York Philharmonic; Eugene Ormandy |  |
+    Vladimir Horowitz; New York Philharmonic; Eugene Ormandy (1978) |  |
 
 Nikolai Rimsky-Korsakov
   Scheherazade
-    Chicago Symphony Orchestra; Fritz Reiner |  |
+    Royal Concertgebouw Orchestra; Kirill Kondrashin |  |
+    Chicago Symphony Orchestra; Fritz Reiner (1956) |  |
 
 Sergei Prokofiev
   Piano Concerto No. 3
@@ -402,7 +410,7 @@ Igor Stravinsky
     Cleveland Orchestra; Pierre Boulez |  |
   The Rite of Spring
     Cleveland Orchestra; Pierre Boulez |  |
-    Chicago Symphony Orchestra; Georg Solti |  |
+    Columbia Symphony Orchestra; Igor Stravinsky (1960) |  |
 
 Dmitri Shostakovich
   Symphony No. 5
@@ -410,5 +418,5 @@ Dmitri Shostakovich
 
 Béla Bartók
   Concerto for Orchestra
-    Chicago Symphony Orchestra; Fritz Reiner |  |
     Budapest Festival Orchestra; Iván Fischer |  |
+    Chicago Symphony Orchestra; Fritz Reiner |  |
