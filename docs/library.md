@@ -57,6 +57,7 @@ composer -> work -> recording
   3. concertos
   4. orchestral
   5. vocal / sacred
+- Within one of those broad groups, works SHOULD be ordered by listening priority and browsing usefulness rather than chronology alone, usually leading with central or approachable anchor works while still preserving obvious musical relationships such as numbered families, late trilogies, or closely linked sets when that makes browsing clearer.
 - Typographic punctuation in `src/library.txt`, including curly quotation marks and en dashes where appropriate, is intentional and part of the library's house style.
 
 ## Recordings
