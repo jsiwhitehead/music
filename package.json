@@ -6,7 +6,8 @@
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "format:files": "prettier --write"
+    "format:files": "prettier --write",
+    "build": "bun build static/index.html --outdir build"
   },
   "devDependencies": {
     "@happy-dom/global-registrator": "^20.7.0",
