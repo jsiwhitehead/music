@@ -22,6 +22,7 @@
   }
 
   h1,
+  button,
   li,
   p {
     margin: 0;
@@ -60,6 +61,29 @@
     letter-spacing: 0.02em;
   }
 
+  .library-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+  }
+
+  .library-switcher-button {
+    border: 1px solid rgb(var(--ink-rgb) / 0.16);
+    background: rgb(var(--ink-rgb) / 0.03);
+    color: rgb(var(--ink-rgb) / 0.78);
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .library-switcher-button[aria-pressed="true"] {
+    border-color: rgb(var(--ink-rgb) / 0.3);
+    background: rgb(var(--ink-rgb) / 0.1);
+    color: rgb(var(--ink-rgb));
+  }
+
   .composer-cell,
   .work-cell,
   .recording-link {
@@ -69,7 +93,7 @@
 
   .library-table {
     width: 100%;
-    margin-top: 0.65rem;
+    margin-top: 0.8rem;
     border-collapse: collapse;
   }
 
@@ -139,5 +163,42 @@
     text-decoration: underline;
     text-decoration-thickness: 0.06em;
     text-underline-offset: 0.14em;
+  }
+
+  .library-table[data-section="general"] .composer-cell,
+  .library-table[data-section="bahai"] .composer-cell {
+    width: 30%;
+  }
+
+  .flat-library .work-cell {
+    padding-left: 0;
+  }
+
+  @media (max-width: 720px) {
+    .library {
+      padding: 1.25rem;
+    }
+
+    .composer-cell,
+    .work-cell,
+    .recordings-cell {
+      display: block;
+      width: 100%;
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .composer-cell--empty {
+      display: none;
+    }
+
+    .composer-boundary-cell {
+      height: calc(var(--space-table-cell-block) * 2.5);
+    }
+
+    .flat-library .work-cell {
+      padding-top: 0;
+      padding-bottom: calc(var(--space-table-cell-block) * 1.5);
+    }
   }
 }

@@ -1,6 +1,6 @@
-# Curated Classical Listening Library - Approach
+# Curated Music Library - Approach
 
-This document defines the curation approach for the listening library. The library is a listening guide, not a historical catalogue or complete discography. It is meant to provide reliable entry points into great works through outstanding recordings, with clarity, musical quality, and practical long-term listening use as the guiding priorities.
+This document defines the curation approach for the listening library. The library is a listening guide, not a historical catalogue or complete discography. It is meant to provide reliable entry points into strong listening choices with clarity, musical quality, and practical long-term listening use as the guiding priorities.
 
 ## Listening profile
 
@@ -30,11 +30,11 @@ Rules:
 - The library MAY distinguish between a wider discovery layer and a smaller core of works that justify deeper coverage.
 - A one-time interesting work is less important than a work likely to become part of regular listening life.
 
-## Work
+## Classical work model
 
 Rules:
 
-- The library MUST be organized as:
+- The classical library MUST be organized as:
 
 ```text
 composer -> work -> recording
@@ -58,9 +58,9 @@ composer -> work -> recording
   4. orchestral
   5. vocal / sacred
 - Within one of those broad groups, works SHOULD be ordered by listening priority and browsing usefulness rather than chronology alone, usually leading with central or approachable anchor works while still preserving obvious musical relationships such as numbered families, late trilogies, or closely linked sets when that makes browsing clearer.
-- Typographic punctuation in `src/library.txt`, including curly quotation marks and en dashes where appropriate, is intentional and part of the library's house style.
+- Typographic punctuation in `src/classical.txt`, including curly quotation marks and en dashes where appropriate, is intentional and part of the library's house style.
 
-## Recordings
+## Classical recordings
 
 Rules:
 
@@ -82,11 +82,26 @@ Rules:
   2. core works: two or three recordings
   3. exceptional cases: more when repeated listening clearly justifies it
 
-## Library File Format
+## Non-classical model
 
 Rules:
 
-- Recording entries in `src/library.txt` MUST use one of these forms:
+- The general and Baha'i libraries MUST be organized as:
+
+```text
+artist -> title
+```
+
+- A top-level artist entry SHOULD group together the albums or titles that are most worth keeping in regular reach.
+- Non-classical entries SHOULD usually represent an album, but MAY represent a standalone title when that is the more natural listening unit.
+- Non-classical entries SHOULD stay simple: one artist heading, then a short list of titles beneath it.
+- Non-classical libraries SHOULD NOT introduce an extra recording layer unless there is a clear need that justifies a format change.
+
+## Library file formats
+
+Rules:
+
+- `src/classical.txt` recording entries MUST use one of these forms:
 
 ```text
 performers
@@ -99,5 +114,32 @@ performers | listId | startVideoId
 ```
 
 - The performer field MUST always be present.
-- The curated library in `src/library.txt` is authoritative even when a playable link is not currently available.
+- The curated library in `src/classical.txt` is authoritative even when a playable link is not currently available.
 - The app MAY omit recordings that do not have both `listId` and `startVideoId`.
+
+- `src/general.txt` and `src/bahai.txt` MUST be organized as:
+
+```text
+artist
+  title |
+```
+
+or
+
+```text
+artist
+  title | listId
+```
+
+or
+
+```text
+artist
+  title | listId | startVideoId
+```
+
+- The top-level artist field MUST always be present.
+- The indented title field MUST always be present.
+- The `listId` field MAY be blank until a link is known.
+- The `startVideoId` field MAY be added when playback should start from a specific track within the linked list.
+- Non-classical entries represent one album or title, optionally linked by one YouTube Music `listId`, with an optional `startVideoId`.
